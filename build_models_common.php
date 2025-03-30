@@ -166,9 +166,9 @@ function myHandler($level, $message, $file, $line, $context)
         default:
             $type = 'Error';
             break;
-        // это не E_WARNING и не E_NOTICE
-        // значит мы прекращаем обработку ошибки
-        // далее обработка ложится на сам PHP
+            // это не E_WARNING и не E_NOTICE
+            // значит мы прекращаем обработку ошибки
+            // далее обработка ложится на сам PHP
     }
     // выводим текст ошибки
     //  echo "<h2>$type: $message</h2>";
@@ -601,7 +601,7 @@ function setAuxParams($models)
                         $State['param']['P6Context'] =
                             abs(round(
                                 (abs(low($State['t1'], $v)) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                (abs($State['param']['calcP6']) - abs(low($State['t1'], $v))),
+                                    (abs($State['param']['calcP6']) - abs(low($State['t1'], $v))),
                                 2
                             )) * 100 . "%";
                         //$State['param']['DEBUG_P6Context']="!!!(1)!!! ".abs(low($State['t1'], $v))."|".abs(low($Models_1[0]['t1'], $Models_1[0]['v']))."|".abs($State['param']['calcP6'])."|".abs(low($State['t1'], $v));
@@ -615,7 +615,7 @@ function setAuxParams($models)
                             $State['param']['P6ContextOfP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['calcP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                    (abs($State['param']['calcP6']) - abs(low($State['t1'], $v))),
+                                        (abs($State['param']['calcP6']) - abs(low($State['t1'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6) к размеру рассматриваемой модели (для расчетной т.6)  = " . $State['param']['P6ContextOfP6']);
@@ -625,7 +625,7 @@ function setAuxParams($models)
                             $State['param']['P6ContextOfAuxP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['auxP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                    (abs($State['param']['calcP6']) - abs(low($State['t1'], $v))),
+                                        (abs($State['param']['calcP6']) - abs(low($State['t1'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6 вспомогательной МП) к размеру рассматриваемой модели (для расчётной т.6) = " . $State['param']['P6ContextOfAuxP6']);
@@ -636,7 +636,7 @@ function setAuxParams($models)
                         isset($State['param']['auxP6'])
                         && (abs($State['param']['auxP6']) - abs(low($State['t1'], $v)) != 0)
                     )
-                        // && $State['param']['G1'] != 'EM')
+                    // && $State['param']['G1'] != 'EM')
                     {
                         // $State = myLog($State, "auxP6= " . abs($State['param']['auxP6']));
                         // $State = myLog($State, "t1= " . abs(low($State['t1'],$v)));
@@ -647,7 +647,7 @@ function setAuxParams($models)
                         $State['param']['auxP6Context'] =
                             abs(round(
                                 (abs(low($State['t1'], $v)) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                (abs($State['param']['auxP6']) - abs(low($State['t1'], $v))),
+                                    (abs($State['param']['auxP6']) - abs(low($State['t1'], $v))),
                                 2
                             )) * 100 . "%";
                         $State = myLog($State, "отношение предшествующей модели (по реальной т.6) к размеру рассматриваемой модели (для расчётной 6 вспомогательной МП) =" . $State['param']['auxP6Context']);
@@ -660,7 +660,7 @@ function setAuxParams($models)
                             $State['param']['auxP6ContextOfP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['calcP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                    (abs($State['param']['auxP6']) - abs(low($State['t1'], $v))),
+                                        (abs($State['param']['auxP6']) - abs(low($State['t1'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6) к размеру рассматриваемой модели (для расчетной т.6 вспомогательной МП)  = " . $State['param']['auxP6ContextOfP6']);
@@ -670,7 +670,7 @@ function setAuxParams($models)
                             $State['param']['auxP6ContextOfAuxP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['auxP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                    (abs($State['param']['auxP6']) - abs(low($State['t1'], $v))),
+                                        (abs($State['param']['auxP6']) - abs(low($State['t1'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6 вспомогательной МП) к размеру рассматриваемой модели (для расчётной т. 6 всопомогательной МП) =" . $State['param']['auxP6ContextOfAuxP6']);
@@ -682,7 +682,7 @@ function setAuxParams($models)
                         isset($State['param']['auxP6\''])
                         && (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v)) != 0)
                     )
-                        // && $State['param']['G1'] != 'EM')
+                    // && $State['param']['G1'] != 'EM')
                     {
                         // $State = myLog($State, "auxP6'= " . abs($State['param']['auxP6\'']));
                         // $State = myLog($State, "t1= " . abs(low($State['t1'],$v)));
@@ -693,7 +693,7 @@ function setAuxParams($models)
                         $State['param']['auxP6\'Context'] =
                             abs(round(
                                 (abs(low($State['t1'], $v)) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v))),
+                                    (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v))),
                                 2
                             )) * 100 . "%";
                         $State = myLog($State, "отношение предшествующей модели (по реальной т.6) к размеру рассматриваемой модели (для расчётной 6' всопомогательной МП) = " . $State['param']['auxP6\'Context']);
@@ -706,7 +706,7 @@ function setAuxParams($models)
                             $State['param']['auxP6\'ContextOfP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['calcP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                    (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v))),
+                                        (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6 ) к размеру рассматриваемой модели (для расчетной т.6' вспомогательной МП)  = " . $State['param']['auxP6\'ContextOfP6']);
@@ -716,7 +716,7 @@ function setAuxParams($models)
                             $State['param']['auxP6\'ContextOfAuxP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['auxP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                    (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v))),
+                                        (abs($State['param']['auxP6\'']) - abs(low($State['t1'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6 вспомогательной МП) к размеру рассматриваемой модели (по расчётной т. 6' вспомогательной МП) =" . $State['param']['auxP6\'ContextOfAuxP6']);
@@ -954,7 +954,7 @@ function setAuxParams($models)
                         $State['param']['P6Context'] =
                             abs(round(
                                 (abs(low($State['t3'], $v)) - abs(low($Models_1[0]['t1'], $Models_1[0]['v']))) /
-                                (abs($State['param']['calcP6']) - abs(low($State['t3'], $v))),
+                                    (abs($State['param']['calcP6']) - abs(low($State['t3'], $v))),
                                 2
                             )) * 100 . "%";
                         //$State['param']['DEBUG_P6Context']="!!!(2)!!! ".abs(low($State['t3'], $v))."|".abs(low($Models_1[0]['t1'], $Models_1[0]['v']))."|".abs($State['param']['calcP6'])."|".abs(low($State['t3'], $v));
@@ -968,7 +968,7 @@ function setAuxParams($models)
                             $State['param']['P6ContextOfP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['calcP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['t1']))) /
-                                    (abs($State['param']['calcP6']) - abs(low($State['t3'], $v))),
+                                        (abs($State['param']['calcP6']) - abs(low($State['t3'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6) к размеру рассматриваемой модели (для расчетной т.6)  = " . $State['param']['P6ContextOfP6']);
@@ -978,7 +978,7 @@ function setAuxParams($models)
                             $State['param']['P6ContextOfAuxP6'] =
                                 abs(round(
                                     (abs($Models_1[0]['param']['auxP6']) - abs(low($Models_1[0]['t1'], $Models_1[0]['t1']))) /
-                                    (abs($State['param']['calcP6']) - abs(low($State['t3'], $v))),
+                                        (abs($State['param']['calcP6']) - abs(low($State['t3'], $v))),
                                     2
                                 )) * 100 . "%";
                             $State = myLog($State, "отношение предшествующей модели (по расчётной т.6 вспомогательной МП) к размеру рассматриваемой модели (для расчётной т.6) = " . $State['param']['P6ContextOfAuxP6']);
@@ -999,7 +999,7 @@ function setAuxParams($models)
                         $State['param']['P6"Context'] =
                             abs(round(
                                 (abs(low($State['t3'], $v)) - abs(low($Models_1[0]['t1'], $Models_1[0]['t1']))) /
-                                (abs($State['param']['calcP6"']) - abs(low($State['t3'], $v))),
+                                    (abs($State['param']['calcP6"']) - abs(low($State['t3'], $v))),
                                 2
                             )) * 100 . "%"; // расчётная 6" относительно предшествующей модели
                         $State = myLog($State, "отношение предшествующей модели (по реальной т.6) к размеру рассматриваемой модели (для расчётной 6\" ВМП) =" . $State['param']['calcP6"']);
@@ -1061,12 +1061,12 @@ function setAuxParams($models)
             $models[$bar][$pk]['param']['Par25prcnt'] = "No6";
         } else
             if (high($pv['t2'], $v) < low($pv['t5'], $v)) { // Если бары точек 2 и 5 не пересекаются (бар 2 ниже бара 5), то отображается Par25prcnt=0%
-                $models[$bar][$pk]['param']['Par25prcnt'] = "0%";
-            } else {
-                if (($dist_4_5 = abs(high($pv['t4'], $v) - low($pv['t5'], $v))) == 0) $intersectionProcent = 10000;
-                else $intersectionProcent = (high($pv['t2'], $v) - low($pv['t5'], $v)) / $dist_4_5 * 100;
-                $models[$bar][$pk]['param']['Par25prcnt'] = round($intersectionProcent, 0) . "%";
-            }
+            $models[$bar][$pk]['param']['Par25prcnt'] = "0%";
+        } else {
+            if (($dist_4_5 = abs(high($pv['t4'], $v) - low($pv['t5'], $v))) == 0) $intersectionProcent = 10000;
+            else $intersectionProcent = (high($pv['t2'], $v) - low($pv['t5'], $v)) / $dist_4_5 * 100;
+            $models[$bar][$pk]['param']['Par25prcnt'] = round($intersectionProcent, 0) . "%";
+        }
     }
     // 8. (п.11) Параметр, отражающий наличие/отсутствие Пресуппозиции в ВМП
     //$tmpTime1=microtime(true);
@@ -1509,7 +1509,7 @@ function setAuxParams($models)
             // вначале 5 по времени:
             if ($t5_bar) $models[$bar][$pk]['param'][$p5_part . 'll' . $aim] = round(($CP_bar - $t5_bar) / $sizeTime, 2);
             if ($t4_bar) $models[$bar][$pk]['param']['p4ll' . $aim] = round(($CP_bar - $t4_bar) / $sizeTime, 2);
-            if (isset($State['conf_t4']))$models[$bar][$pk]['param']['llconf_t4' . $aim] = round(($CP_bar - $State['conf_t4']) / $sizeTime, 2);
+            if (isset($State['conf_t4'])) $models[$bar][$pk]['param']['llconf_t4' . $aim] = round(($CP_bar - $State['conf_t4']) / $sizeTime, 2);
             if ($t3_bar) $models[$bar][$pk]['param']['p3_ll' . $aim] = round(($CP_bar - $t3_bar) / $sizeTime, 2);
             if ($t2_bar) $models[$bar][$pk]['param']['p2_ll' . $aim] = round(($CP_bar - $t2_bar) / $sizeTime, 2);
             if ($t1_bar) $models[$bar][$pk]['param']['p1ll' . $aim] = round(($CP_bar - $t1_bar) / $sizeTime, 2);
@@ -1534,175 +1534,293 @@ function setAuxParams($models)
     return ($models);
 }
 
-//	* Definition of Sacral Point (SP) and model type.
-//	* ОПРЕДЕЛНИЕ СТ И ТИПА МОДЕЛИ.
-function defineG1($State)
+/**
+ * Класс для определения типа модели (G1)
+ * 
+ *  **Разбиение на методы по функциональным блокам**:
+   - **determineG1(state)** - основной метод, аналог исходной функции defineG1
+   - **initializeLines()** - инициализация линий тренда и целей
+   - **handleWithT2Prime()** - обработка случая, когда найдена точка t2'
+   - **handleWithoutT2Prime()** - обработка случая, когда точка t2' не найдена
+
+ *   **Дальнейшее разбиение основных блоков на подфункции**:
+   - **handleIntersectionWithT2Prime()** - обработка пересечения линий при наличии t2'
+   - **analyzeT6RightOfT4WithT2Prime()** - анализ когда t6 правее t4 при наличии t2'
+   - **analyzeT6LeftOfT4WithT2Prime()** - анализ когда t6 левее t4 при наличии t2'
+   - **analyzeT6RightOfT4WithoutT2Prime()** - анализ когда t6 правее t4 без t2'
+   - **analyzeT6LeftOfT4WithoutT2Prime()** - анализ когда t6 левее t4 без t2'
+   - **analyzePseudoSTLeftOfT1()** - специальный анализ псевдо-СТ слева от t1
+   - **setCalcP6Values()** - вспомогательный метод для установки значений calcP6
+   - **handleParallelLines()** - обработка параллельных линий
+   - **finalizeResult()** - финализация результата
+ * 
+ * 
+ */
+class G1Classifier
 {
-    global $res;
-    $v = $State['v'];
-    $LT = LT($State);
-    $LCs = LCs($State);
-    $t6_ = linesIntersection($LT, $LCs);
-    $State['param']['G1_sd'] = 1;
-    if (isset($State['t2\''])) { // испр.алг - если нашли т2' //7.1.В случае если ЛЦ построена через т.2 (а не через т.2', т.е. линия от через точки т.2 и т.4) не имеет пересечения с ценой на участке т.1-т.2
+    private $state;
+    private $v;
+    private $LT;
+    private $LCs;
+    private $t6;
 
-        if ($t6_) { // есть пересечение справа
-            if ($t6_['bar'] > $State['t4']) { // 7.1.1. Точка пересечения ЛТ и ЛЦ' лежит правее т.4. В данном случае точка пересечения линий является расчетной точкой 6 (далее - расчетная т.6).), то программа рассчитывает соотношение отрезков времени от т.1 до т.4 и от т.4 до расчетной т.6 для ЧМП.
-                $State['param']['G1'] = "NA_7_1_1";
+    /**
+     * Основной метод для определения типа модели
+     * ОПРЕДЕЛНИЕ СТ И ТИПА МОДЕЛИ.
+     */
+    public function determineG1($state)
+    {
+        global $res;
+        $this->state = $state;
+        $this->v = $state['v'];
+        $this->initializeLines();
 
-                $P6 = $State['param']['calcP6'] = round(abs($t6_['level']), 5);
-                $State['param']['calcP6t'] = round($t6_['bar'], 3);
-                $dist_1_4 = $State['t4'] - $State['t1'];
-                $dist_4_6 = $t6_['bar'] - $State['t4'];
+        // Установка значения по умолчанию
+        $this->state['param']['G1_sd'] = 1;
 
-                if ($dist_1_4 * 3 > $dist_4_6) { //7.1.1.1.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6 для ЧМП, данная модель является ЧМП.
-                    $State['param']['G1'] = 'AM';
-                } //$dist_1_4*3>$dist_4_6
-                else if ($dist_1_4 * 12 > $dist_4_6) { //$dist_1_4*3<=$dist_4_6
-                    // $State = myLog($State, "7.1.1.2. данная модель является ЧМП/МДР.");
-                    $State['param']['G1'] = 'AM/DBM';
-                }
-                if ($dist_1_4 * 12 <= $dist_4_6) {
-                    $State['param']['G1'] = 'DBM';
-                }
-            } //t6 правее т4
-            else { //t6 левее т4
-                // $ST_str = substr(" " . $t6_['bar'], 1, 7) . " (" . substr(" " . abs($t6_['level']), 1, 7) . ")";
-                // $ST_str = round($t6_['bar'], 3) . " (" . round(abs($t6_['level']), 5) . ")";
-                // $State['param']['_CT'] = $ST_str;
-
-                // $State['param']['calcP6'] = substr(" " . abs($t6_['level']), 1, 7);
-                // $State['param']['calcP6t'] = substr(" " . $t6_['bar'], 1, 7);
-
-                // $State['param']['calcP6'] = round( abs($t6_['level']), 5);
-                // $State['param']['calcP6t'] = round($t6_['bar'], 3);
-                //$State = myLog($State, "Найдена Сакральная Точка СТ $ST_str");
-                if (($State['t4'] - $State['t1']) * 3 <= ($State['t1'] - $t6_['bar'])
-                    && ($State['t4'] - $State['t1']) * 12 > ($State['t1'] - $t6_['bar'])
-                ) {
-                    //$State = myLog($State, "7.1.1.2. данная модель является МДР/МР.");
-                    $State['param']['G1'] = 'EM/DBM';
-                    $ST_str = round($t6_['bar'], 3) . " (" . round(abs($t6_['level']), 5) . ")";
-                    $State['param']['_CT'] = $ST_str;
-                    $State['param']['calcP6'] = round(abs($t6_['level']), 5);
-                    $State['param']['calcP6t'] = round($t6_['bar'], 3);
-                } else if (($State['t4'] - $State['t1']) * 12 > ($State['t1'] - $t6_['bar'])) {
-                    //$State = myLog($State, "7.1.1.2. данная модель является  это МР.");
-                    $State['param']['G1'] = 'EM';
-                    $ST_str = round($t6_['bar'], 3) . " (" . round(abs($t6_['level']), 5) . ")";
-                    $State['param']['_CT'] = $ST_str;
-                    $State['param']['calcP6'] = round(abs($t6_['level']), 5);
-                    $State['param']['calcP6t'] = round($t6_['bar'], 3);
-                } else {
-                    //$State = myLog($State, "7.1.1.3 ЛТ и ЛЦ модели параллельны, данная модель является МДР.");
-                    $State['param']['G1'] = 'DBM';
-                }
-            }
-        } // t6 найдена - есть пересечение ЛТ и ЛЦ'
-        else { //***Если ЛТ и ЛЦ модели параллельны, то данная модель является МДР.
-            //            $State = myLog($State, "7.1.2 ЛТ и ЛЦ модели параллельны, данная модель является МДР.");
-            $State['param']['G1'] = 'DBM';
-            //$State=fix_model($State,"МДР");
-        }
-    } // 7.1.	В случае если ЛЦ построили через т2' (т2' была найдена  - цена не пересекает ЛЦ' на т1-т2
-    else { //7.2 t2' найти не смогли - цена пересекает ЛЦ' на т1-т2
-
-        if ($t6_) { // есть пересечение - t6 найдена
-            $State['param']['G1'] = "NA_7_2";
-            if ($t6_['bar'] > $State['t4']) { // 7.2.1 t6 справа от т2 и т4
-                //                if (low($State['t4'], $v) <= lineLevel($LT, $State['t4']) || low($State['t4'] + 1, $v) <= lineLevel($LT, $State['t4'] + 1)) {
-                //
-                //                    //7.2.1.1. Если ЛТ ЧМП пробита баром т.4 или баром, следующим сразу за т.4, программа осуществляет поиск новой т.3, для чего обрабатывает бар, пробивший ЛТ ЧМП по п.2.
-                //                    $State = myLog($State, "ЛТ ЧМП пробита баром т.4 или баром, следующим сразу за т.4 - ищем новую т3");
-                //                    //                    $State=fix_model($State,"---");
-                //                    if(($State['draw_flag'] ?? false))$State['next_step'] = 'stop';
-                //                    else $State['next_step'] = 'step_2';
-                //                    //$State['next_step'] = 'step_2';
-                //                    if (low($State['t4'], $v) <= lineLevel($LT, $State['t4'])) $State['curBar'] = $State['t4'];
-                //                    else                                                 $State['curBar'] = $State['t4'] + 1;
-                //
-                //                    $State = clearState($State, "2,3,t1,t2,t3-");
-                //                    return ([$State]);
-                //                } else { //7.2.1.2. Если ЛТ ЧМП не пробита баром т.4 или баром, следующим сразу за ним, то программа осуществляет поиск новой т.4, для чего обрабатывает бар, следующий за баром кандидата в т.4 по 3.4.
-                //                    $State = myLog($State, "ЛТ ЧМП не пробита баром т.4 или баром, следующим сразу за т.4 - обрабатывает бар, следующий за баром кандидата в т.4 по 3.4.");
-                //                    // $State = fix_model($State, "модель в п7.2.1.2.");
-                //                    // $State['param']['alt'] = 1;
-                //                    $State['curBar'] = $State['t4'] + 1;
-                //                    $State = myLog($State, "ЧМП через т.2 не абсолют, ишемм следующую т4 начиная с бара " . $State['curBar']);
-                //                    $State['next_step'] = 'step_3_4';
-                //                    return ([$State]);
-                //                }
-
-                $P6 = round(" " . abs($t6_['level']), 5);
-                // $State['param']['calcP6'] = $P6;
-                // $State['param']['calcP6t'] = round(" " . $t6_['bar'], 3);
-                $dist_1_4 = $State['t4'] - $State['t1'];
-                $dist_4_6 = $t6_['bar'] - $State['t4'];
-                if ($dist_1_4 * 3 > $dist_4_6) { //7.2.1.1.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является некорректной ЧМП
-                    $State['param']['G1'] = "NA_7_2_1_1"; //  - некорректная ЧМП
-                    $State['param']['calcP6'] = $P6;
-                    $State['param']['calcP6t'] = round(" " . $t6_['bar'], 3);
-                } else
-                    if ($dist_1_4 * 12 > $dist_4_6) { //7.2.1.2.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является ЧМП/МДР
-                        $State = myLog($State, "7.2.1.2. данная модель является ЧМП/МДР.");
-                        $State['param']['G1'] = 'AM/DBM';
-                        $State['param']['calcP6'] = $P6;
-                        $State['param']['calcP6t'] = round(" " . $t6_['bar'], 3);
-                    } else { // 7.2.1.3. участок от т.1 до т.4 умноженный на 12 меньше или равен участку от СТ до т.1 то данная модель является МДР.
-
-                        $State = myLog($State, "7.2.1.3. данная модель является МДР.");
-                        $State['param']['G1'] = 'DBM';
-                    }
-            } // 7.2.1 t6 справа от т2 и т4
-            else { // 7.2.2 t6 слева от т2 и т4
-                $t3_ = (isset($State['t3\''])) ? $State['t3\''] : $State['t3'];
-                $State['param']['G1'] = 'NA_7_2_2';
-                if ($t6_['bar'] > $State['t1'] && $t6_['bar'] < $t3_) {  // псевдоСТ (t6) между т1 и т3/т3'
-                    $State = myLog($State, "7.2.2.1. Если псевдо СТ лежит правее (т.е. позже) т.1 до т.3 -> сильная по СТО МР");
-                    $State['param']['G1'] = 'EM';
-                    $State['param']['SP'] = 'strongpseudoSP';
-                } else { // псевдоСТ (t6) слева от т1
-                    if (($t3_ - $State['t1']) > ($State['t1'] - $t6_['bar'])) {
-                        $State = myLog($State, "7.2.2.2.1 -> МР, сила модели не определена");
-                        $State['param']['G1'] = 'EM';
-                        $State['param']['SP'] = 'undef';
-                    }
-                    if (($t3_ - $State['t1']) <= ($State['t1'] - $t6_['bar']) && ($t3_ - $State['t1']) * 3 >= ($State['t1'] - $t6_['bar'])) {
-                        $State = myLog($State, "7.2.2.2.2. -> МР, модель слабая по СТО");
-                        $State['param']['G1'] = 'EM';
-                        $State['param']['SP'] = 'weakpseudoST';
-                    }
-                    if (($t3_ - $State['t1']) * 3 >= ($State['t1'] - $t6_['bar'])) {
-                        $State = myLog($State, "7.2.2.2.3. -> тип модели МР/МДР");
-                        $State['param']['G1'] = 'EM/DBM';
-                    }
-                } // псевдо СТ (t6) слева от т1
-            } // 7.2.2 t6 слева от т2 и т4
-
-        } else { // ЛЦ' и ЛТ параллельны, t6 не найдена
-            //  $State = myLog($State, "аналог 7.1.2 ЛТ и ЛЦ модели параллельны, данная модель является МДР.");
-            $State['param']['G1'] = 'DBM';
+        if (isset($this->state['t2\''])) {
+            return $this->handleWithT2Prime();
+        } else {
+            return $this->handleWithoutT2Prime();
         }
     }
 
-    //$State['next_step'] = 'step_8';
-    //if($State['draw_flag']??false)$State['next_step'] = 'stop';
-    if (!isset($State['param']['G1'])) $State['param']['G1'] = "NA_empty";
-    return ($State);
+    /**
+     * Инициализация линий тренда и целей
+     */
+    private function initializeLines()
+    {
+        $this->LT = LT($this->state);
+        $this->LCs = LCs($this->state);
+        $this->t6 = linesIntersection($this->LT, $this->LCs);
+    }
+
+    /**
+     * Обработка случая, когда т2' найдена
+     * 7.1.В случае если ЛЦ построена через т.2 (а не через т.2', т.е. линия от через точки т.2 и т.4) не имеет пересечения с ценой на участке т.1-т.2
+     */
+    private function handleWithT2Prime()
+    {
+        if ($this->t6) {
+            return $this->handleIntersectionWithT2Prime();
+        } else {
+            return $this->handleParallelLines('DBM');
+        }
+    }
+
+    /**
+     * Обработка пересечения линий, когда т2' найдена
+     */
+    private function handleIntersectionWithT2Prime()
+    {
+        if ($this->t6['bar'] > $this->state['t4']) {
+            // 7.1.1. Точка пересечения ЛТ и ЛЦ' лежит правее т.4. В данном случае точка пересечения линий является расчетной точкой 6 (далее - расчетная т.6).), то программа рассчитывает соотношение отрезков времени от т.1 до т.4 и от т.4 до расчетной т.6 для ЧМП.
+            $this->state['param']['G1'] = "NA_7_1_1";
+            return $this->analyzeT6RightOfT4WithT2Prime();
+        } else {
+            // t6 левее т4
+            return $this->analyzeT6LeftOfT4WithT2Prime();
+        }
+    }
+
+    /**
+     * Анализ когда т6 правее т4 при наличии т2'
+     */
+    private function analyzeT6RightOfT4WithT2Prime()
+    {
+        $P6 = $this->state['param']['calcP6'] = round(abs($this->t6['level']), 5);
+        $this->state['param']['calcP6t'] = round($this->t6['bar'], 3);
+        $dist_1_4 = $this->state['t4'] - $this->state['t1'];
+        $dist_4_6 = $this->t6['bar'] - $this->state['t4'];
+
+        if ($dist_1_4 * 3 > $dist_4_6) {
+            // 7.1.1.1.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6 для ЧМП, данная модель является ЧМП.
+            $this->state['param']['G1'] = 'AM';
+        } else if ($dist_1_4 * 12 > $dist_4_6) {
+            // 7.1.1.2. данная модель является ЧМП/МДР.
+            $this->state['param']['G1'] = 'AM/DBM';
+        } else if ($dist_1_4 * 12 <= $dist_4_6) {
+            $this->state['param']['G1'] = 'DBM';
+        }
+
+        return $this->state;
+    }
+
+    /**
+     * Анализ когда т6 левее т4 при наличии т2'
+     */
+    private function analyzeT6LeftOfT4WithT2Prime()
+    {
+        if (($this->state['t4'] - $this->state['t1']) * 3 <= ($this->state['t1'] - $this->t6['bar'])
+            && ($this->state['t4'] - $this->state['t1']) * 12 > ($this->state['t1'] - $this->t6['bar'])
+        ) {
+            // 7.1.1.2. данная модель является МДР/МР.
+            $this->state['param']['G1'] = 'EM/DBM';
+            $this->setCalcP6Values();
+        } else if (($this->state['t4'] - $this->state['t1']) * 12 > ($this->state['t1'] - $this->t6['bar'])) {
+            // 7.1.1.2. данная модель является это МР.
+            $this->state['param']['G1'] = 'EM';
+            $this->setCalcP6Values();
+        } else {
+            // 7.1.1.3 ЛТ и ЛЦ модели параллельны, данная модель является МДР.
+            $this->state['param']['G1'] = 'DBM';
+        }
+
+        return $this->state;
+    }
+
+    /**
+     * Установка значений calcP6 и calcP6t
+     */
+    private function setCalcP6Values()
+    {
+        $ST_str = round($this->t6['bar'], 3) . " (" . round(abs($this->t6['level']), 5) . ")";
+        $this->state['param']['_CT'] = $ST_str;
+        $this->state['param']['calcP6'] = round(abs($this->t6['level']), 5);
+        $this->state['param']['calcP6t'] = round($this->t6['bar'], 3);
+    }
+
+    /**
+     * Обработка параллельных линий
+     * 7.1.2 ЛТ и ЛЦ модели параллельны, данная модель является МДР.
+     */
+    private function handleParallelLines($modelType)
+    {
+        $this->state['param']['G1'] = $modelType;
+        return $this->state;
+    }
+
+    /**
+     * Обработка случая, когда т2' не найдена
+     * 7.2 t2' найти не смогли - цена пересекает ЛЦ' на т1-т2
+     */
+    private function handleWithoutT2Prime()
+    {
+        if ($this->t6) {
+            $this->state['param']['G1'] = "NA_7_2";
+            if ($this->t6['bar'] > $this->state['t4']) {
+                // 7.2.1 t6 справа от т2 и т4
+                return $this->analyzeT6RightOfT4WithoutT2Prime();
+            } else {
+                // 7.2.2 t6 слева от т2 и т4
+                return $this->analyzeT6LeftOfT4WithoutT2Prime();
+            }
+        } else {
+            // ЛЦ' и ЛТ параллельны, t6 не найдена
+            // аналог 7.1.2 ЛТ и ЛЦ модели параллельны, данная модель является МДР.
+            return $this->handleParallelLines('DBM');
+        }
+    }
+
+    /**
+     * Анализ когда т6 правее т4 при отсутствии т2'
+     * 7.2.1 t6 справа от т2 и т4
+     */
+    private function analyzeT6RightOfT4WithoutT2Prime()
+    {
+        $P6 = round(" " . abs($this->t6['level']), 5);
+        $dist_1_4 = $this->state['t4'] - $this->state['t1'];
+        $dist_4_6 = $this->t6['bar'] - $this->state['t4'];
+
+        if ($dist_1_4 * 3 > $dist_4_6) {
+            // 7.2.1.1.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является некорректной ЧМП
+            $this->state['param']['G1'] = "NA_7_2_1_1"; // некорректная ЧМП
+            $this->state['param']['calcP6'] = $P6;
+            $this->state['param']['calcP6t'] = round(" " . $this->t6['bar'], 3);
+        } else if ($dist_1_4 * 12 > $dist_4_6) {
+            // 7.2.1.2.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является ЧМП/МДР
+            $this->state = myLog($this->state, "7.2.1.2. данная модель является ЧМП/МДР.");
+            $this->state['param']['G1'] = 'AM/DBM';
+            $this->state['param']['calcP6'] = $P6;
+            $this->state['param']['calcP6t'] = round(" " . $this->t6['bar'], 3);
+        } else {
+            // 7.2.1.3. участок от т.1 до т.4 умноженный на 12 меньше или равен участку от СТ до т.1 то данная модель является МДР.
+            $this->state = myLog($this->state, "7.2.1.3. данная модель является МДР.");
+            $this->state['param']['G1'] = 'DBM';
+        }
+
+        return $this->state;
+    }
+
+    /**
+     * Анализ когда т6 левее т4 при отсутствии т2'
+     * 7.2.2 t6 слева от т2 и т4
+     */
+    private function analyzeT6LeftOfT4WithoutT2Prime()
+    {
+        $t3_ = (isset($this->state['t3\''])) ? $this->state['t3\''] : $this->state['t3'];
+        $this->state['param']['G1'] = 'NA_7_2_2';
+
+        if ($this->t6['bar'] > $this->state['t1'] && $this->t6['bar'] < $t3_) {
+            // 7.2.2.1. Если псевдо СТ лежит правее (т.е. позже) т.1 до т.3 -> сильная по СТО МР
+            $this->state = myLog($this->state, "7.2.2.1. Если псевдо СТ лежит правее (т.е. позже) т.1 до т.3 -> сильная по СТО МР");
+            $this->state['param']['G1'] = 'EM';
+            $this->state['param']['SP'] = 'strongpseudoSP';
+        } else {
+            // псевдоСТ (t6) слева от т1
+            return $this->analyzePseudoSTLeftOfT1($t3_);
+        }
+
+        return $this->state;
+    }
+
+    /**
+     * Анализ когда псевдоСТ (t6) слева от т1
+     */
+    private function analyzePseudoSTLeftOfT1($t3_)
+    {
+        if (($t3_ - $this->state['t1']) > ($this->state['t1'] - $this->t6['bar'])) {
+            // 7.2.2.2.1 -> МР, сила модели не определена
+            $this->state = myLog($this->state, "7.2.2.2.1 -> МР, сила модели не определена");
+            $this->state['param']['G1'] = 'EM';
+            $this->state['param']['SP'] = 'undef';
+        }
+
+        if (($t3_ - $this->state['t1']) <= ($this->state['t1'] - $this->t6['bar']) && ($t3_ - $this->state['t1']) * 3 >= ($this->state['t1'] - $this->t6['bar'])) {
+            // 7.2.2.2.2. -> МР, модель слабая по СТО
+            $this->state = myLog($this->state, "7.2.2.2.2. -> МР, модель слабая по СТО");
+            $this->state['param']['G1'] = 'EM';
+            $this->state['param']['SP'] = 'weakpseudoST';
+        }
+
+        if (($t3_ - $this->state['t1']) * 3 >= ($this->state['t1'] - $this->t6['bar'])) {
+            // 7.2.2.2.3. -> тип модели МР/МДР
+            $this->state = myLog($this->state, "7.2.2.2.3. -> тип модели МР/МДР");
+            $this->state['param']['G1'] = 'EM/DBM';
+        }
+
+        return $this->state;
+    }
+
+    /**
+     * Финализация результата
+     */
+    private function finalizeResult()
+    {
+        if (!isset($this->state['param']['G1'])) {
+            $this->state['param']['G1'] = "NA_empty";
+        }
+        return $this->state;
+    }
 }
-//function LCs($State)
-//{ // определение ЛЦ'
-//    $v = $State['v'];
-//    $t2_ = (isset($State['t2\''])) ? 't2\'' : 't2';
-//    return (['bar' => $State[$t2_], 'level' => high($State[$t2_], $v), 'angle' => (high($State['t4'], $v) - high($State[$t2_], $v)) / ($State['t4'] - $State[$t2_])]);
-//}
-//
-//function LT($State)
-//{ // определение линии тренда
-//    $v = $State['v'];
-//    $t3_ = (isset($State['t3\''])) ? 't3\'' : 't3';
-//    return (['bar' => $State['t1'], 'level' => low($State['t1'], $v), 'angle' => (low($State[$t3_], $v) - low($State['t1'], $v)) / ($State[$t3_] - $State['t1'])]);
-//}
+
+/**
+ * Основная функция для определения G1
+ * ОПРЕДЕЛНИЕ СТ И ТИПА МОДЕЛИ.
+ */
+function defineG1($State)
+{
+    $classifier = new G1Classifier();
+    $State = $classifier->determineG1($State);
+
+    // Устанавливаем значение по умолчанию, если G1 не был определен
+    if (!isset($State['param']['G1'])) {
+        $State['param']['G1'] = "NA_empty";
+    }
+
+    return $State;
+}
+
 function is_ajax()
 { // проверка был ли вызов по ajax или вручную (см. в интернете)
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
