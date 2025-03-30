@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteRule ^js/main.js$ /get-file.php?file=main.js [L]
+
+; # Включаем отображение ошибок (только для отладки, не для продакшена)
+; php_flag display_errors On
+; php_value error_reporting -1
+
+; # Увеличиваем время выполнения скриптов (300 секунд = 5 минут)
+; php_value max_execution_time 300
+
+; # Увеличиваем лимит памяти
+; php_value memory_limit 512M
+
+; # При необходимости увеличиваем лимит на загрузку файлов
+; php_value post_max_size 64M
+; php_value upload_max_filesize 64M
+

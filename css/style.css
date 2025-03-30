@@ -1,0 +1,763 @@
+:root {
+  --primary-color: #2563eb; /* Темно-синий */
+  --secondary-color: #4b5563; /* Серый для вторичного контента */
+  --background-color: #f8fafc; /* Светло-серый фон */
+  --content-background-color: white; /* Белый фон для основных блоков */
+  --border-color: #e2e8f0; /* Серо-голубой цвет границ */
+  --hover-color: #1d4ed8; /* Темный синий при наведении */
+  --text-color: #1f2937; /* Основной текстовый цвет */
+}
+
+.header {
+  min-height: 58px;
+  padding-right: 15px;
+  padding-left: 15px;
+  background-color: white;
+}
+
+.container_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.nav-right {
+  display: flex;
+  font-size: 12px;
+  line-height: 14px;
+  color: #2c2e61;
+}
+.nav-right li {
+  padding-top: 5px;
+  padding-right: 15px;
+  list-style-type: none;
+}
+.nav-right li:not(:first-child) {
+  padding-left: 15px;
+  padding-bottom: 5px;
+}
+.nav-right li:not(:last-child) {
+  border-right: 1px solid #e5e5e5;
+}
+.nav-right li:hover {
+  font-weight: 500;
+  font-size-adjust: 0.6;
+}
+
+/* .logo {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  padding-top: 5px;
+  padding-bottom: 5px;
+} */
+
+/* .logo {
+  margin-left: 0; 
+  transform: none; 
+  padding-top: 5px;
+  padding-bottom: 5px;
+} */
+
+.logo {
+  margin-left: 20px; 
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Базовые стили */
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  background: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+  /* Добавлено */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Для центрирования внизу страницы */
+}
+
+/* body{
+    margin: 0px;
+    background: #fff;
+    margin: 10px;
+
+} */
+
+/* Разделители */
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--border-color);
+  margin: 24px 0;
+}
+
+/* hr {
+    margin: 5px auto;
+    height: 1px;
+    color: #eee;
+}
+p{
+    margin: 3px;
+} */
+
+/* Основной контейнер */
+.window {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--content-background-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+/* .window{
+
+    background: #ffffe0;
+    margin: 0px auto;
+    padding: 5px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #eee;
+} */
+
+/* Элементы управления */
+button {
+  padding: 8px 16px; /* Внутренние отступы */
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px; /* Размер шрифта */
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
+}
+
+button:hover {
+  background: var(--hover-color);
+}
+
+button:disabled {
+  background: var(--secondary-color);
+  cursor: not-allowed;
+}
+
+/* Эффект активного состояния кнопок */
+button:active {
+  transform: scale(0.98); /* Уменьшение размера при нажатии */
+}
+
+#showPages {
+  display: flex;
+  justify-content: flex-start; /* Прижатие к левому краю */
+  align-items: center; /* Центрирование по вертикали */
+  gap: 10px; /* Отступы между кнопками */
+  margin-top: 20px; /* Отступ сверху для чистоты дизайна */
+}
+
+/* Эффект наведения на кнопки */
+
+
+
+input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: white;
+  margin-right: 8px;
+}
+
+#debug {
+  font-size: 14px;
+  background: #f5ffff;
+  width: 100%;
+  margin: 20px auto;
+  padding: 5px;
+  border: 1px solid #ddd;
+  max-height: 360px;
+  overflow: auto;
+  display: none;
+}
+
+.build-btn {
+  margin-top: 4px;
+}
+
+/* Основная рабочая область */
+.desk {
+  background: var(--content-background-color);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* Добавлено */
+  flex-grow: 1; /* Занимает все доступное пространство */
+}
+/* .desk{
+   position: relative;
+} */
+/* .desk{
+   border: 1px solid chartreuse;
+} */
+
+#dop-info {
+  position: absolute;
+  right: 2px;
+  bottom: 0px;
+  display: none;
+}
+#chk-log {
+  right: 50px;
+  bottom: 0px;
+  display: inline-block;
+  text-align: right;
+}
+/* Область с canvas */
+#canvas-wrapper {
+  position: relative;
+  display: inline-block; /* добавлено */
+  width: 100%;
+  /* height: 100%; */
+  height: 300px; /* Высота по умолчанию */
+  margin: 20px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  /* overflow: hidden; */
+  overflow: visible;
+  /* overflow: scroll; */
+  /* overflow: auto; */
+}
+
+#graph {
+  display: block; /* Убедитесь, что канвас занимает всю ширину родительского элемента */
+  width: 100%;
+  height: 100%;
+}
+
+/* The above CSS code is targeting an element with the ID "line-g" that is a sibling of an element with
+the ID "graph-cover" when the "graph-cover" element is being hovered over. It sets the display
+property of the "line-g" element to block, making it visible when the "graph-cover" element is
+hovered. */
+#graph-cover:hover ~ #line-g {
+  display: block;
+}
+
+#line-g {
+  position: absolute;
+  top: -1000px;
+  height: 0;
+  border-top: 1px dashed #ccc;
+  display: none;
+}
+#line-v {
+  position: absolute;
+  /* left: -1000px; */
+  width: 0px;
+  border-left: 1px dashed #ccc;
+  display: none;
+}
+
+/* The above CSS code is targeting an element with the ID "line-v" that is a sibling of an element with
+the ID "graph-cover" when the "graph-cover" element is being hovered over. It sets the display
+property of the "line-v" element to block, making it visible when the "graph-cover" element is
+hovered over. */
+#graph-cover:hover ~ #line-v {
+  display: block;
+}
+#graph-cover:hover ~ #point-price,
+#graph-cover:hover ~ #from-to-text,
+#graph-cover:hover ~ #candle-info {
+  display: inline-block;
+}
+#last-price {
+  display: inline-block;
+  padding: 1px 2px;
+  font: Bold 13px "Courier New";
+  background: #000;
+  color: #fff;
+  position: absolute;
+  top: -1000px;
+  left: 10px;
+  z-index: 2;
+}
+#point-price {
+  padding: 1px 2px;
+  font: Bold 13px "Courier New";
+  background: #888;
+  color: #fff;
+  position: absolute;
+  top: -1000px;
+  left: 10px;
+  display: none;
+  z-index: 3;
+}
+#graph-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  z-index: 0;
+}
+
+/* Правый блок */
+/* #right-block {
+    background: var(--content-background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 20px;
+} */
+
+#right-block {
+  /* background: lightgoldenrodyellow; */
+  display: inline-block;
+  overflow: auto;
+  /* width: 310px; */
+  /* margin: 0 10px; */
+  /* padding: 5px; */
+  /* vertical-align:top; */
+  /* Использовано из нового  */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+/* Информационные блоки */
+#dop-info,
+#debug {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--background-color);
+  border-radius: 4px;
+}
+
+
+
+#from-to-text {
+  display: none;
+  padding: 1px 0 1px 4px;
+  width: 290px;
+  font: Bold 13px "Courier New";
+  background: #888;
+  color: #fff;
+  position: absolute;
+  top: -1000px;
+  left: 10px;
+  z-index: 2;
+}
+#candle-info {
+  display: none;
+  padding: 1px 4px 1px 4px;
+  font: Bold 13px "Courier New";
+  background: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 50, 0.7);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 2;
+}
+
+/* Секции источников данных */
+/* #showPages, */
+#source-switch,
+#source-forex,
+#source-saves,
+#source-mysql {
+  margin-bottom: 20px;
+}
+
+
+
+
+
+/* The CSS code you provided is styling three different elements based on their IDs: */
+/* #source-switch{
+}
+#source-forex{
+    display:none;
+}
+#source-saves{
+    display:block; 
+} */
+
+#form-source {
+  display: inline-block;
+}
+#alg-switch {
+  display: inline-block;
+}
+#lvl-switch {
+  display: inline-block;
+}
+#showSwitch {
+  margin-left: 20px;
+  display: none;
+}
+#showLevels {
+  margin-left: 20px;
+  display: none;
+}
+
+/* #active-bar {
+} */
+#active-bar span {
+  font-size: 17px;
+  font-weight: Bold;
+}
+
+#bar-info {
+  display: none;
+}
+.model-info-v {
+  color: red;
+}
+.model-info-status {
+  color: rgb(0, 50, 199);
+  font-style: italic;
+}
+.model-info-div {
+  border-top: 1px dashed gray;
+  margin: 2px auto;
+  overflow-x: auto; /* прокрутка по горизонтали */
+  overflow-y: auto; /* прокрутка по вертикали */
+}
+.model-info-param-name {
+  color: rgb(100, 100, 100);
+  font-size: 0.84em;
+}
+.model-info-param-val {
+  color: rgb(0, 80, 170);
+  font-size: 0.84em;
+  margin: auto auto auto 5px;
+}
+/* Навигация по моделям */
+.next-prev-model-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 16px 0;
+}
+/* Навигация по истории */
+.next-prev-page-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 16px 0;
+}
+/* .next-prev-model-btns {
+  display: none;
+} */
+
+
+/* Индикатор загрузки */
+/* .parent_wait {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.block_wait {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    text-align: center;
+} */
+
+/* пока оставил родной */
+.parent_wait {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  overflow: auto;
+  display: none;
+  z-index: 98;
+}
+
+/* Элементы форм */
+input[type="radio"], 
+input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+label {
+    margin-right: 16px;
+}
+
+
+.block_wait {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 256px;
+  height: 256px;
+  margin: auto;
+  background-image: url(loader.gif);
+  padding: -10px;
+  transform: translate(-50%, -50%);
+}
+.block_wait p {
+  color: rgb(0, 155, 220);
+  position: absolute;
+  font: Italic Bold 37px "Courier New";
+  padding: 0;
+  white-space: nowrap;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+#debugPopUp {
+  display: flex; /* or inline-flex */
+  align-items: stretch;
+  /*align-content: stretch;*/
+  flex-direction: column;
+  font-size: 14px;
+  width: 100%;
+  height: 100%;
+  height: 100%;
+  margin: 0px auto;
+  padding: 1px;
+  /* overflow: hidden; */
+}
+.moving-box {
+  z-index: 99;
+  border: 1px solid #bbb;
+  /*background-color: rgba(255,243,234,0.7);*/
+  border-radius: 7px;
+  position: fixed;
+  padding: 0px;
+  /*width :380px;
+    height :220px;*/
+  top: 100px;
+  left: 1200px;
+  overflow: hidden;
+  box-shadow: 3px 4px 4px 0px rgba(50, 50, 50, 0.25);
+  font: 9pt Verdana, sans-serif;
+}
+.moving-box p {
+  padding: 2px;
+}
+.moving-box-content {
+  display: none;
+  background-color: rgba(255, 243, 234, 0.75);
+  padding: 3px;
+  /*width :380px;*/
+  margin: 0px;
+  overflow: hidden;
+  width: 300px;
+}
+
+.moving-box-title {
+  background-color: rgba(155, 243, 234, 0.64);
+  margin: 0px;
+  position: relative;
+  cursor: pointer;
+}
+.popup-element {
+  /*border: 1px solid #b00;*/
+  margin: 3px;
+  padding: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#debugPopUp-top {
+  height: 30px;
+  min-height: 30px;
+}
+#debugPopUp-main {
+  flex-grow: 1;
+  font-size: 14px;
+  background: #f5ffff;
+  border: 1px solid #ddd;
+  overflow: auto;
+  max-height: 800px;
+}
+#debugPopUp-bottom {
+  height: 40px;
+}
+#rb-mysql-env {
+  display: inline-block;
+}
+/* Дополнительный блок - стили для trade_emulator*/
+#trade_title {
+  display: inline;
+  font-size: 16px;
+  color: darkblue;
+}
+#setup_selection {
+  display: flex; /* or inline-flex */
+  align-self: stretch;
+  font-size: 14px;
+  margin: 2px;
+  padding: 3px;
+  overflow: hidden;
+}
+#setup_selection_window {
+  align-self: stretch;
+  max-width: 60%;
+}
+#setup_selection_window button {
+  padding: 2px 10px;
+}
+#setup_selection_info {
+  padding: 5px 5px 5px 10px;
+  margin: 0 0 0 10px;
+  background: #f5ffff;
+  min-width: 30%;
+  width: 100%;
+  align-self: stretch;
+  overflow: auto;
+}
+#setup_selection_list {
+  margin: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.conditions1 {
+  display: block;
+  margin: 5px;
+  white-space: nowrap;
+}
+#title_label {
+  font-size: 22px;
+  display: inline;
+}
+#status_label {
+  display: inline;
+  color: red;
+}
+#progress_info {
+  border: 1px lightsteelblue solid;
+  padding: 2px 5px;
+  margin: 0px;
+  display: inline;
+  background: #f5ffff;
+  color: #555;
+}
+.parent_wait_setups {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+#trade_emulator_errors {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: red 1px solid;
+  display: none;
+}
+#report_files a {
+  color: darkblue;
+  text-decoration: none;
+  margin: 9px;
+} 
+.show_graph {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 50px;
+  margin: auto;
+  /*background-image: url('../Reports/2022-08-03 13_42_44/Aim1=-6,Trigger1=55_EAM.jpg');*/
+  display: none;
+  padding: -10px;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 9px 11px 2px rgba(34, 60, 80, 0.44);
+}
+.click_for_graph {
+  color: red;
+  display: inline;
+  cursor: pointer;
+}
+.click_for_graph1 {
+  color: chocolate;
+  display: inline;
+  cursor: pointer;
+}
+
+/* Информационные блоки */
+#dop-info {
+  margin-top: 16px;
+  gap: 10px; 
+  padding: 12px;
+  background: #f8fafc; /* Светло-синий фон, можно изменить по желанию */
+  border-radius: 4px;
+  border: 1px solid var(--border-color); /* Добавим границу для выделения блока */
+}
+
+#debug {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8fafc; /* Светло-синий фон, можно изменить по желанию */
+  border-radius: 4px;
+  border: 1px solid var(--border-color); /* Добавим границу для выделения блока */
+  font-family: monospace; /* Моноширинный шрифт для логов и отладки */
+}
+
+#debug p {
+  margin: 0; /* Удалим стандартные отступы между строками в тексте debug */
+}
+
+/* Дополнительное оформление для чекбокса внутри #dop-info */
+#chk-log {
+  cursor: pointer;
+  accent-color: var(--primary-color); /* Цвет, который будет использоваться для отметки в чекбоксе */
+}
+/* Стилизация метки */
+label[for="chk-log"] {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-color);
+  cursor: pointer; /* Меняет курсор при наведении на метку */
+}
+.dop-info {
+  display: flex;
+  /* flex-direction: column;  */
+  /* Столбец для расположения элементов вертикально */
+  align-items: center; /* Выравнивает элементы по вертикали */
+  gap: 10px; /* Добавляет пространство между элементами */
+  margin-top: 20px; /* Добавляет отступ сверху для чистоты дизайна */
+}
+
+
+
+.chk-log {
+  margin-top: auto; /* Отталкивает чекбокс к нижней части блока dop-info */
+  /* position: fixed; */
+   /* Фиксация относительно окна браузера */
+  bottom: 10px; /* Отступ от нижнего края */
+  left: 10px; /* Отступ от левого края */
+  z-index: 100; /* Поверх других элементов */
+  background: var(--content-background-color); /* Для лучшей видимости */
+  padding: 4px 8px; /* Добавляем отступы */
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#scroll-bar {
+   width: 100%;; /* 20% of the viewport width */
+   transition: value 0.3s ease; /* плавная анимация */
+}

@@ -1,0 +1,2 @@
+insert into spreads (tool_name,full_name,spread,step,swap_short,swap_long) VALUES('AUDCAD','Australian Dollar / Canadian Dollar',0.2,0.00001,-0.3600,-0.3200);
+insert into spreads (tool_name,full_name,spread,step,swap_short,swap_long) VALUES('AUDCAD','Australian Dollar / Canadian Dollar',?0.2,?0.00001,?-0.3600,?-0.3200);

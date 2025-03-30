@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <!-- <script src='js/moving_box_css.js'></script> -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script>
+        //скрипт для передачи параметров для запуска страницы
+        url_="calc_setups.php" // имя PHP файла, в который летят AJAX запросы - он вначале присылает список сетапов, а потом результаты эмуляции по нужным
+        ver = "1.0";
+    </script>
+    <title>Trade emulator (ver. 2022-08-02) </title>
+</head>
+
+<body>
+    <div class="window">
+        <div id="trade_title" >
+            <p id="title_label" oncontextmenu=debug_on_off(event) >Эмулятор торгов по заданным сетапам:&nbsp&nbsp&nbsp</p>
+            <p id="status_label" >Статус:</p>
+            <p id="progress_info">START</p>
+        </div>
+        <hr />
+        <div id="setup_selection">
+            <div id="setup_selection_window">
+            <p> Выбор нужных сетапов из заданных в PHP</p>
+                <button onclick="selectSetups(1)">Отметить все</button>
+                <button onclick="selectSetups(0)">Снять отметки</button>
+                <a>Выбрать инструмент: </a>
+                <select id="select-name" name="name" size="1">
+                    <option value="--- ВСЕ ---" selected>--- ВСЕ ---</option>
+                </select>
+            <hr>
+            <div id="setup_selection_list"> <!-- заполняется скриптом - список всех сетапов -->
+            </div>
+            <hr>
+            <button onclick="calculatePlease()">Выполнить эмуляцию торгов по выбранным сетапам</button>
+            </div>
+
+            <div id="setup_selection_info"> <!-- заполняется скриптом - параметры выбранного сетапа -->
+
+            </div>
+        </div>
+        <hr />
+
+    </div>
+    <div id="trade_emulator_errors">
+        errors
+    </div>
+    <div id="report_files">
+
+    </div>
+    <div id="debug">
+        debug
+    </div>
+
+    <div class="parent_wait parent_wait_setups">
+        <div class="block_wait">
+            <p id="loader-text">0.0</p>
+        </div>
+    </div>
+    <div class="show_graph" onclick=showGraph_close()>
+
+    </div>
+
+
+    <script src="js/functions.js"></script>
+    <script src="js/trade_emulator.js"></script>
+
+</body>
+
+</html>
