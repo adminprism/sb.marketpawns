@@ -55,7 +55,8 @@ Model_colors = {
 
 Graph_settings = {
   // width: 1200, // Width of the canvas. Ширина холста
-  width: document.getElementById("canvas-wrapper").clientWidth + 50, // Width of the canvas / Ширина холста
+  // width: document.getElementById("canvas-wrapper").clientWidth + 50, // Width of the canvas / Ширина холста
+  width: document.getElementById("canvas-wrapper").clientWidth, // Width of the canvas / Ширина холста
   height: 520, // Height of the canvas. Высотка холста
   left: 10.5, // Chart area  -  X-axis offset (from the left) / Область графика - отступ по оси Х (слева)
   top: 5.5, // Chart area -  Y-axis offset (from above)
@@ -308,15 +309,41 @@ $(document).ready(function () {
             top: ypos - 8,
           });
           // Вычисляет номер бара на основе позиции курсора по оси X.
-          nbar = Math.round(
-            (Data_settings.X_right - xpos) /
-              Graph_settings.scale[Data_settings.scale].step
+          let graphX = xpos - Graph_settings.left;
+          let totalWidth = Graph_settings.width - Graph_settings.left - Graph_settings.right;
+          let barWidth = Graph_settings.scale[Data_settings.scale].step;
+          let visibleBars = Math.floor(totalWidth / barWidth);
+          
+          // Calculate which bar was clicked relative to the right edge
+          // Use Math.round to get the closest bar to the cursor
+          let barOffset = Math.round((Data_settings.X_right - graphX) / barWidth - 0.5);
+          
+          // Ensure barOffset is within valid range
+          barOffset = Math.max(0, Math.min(barOffset, visibleBars));
+          
+          // Calculate the actual bar index that was clicked
+          Data_settings.pointedBar = Math.min(
+            Math.max(0, Data_settings.cur_bar - barOffset),
+            Data_settings.n_bar - 1
           );
-          // Определяет индекс текущего выбранного бара.
-          Data_settings.pointedBar = Data_settings["cur_bar"] - nbar;
-          // if (ConsoleLoggingOn) console.log("PointedBar:" + Data_settings.pointedBar);
-          // if (ConsoleLoggingOn) console.log("cur_bar" + Data_settings["cur_bar"]);
-          // if (ConsoleLoggingOn)console.log("nbar" + nbar);
+          
+          // Update nbar for visual feedback
+          nbar = barOffset;
+          
+          if (ConsoleLoggingOn) {
+            console.log("Graph click details:", {
+              graphX,
+              totalWidth,
+              barWidth,
+              visibleBars,
+              barOffset,
+              pointedBar: Data_settings.pointedBar,
+              cur_bar: Data_settings.cur_bar,
+              X_right: Data_settings.X_right,
+              xpos,
+              step: Graph_settings.scale[Data_settings.scale].step
+            });
+          }
 
           // Убеждается, что номер бара не превышает допустимое значение.
           if (nbar > Data_settings.cur_bar) nbar = Data_settings.cur_bar;
@@ -1189,10 +1216,7 @@ function drawGraph() {
   }
 
   // отрисовка баров
-  var X_right =
-    // Graph_settings.width - Graph_settings.right - (bar_width - 1) / 2 - 1;
-    Graph_settings.width - Graph_settings.right - bar_width / 2;
-  // Graph_settings.width - Graph_settings.right;
+  var X_right = Graph_settings.width - Graph_settings.right;
   Data_settings.X_right = X_right;
 
   if (ConsoleLoggingOn)
@@ -1200,24 +1224,23 @@ function drawGraph() {
     Calculated X_right=${X_right},
     Graph width=${Graph_settings.width},
     Graph right margin=${Graph_settings.right},
-    Bar width=${Graph_settings.scale[Data_settings.scale].width}
+    Bar width=${bar_width},
+    Step=${step}
   `);
 
   for (
     i = startBarIndex,
-      // ind = 0; // Используем ind для отслеживания позиции бара
-      ind = endBarIndex - startBarIndex; // Используем обратное индексирование для ind
+    ind = endBarIndex - startBarIndex;
     i <= endBarIndex;
-    // i++, ind++
     i++, ind--
   ) {
-    var isUp = Data[i].open - Data[i].close < 0 ? true : false; // верх или вниз тек бар
+    var isUp = Data[i].open - Data[i].close < 0 ? true : false;
 
     // вертикальная линия, указывающая на активний бар
     if (i == Data_settings.activeBar)
       fillRect_ep(
         graph_context,
-        X_right - ind * step - (bar_width - 1) / 2,
+        X_right - ind * step - bar_width / 2,
         Graph_settings.top,
         bar_width,
         fieldHeight,
@@ -1228,7 +1251,7 @@ function drawGraph() {
       graph_context.fillStyle = Graph_settings.color.up;
       fillRect_ep(
         graph_context,
-        X_right - ind * step - (bar_width - 1) / 2,
+        X_right - ind * step - bar_width / 2,
         Graph_settings.top +
           ((max_v - Data[i].close) / (max_v - min_v)) * fieldHeight,
         bar_width,
@@ -1259,7 +1282,7 @@ function drawGraph() {
       graph_context.fillStyle = Graph_settings.color.down;
       fillRect_ep(
         graph_context,
-        X_right - ind * step - (bar_width - 1) / 2,
+        X_right - ind * step - bar_width / 2,
         Graph_settings.top +
           ((max_v - Data[i].open) / (max_v - min_v)) * fieldHeight,
         bar_width,
@@ -1290,7 +1313,7 @@ function drawGraph() {
     if (Data[i].high == Data[i].low) {
       fillRect_ep(
         graph_context,
-        X_right - ind * step - (bar_width - 1) / 2,
+        X_right - ind * step - bar_width / 2,
         Graph_settings.top +
           ((max_v - Data[i].open) / (max_v - min_v)) * fieldHeight,
         bar_width,
@@ -1341,6 +1364,7 @@ function wheel(event) {
     return; // Прерываем обработчик, если курсор за пределами графика
   }
   var graph_position;
+  var delta; // Направление колёсика мыши
   var delta; // Направление колёсика мыши
   if (!isLoaderOn) {
     event = event || window.event;
