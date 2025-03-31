@@ -231,23 +231,33 @@ select {
 /* Область с canvas */
 #canvas-wrapper {
   position: relative;
-  display: inline-block; /* добавлено */
+  display: inline-block;
   width: 100%;
-  /* height: 100%; */
-  height: 300px; /* Высота по умолчанию */
+  height: 300px; /* Стандартная высота для десктопной версии */
   margin: 20px 0;
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  /* overflow: hidden; */
   overflow: visible;
-  /* overflow: scroll; */
-  /* overflow: auto; */
 }
 
 #graph {
-  display: block; /* Убедитесь, что канвас занимает всю ширину родительского элемента */
+  display: block;
   width: 100%;
   height: 100%;
+}
+
+/* Стили для десктопной версии */
+@media screen and (min-width: 769px) {
+  #canvas-wrapper {
+    height: 300px;
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  #graph {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 /* The above CSS code is targeting an element with the ID "line-g" that is a sibling of an element with
