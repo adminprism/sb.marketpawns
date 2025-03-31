@@ -1,58 +1,205 @@
 <!DOCTYPE html>
 <html>
 
-<div class="window">
+<head>
+    <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- <script src='js/moving_box_css.js'></script> -->
 
-    <head>
-        <meta charset='UTF-8'>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/style.css">
-        <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <!-- <script src='js/moving_box_css.js'></script> -->
+    <script>
+        //скрипт для передачи параметров для запуска страницы
+        ver = "1.0";
+    </script>
+    <title>sandbox</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 375px 1fr;
+            grid-template-rows: auto auto 1fr;
+            grid-template-areas: 
+                "header header"
+                "params datasource"
+                "params maincontent";
+            min-height: 100vh;
+            gap: 10px;
+            position: relative;
+        }
 
-        <script>
-            //скрипт для передачи параметров для запуска страницы
-            ver = "1.0";
-        </script>
-        <title>sandbox</title>
-    </head>
+        .header-area {
+            grid-area: header;
+        }
 
-    <!-- <body onmousemove='body_m_move(event)' onmouseup='body_m_up(event)' onmousedown='body_m_down(event)'> -->
+        .params-area {
+            grid-area: params;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            /* Обеспечивает продление до нижнего края графика */
+            height: 100%;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-        <header class="header">
-            <div class="container_header">
-                <a class="logo" href="#">
-                    <!-- <img src="/public/images/logo.png" alt="" /> -->
-                    <img src="/public/images/SANDBOX.png" alt="" />
-                </a>
+        .datasource-area {
+            grid-area: datasource;
+            padding: 10px;
+        }
 
-                <ul class="nav-right">
-                    <li><a href="https://marketpawns.com">Marketpawns</a></li>
-                    <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
-                    <!-- <li data-bs-toggle="modal" data-bs-target="#registerModal"><a href="#">Register</a></li>
-                        <li data-bs-toggle="modal" data-bs-target="#signinModal"><a href="#">Sign in</a></li> -->
-                </ul>
-            </div>
+        .maincontent-area {
+            grid-area: maincontent;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
 
-        </header>
-        <!-- <div id='mB1' class='moving-box'>
-            <p class='moving-box-title'>Information</p>
-            <div class='moving-box-content'>
-                <div id="debugPopUp">
-                    <div class='popup-element' id="debugPopUp-top">
+        .desk {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
-                        <input id="popUpText" type="text" required="">
-                        <button onclick="show_model_for_key()">Show models</button>
-                        <button onclick="show_resAJAX_info('info')">AJAX info</button>
+        #canvas-wrapper {
+            width: 100%;
+            flex-grow: 1;
+        }
+        
+        .sticky-buttons {
+            position: sticky;
+            top: 10px;
+            background-color: #f5f5f5;
+            padding: 10px 0;
+            z-index: 10;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .build-btn {
+            margin-bottom: 5px;
+            width: 100%;
+        }
+        
+        .log-btn {
+            margin-top: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .params-table td {
+            padding: 4px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .params-table tr:nth-child(even) {
+            background-color: #f0f0f0;
+        }
+        
+        #right-block {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 100%;
+            flex-grow: 1;
+        }
+        
+        #model-info {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #model-info-table {
+            flex-grow: 1;
+        }
+    </style>
+</head>
 
-                    </div>
-                    <div class='popup-element' id="debugPopUp-main">
-                        (пусто)
-                    </div>
+<!-- <body onmousemove='body_m_move(event)' onmouseup='body_m_up(event)' onmousedown='body_m_down(event)'> -->
+
+<div class="grid-container">
+    <!-- HEADER AREA -->
+    <header class="header header-area">
+        <div class="container_header">
+            <a class="logo" href="#">
+                <!-- <img src="/public/images/logo.png" alt="" /> -->
+                <img src="/public/images/SANDBOX.png" alt="" />
+            </a>
+
+            <ul class="nav-right">
+                <li><a href="https://marketpawns.com">Marketpawns</a></li>
+                <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
+                <!-- <li data-bs-toggle="modal" data-bs-target="#registerModal"><a href="#">Register</a></li>
+                    <li data-bs-toggle="modal" data-bs-target="#signinModal"><a href="#">Sign in</a></li> -->
+            </ul>
+        </div>
+
+    </header>
+    <!-- <div id='mB1' class='moving-box'>
+        <p class='moving-box-title'>Information</p>
+        <div class='moving-box-content'>
+            <div id="debugPopUp">
+                <div class='popup-element' id="debugPopUp-top">
+
+                    <input id="popUpText" type="text" required="">
+                    <button onclick="show_model_for_key()">Show models</button>
+                    <button onclick="show_resAJAX_info('info')">AJAX info</button>
+
+                </div>
+                <div class='popup-element' id="debugPopUp-main">
+                    (пусто)
                 </div>
             </div>
-        </div> -->
+        </div>
+    </div> -->
+    <div class="params-area">
+        <div id="right-block" oncontextmenu="debug_on_off(event)">
+            <div id="active-bar">Chosen bar: <span>0</span></div>
+            <hr />
+            
+            <table class="params-table">
+                <tr>
+                    <td colspan="2">
+                        <form id="form-mode">
+                            <input id="rb-mode1" type="radio" name="calc-mode" value="mode1">show all models</input><br>
+                            <input id="rb-mode2" type="radio" name="calc-mode" value="mode2" checked>find last (low + high)</input><br>
+                            <input id="rb-mode3" type="radio" name="calc-mode" value="mode3">selected bar as t.1</input><br>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- Закрепленный блок с кнопками -->
+            <div class="sticky-buttons">
+                <button class="build-btn" onclick="build_models(1)">Calculate Algorythm_1 models</button>
+                <button class="build-btn" onclick="build_models(2)">Calculate Algorythm_2 models</button>
+                <!-- Новая кнопка для открытия лога -->
+                <button class="log-btn" onclick="openDebugLog()">Open Log</button>
+            </div>
+            
+            <div id="model-info"> 
+                <!-- Контент для информации о модели будет отображаться в виде таблицы -->
+                <table class="params-table" id="model-info-table">
+                    <!-- Данные будут добавлены динамически JavaScript'ом -->
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATA SOURCE AREA -->
+    <div class="datasource-area">
         <div id="source-switch">Data source:&nbsp&nbsp&nbsp
             <form id="form-source">
                 <input id="rb-forex" type="radio" name="source" value="1" onclick="changeSource('forex')"> FOREX data (Finam) online&nbsp&nbsp</input>
@@ -181,7 +328,10 @@
             // } else echo $Last_Error;
             ?>
         </div>
-        <hr />
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="maincontent-area">
         <div class="desk">
             <span><strong>To move chart:</strong> drag it with mouse <strong>Scale: </strong> Mouse wheel </span>
             <div class="next-prev-model-btns">
@@ -214,22 +364,6 @@
             <div>
                 <input type="range" id="scroll-bar" min="0" max="1000" value="0" oninput="handleScrollBarChange(event)" step="1">
             </div>
-            <div id="right-block" oncontextmenu="debug_on_off(event)">
-                <div id="active-bar">Chosen bar: <span>0</span></div>
-                <hr />
-                <form id="form-mode">
-                    <input id="rb-mode1" type="radio" name="calc-mode" value="mode1">show all models</input><br>
-                    <input id="rb-mode2" type="radio" name="calc-mode" value="mode2" checked>find last (low + high)</input><br>
-                    <input id="rb-mode3" type="radio" name="calc-mode" value="mode3">selected bar as t.1</input><br>
-                </form>
-
-                <!-- <input id='all-models-checkbox' type='checkbox' name='all_models' value='no' > Показывать все модели, а не только последние -->
-
-                <button class="build-btn" onclick="build_models(1)">Calculate Algorythm_1 models</button>
-                <button class="build-btn" onclick="build_models(2)">Calculate Algorythm_2 models</button>
-                <div id="model-info"> </div>
-            </div>
-
             <div id="bar-info">bar-info</div>
 
             <div class="dop-info">
@@ -249,6 +383,7 @@
                 debug
             </div>
         </div>
+    </div>
 </div>
 
 <div class="parent_wait">
@@ -264,6 +399,72 @@
 <script src="js/functions.js"></script>
 <script src="js/main.js"></script>
 <script src="js/drawModels.js"></script>
+<script>
+    // Дополнительный JavaScript для отображения параметров модели в таблице
+    document.addEventListener("DOMContentLoaded", function() {
+        // Функция для перехвата данных и отображения их в таблице
+        const originalModelInfoInnerHTML = Object.getOwnPropertyDescriptor(
+            Object.getPrototypeOf(document.getElementById('model-info')), 
+            'innerHTML'
+        );
+        
+        if(originalModelInfoInnerHTML) {
+            Object.defineProperty(document.getElementById('model-info'), 'innerHTML', {
+                set: function(html) {
+                    // Если HTML содержит структурированные данные (предполагаем)
+                    if(html.includes(':')) {
+                        let tableHTML = '';
+                        // Разбиваем HTML по строкам и обрабатываем каждую строку как параметр
+                        const lines = html.split('<br>');
+                        lines.forEach(line => {
+                            if(line.trim()) {
+                                const parts = line.split(':');
+                                if(parts.length >= 2) {
+                                    const paramName = parts[0].trim();
+                                    const paramValue = parts.slice(1).join(':').trim();
+                                    tableHTML += `<tr><td>${paramName}</td><td>${paramValue}</td></tr>`;
+                                } else {
+                                    tableHTML += `<tr><td colspan="2">${line}</td></tr>`;
+                                }
+                            }
+                        });
+                        
+                        document.getElementById('model-info-table').innerHTML = tableHTML;
+                    } else {
+                        // Если это не структурированные данные, просто отображаем их
+                        originalModelInfoInnerHTML.set.call(this, html);
+                    }
+                },
+                get: function() {
+                    return originalModelInfoInnerHTML.get.call(this);
+                }
+            });
+        }
+    });
+    
+    // Функция для открытия debug-лога
+    function openDebugLog() {
+        // Имитируем клик правой кнопкой мыши по области Chosen bar
+        const event = new MouseEvent('contextmenu', {
+            bubbles: true,
+            cancelable: true,
+            button: 2  // правая кнопка мыши
+        });
+        
+        // Вызываем функцию debug_on_off, если она существует, иначе просто показываем/скрываем debug-div
+        if (typeof debug_on_off === 'function') {
+            // Передаем фейковый event с preventDefault для имитации правого клика
+            const fakeEvent = { preventDefault: function() {} };
+            debug_on_off(fakeEvent);
+        } else {
+            // Альтернативный вариант - просто переключаем видимость debug-div
+            const debugDiv = document.getElementById('debug');
+            if (debugDiv) {
+                debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+    }
+</script>
 </body>
 
 </html>
