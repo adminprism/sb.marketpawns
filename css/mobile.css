@@ -1,0 +1,275 @@
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 10px;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+    /* Предотвращаем проблему с высотой на iOS */
+    min-height: -webkit-fill-available;
+  }
+
+  .window {
+    padding: 15px;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Оптимизация скроллинга для контейнеров */
+  .params-area,
+  #model-info,
+  #setup_selection_list {
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
+    transform: translateZ(0);
+    overscroll-behavior: contain;
+  }
+
+  /* Оптимизация производительности для графика */
+  #canvas-wrapper {
+    height: 250px;
+    margin: 10px 0;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Предотвращаем проблему с размером на iOS */
+    width: 100vw;
+    max-width: 100%;
+  }
+
+  #graph {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Оптимизация для модальных окон */
+  #setup_selection_window {
+    width: 90%;
+    max-height: 80vh;
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .header {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .container_header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-right {
+    flex-direction: column;
+    width: 100%;
+    border-top: 1px solid #e5e5e5;
+    padding-top: 10px;
+  }
+
+  .nav-right li {
+    padding: 8px 0;
+    border-right: none;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .nav-right li:not(:first-child) {
+    padding-left: 0;
+  }
+
+  .logo {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  #showPages {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  input[type="text"],
+  select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #right-block {
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  #dop-info {
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .model-info-v {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .next-prev-model-btns,
+  .next-prev-page-btns {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 480px) {
+  body {
+    padding: 5px;
+    -webkit-overflow-scrolling: touch;
+    min-height: -webkit-fill-available;
+  }
+
+  .window {
+    padding: 10px;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  #canvas-wrapper {
+    height: 200px;
+    will-change: transform;
+    transform: translateZ(0);
+    width: 100vw;
+    max-width: 100%;
+  }
+
+  button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  #showPages {
+    justify-content: center;
+  }
+
+  #debug {
+    font-size: 12px;
+  }
+
+  .model-info-param-name,
+  .model-info-param-val {
+    font-size: 12px;
+  }
+}
+
+/* Landscape orientation */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  body {
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .grid-container {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .params-area {
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 300px;
+    z-index: 1000;
+    background: #f5f5f5;
+    border-right: 1px solid #ccc;
+  }
+
+  .maincontent-area {
+    margin-left: 300px;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #canvas-wrapper {
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    position: relative;
+  }
+
+  #graph {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .datasource-area {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: calc(100% - 300px);
+    background: white;
+    z-index: 1000;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .desk {
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+  }
+
+  #setup_selection_window {
+    max-height: 90vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #setup_selection_list {
+    max-height: 70vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Оптимизация для iPhone в ландшафтной ориентации */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      height: -webkit-fill-available;
+    }
+
+    .grid-container {
+      height: -webkit-fill-available;
+    }
+
+    .params-area {
+      height: -webkit-fill-available;
+    }
+
+    .maincontent-area {
+      height: -webkit-fill-available;
+    }
+
+    #canvas-wrapper {
+      height: -webkit-fill-available;
+    }
+
+    .desk {
+      height: calc(-webkit-fill-available - 60px);
+    }
+  }
+} 

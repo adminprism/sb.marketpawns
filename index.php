@@ -3,8 +3,9 @@
 
 <head>
     <meta charset='UTF-8'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
     <!-- Подключение стилей для кастомной полосы прокрутки -->
     <link rel="stylesheet" href="css/scrollbar-custom.css">
     <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
@@ -28,6 +29,22 @@
             min-height: 100vh;
             gap: 10px;
             position: relative;
+        }
+
+        @media screen and (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "header"
+                    "datasource"
+                    "params"
+                    "maincontent";
+            }
+
+            .params-area {
+                border-right: none;
+                border-bottom: 1px solid #ccc;
+            }
         }
 
         .header-area {
@@ -401,6 +418,8 @@
 <script src="js/functions.js"></script>
 <!-- Подключение обработчика полосы прокрутки перед main.js -->
 <script src="js/scroll-handler.js"></script>
+<script src="js/scroll-optimizer.js"></script>
+<script src="js/landscape-optimizer.js"></script>
 <script src="js/main.js"></script>
 <script src="js/drawModels.js"></script>
 <script>
