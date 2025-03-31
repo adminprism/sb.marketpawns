@@ -1,0 +1,187 @@
+/* Стили для кастомной полосы прокрутки */
+
+/* Основной стиль для полосы прокрутки */
+#scroll-bar {
+  width: 100%;
+  height: 8px;
+  margin: 10px 0;
+  -webkit-appearance: none; /* Убирает стандартный стиль в Chrome/Safari */
+  appearance: none;
+  background: transparent; /* Прозрачный фон */
+  cursor: pointer;
+}
+
+/* Контейнер для полосы прокрутки */
+.scroll-bar-container {
+  width: 100%;
+  padding: 0 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+/* Дорожка полосы прокрутки (фон) - для WebKit (Chrome, Safari) */
+#scroll-bar::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  border: none;
+}
+
+/* Дорожка полосы прокрутки - для Firefox */
+#scroll-bar::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  border: none;
+}
+
+/* Дорожка полосы прокрутки - для IE/Edge */
+#scroll-bar::-ms-track {
+  width: 100%;
+  height: 8px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+/* Заполнение дорожки - для IE/Edge */
+#scroll-bar::-ms-fill-lower {
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+#scroll-bar::-ms-fill-upper {
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+/* Ползунок полосы прокрутки - для WebKit */
+#scroll-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #4a90e2;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  margin-top: -5px; /* Центрирование по вертикали */
+  cursor: pointer;
+}
+
+/* Ползунок полосы прокрутки - для Firefox */
+#scroll-bar::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #4a90e2;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Ползунок полосы прокрутки - для IE/Edge */
+#scroll-bar::-ms-thumb {
+  width: 18px;
+  height: 18px;
+  background: #4a90e2;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  margin-top: 0; /* В IE/Edge требуется особая настройка */
+}
+
+/* Состояние наведения */
+#scroll-bar:hover::-webkit-slider-thumb {
+  background: #2e73c7;
+}
+
+#scroll-bar:hover::-moz-range-thumb {
+  background: #2e73c7;
+}
+
+#scroll-bar:hover::-ms-thumb {
+  background: #2e73c7;
+}
+
+/* Активное состояние (при нажатии) */
+#scroll-bar:active::-webkit-slider-thumb {
+  background: #1c5ca8;
+  box-shadow: 0 0 5px rgba(44, 130, 201, 0.5);
+}
+
+#scroll-bar:active::-moz-range-thumb {
+  background: #1c5ca8;
+  box-shadow: 0 0 5px rgba(44, 130, 201, 0.5);
+}
+
+#scroll-bar:active::-ms-thumb {
+  background: #1c5ca8;
+  box-shadow: 0 0 5px rgba(44, 130, 201, 0.5);
+}
+
+/* Фокус на полосе прокрутки */
+#scroll-bar:focus {
+  outline: none;
+}
+
+#scroll-bar:focus::-webkit-slider-runnable-track {
+  background: #d0d0d0;
+}
+
+#scroll-bar:focus::-moz-range-track {
+  background: #d0d0d0;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+  #scroll-bar::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+    margin-top: -8px;
+  }
+  
+  #scroll-bar::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  
+  #scroll-bar::-ms-thumb {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Стили для темной темы (если поддерживается) */
+@media (prefers-color-scheme: dark) {
+  #scroll-bar::-webkit-slider-runnable-track {
+    background: #3a3a3a;
+  }
+  
+  #scroll-bar::-moz-range-track {
+    background: #3a3a3a;
+  }
+  
+  #scroll-bar::-ms-fill-lower,
+  #scroll-bar::-ms-fill-upper {
+    background: #3a3a3a;
+  }
+  
+  #scroll-bar::-webkit-slider-thumb {
+    background: #5a9ee2;
+    border: 2px solid #333333;
+  }
+  
+  #scroll-bar::-moz-range-thumb {
+    background: #5a9ee2;
+    border: 2px solid #333333;
+  }
+  
+  #scroll-bar::-ms-thumb {
+    background: #5a9ee2;
+    border: 2px solid #333333;
+  }
+} 

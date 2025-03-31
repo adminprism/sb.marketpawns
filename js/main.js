@@ -592,6 +592,17 @@ $(document).ready(function () {
 });
 
 function updateScrollBar() {
+  // Если доступен модуль ScrollHandler, используем его
+  if (window.ScrollHandler && window.ScrollHandler.initialized) {
+    window.ScrollHandler.update({
+      curBar: Data_settings.cur_bar,
+      totalBars: Data_settings.n_bar,
+      visibleBars: Data.barsOnDesk
+    });
+    return;
+  }
+  
+  // Код ниже выполняется только если ScrollHandler недоступен (запасной вариант)
   const scrollBar = document.getElementById("scroll-bar");
 
   if (!scrollBar) {

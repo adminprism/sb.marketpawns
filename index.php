@@ -5,6 +5,8 @@
     <meta charset='UTF-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Подключение стилей для кастомной полосы прокрутки -->
+    <link rel="stylesheet" href="css/scrollbar-custom.css">
     <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- <script src='js/moving_box_css.js'></script> -->
@@ -361,7 +363,7 @@
                 <div id="from-to-text"></div>
                 <div id="candle-info">candle-info</div>
             </div>
-            <div>
+            <div class="scroll-bar-container">
                 <input type="range" id="scroll-bar" min="0" max="1000" value="0" oninput="handleScrollBarChange(event)" step="1">
             </div>
             <div id="bar-info">bar-info</div>
@@ -397,6 +399,8 @@
 
 
 <script src="js/functions.js"></script>
+<!-- Подключение обработчика полосы прокрутки перед main.js -->
+<script src="js/scroll-handler.js"></script>
 <script src="js/main.js"></script>
 <script src="js/drawModels.js"></script>
 <script>
