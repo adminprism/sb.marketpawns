@@ -31,7 +31,7 @@ function not_v($v)
     return (($v == 'low') ? 'high' : 'low');
 }
 
-// набор функций, возвращающие open, close, high и low бара с номером $i (J для модели, где точка 1=low либо с отрицательным знаком, если 1=high)
+// набор функций, возвращающие open, close, high и low бара с номером $i (для модели, где точка 1=low либо с отрицательным знаком, если 1=high)
 function high($i, $v, $line = "0")
 { // возвращает high либо -low
     global $Chart, $res, $maxBar4Split, $curSplit;
