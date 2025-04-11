@@ -1,0 +1,204 @@
+Name [info] - Full parameter name
+id [calc: build_models_common.php] - Unique identifier for a model
+name_id [calc: build_models_common.php] - Name identifier for a model
+bar_id [calc: build_models_common.php] - Bar identifier where the model is located
+Alg [calc: build_models_A1.php, build_models_A2.php] - Algorithm number (1 or 2) that was used to identify the model
+alt_old [calc: build_models_common.php] - Old alternative model classification 
+alt [calc: build_models_common.php] - Alternative model number (models with the same t4 but different properties)
+_points [calc: build_models_common.php] - Model points count
+G1 [calc: build_models_common.php] - Primary model classification (EAM, AM, AM/DBM, WEDGE, etc.)
+v [calc: build_models_A1.php, build_models_A2.php] - Direction of the model (high or low)
+_2 [calc: build_models_A1.php] - Second reference point value
+_3 [calc: build_models_A1.php] - Third reference point value 
+t1 [calc: build_models_A1.php] - First point of the model
+t2 [calc: build_models_A1.php] - Second point of the model
+t2' [calc: build_models_A1.php] - Alternative second point
+t3 [calc: build_models_A1.php] - Third point of the model
+t3- [calc: build_models_A1.php] - Auxiliary third point
+t3' [calc: build_models_A1.php] - Alternative third point
+t3'мп [calc: build_models_A1.php] - Alternative third point for auxiliary model
+t3'мп5' [calc: build_models_A2.php] - Alternative third point for auxiliary model with t5'
+t4 [calc: build_models_A1.php, build_models_A2.php] - Fourth point of the model
+t5 [calc: build_models_A1.php, build_models_A2.php] - Fifth point of the model
+t5' [calc: build_models_A2.php] - Alternative fifth point
+t5" [calc: build_models_A2.php] - Secondary alternative fifth point
+t3" [calc: build_models_A2.php] - Secondary alternative third point
+A2Prev [calc: build_models_A2.php] - Algorithm 2 previous model reference
+AUX [calc: build_models_A1.php, build_models_A2.php] - Flag indicating if an auxiliary model exists
+AimsBlock5' [calc: build_models_A2.php] - Aims block for t5' point
+AUX5' [calc: build_models_A2.php] - Flag indicating if an auxiliary model with t5' exists
+SP [calc: build_models_common.php] - Model strength parameter
+_CT [calc: build_models_common.php] - Flag indicating CT (calculated targets) presence
+_cross_point [calc: build_models_common.php] - Coordinates of intersection point
+calcP6 [calc: build_models_A1.php, build_models_A2.php] - Calculated potential 6th point level
+calcP6t [calc: build_models_A1.php, build_models_A2.php] - Time (bar number) of the calculated potential 6th point
+auxP6 [calc: build_models_A1.php, build_models_A2.php] - Auxiliary model's calculated 6th point level
+auxP6t [calc: build_models_A1.php, build_models_A2.php] - Time of the auxiliary model's calculated 6th point
+auxP6' [calc: build_models_A1.php, build_models_A2.php] - Alternative auxiliary model's calculated 6th point level
+auxP6't [calc: build_models_A1.php, build_models_A2.php] - Time of the alternative auxiliary model's calculated 6th point
+calcP6" [calc: build_models_A2.php] - Alternative calculated 6th point level
+calcP6"t [calc: build_models_A2.php] - Time of the alternative calculated 6th point
+PREVdata [calc: build_models_common.php] - Previous model's data reference
+E1 [calc: build_models_A1.php] - Extension parameter 1 (model formed via t3 or t3')
+t1p [calc: build_models_common.php] - Projected first point
+t2p [calc: build_models_common.php] - Projected second point
+t3p [calc: build_models_common.php] - Projected third point
+t4p [calc: build_models_common.php] - Projected fourth point
+confirmT1p [calc: build_models_common.php] - Confirmation for projected t1
+E3 [calc: build_models_common.php] - Extension parameter 3
+G3 [calc: build_models_A1.php, build_models_A2.php] - Classification parameter determining if model is "trend" or "from trend start"
+E4 [calc: build_models_common.php] - Extension parameter 4
+conf_t4 [calc: build_models_A1.php, build_models_A2.php] - Confirmation bar for t4
+E6 [calc: build_models_common.php] - Extension parameter 6 (presence/absence of presupposition)
+_cross_point2 [calc: build_models_common.php] - Coordinates of secondary intersection point
+SPc [calc: build_models_common.php] - Model strength parameter based on CT (calculated targets)
+EAMP3 [calc: build_models_common.php] - Parameter indicating whether model is built through t3 or t3'
+auxP3 [calc: build_models_common.php] - Parameter for auxiliary model's t3 positioning
+P3 [calc: build_models_common.php] - Parameter indicating if model uses t3 or t3'
+Par25prcnt [calc: build_models_common.php] - Parameter showing intersection percentage between bars 2 and 5
+lvl32'to2'6 [calc: build_models_common.php] - Relationship between t3/t2' and t2'/calculated P6 levels
+lvl32'to2'6aux [calc: build_models_common.php] - Relationship for auxiliary model between t3/t2' and t2'/aux P6 levels
+lvl34to46 [calc: build_models_common.php] - Relationship between t3-t4 and t4-calculated P6 levels
+lvl34to46aux [calc: build_models_common.php] - Relationship for auxiliary model between t3-t4 and t4-auxP6 levels
+ll2'5to56 [calc: build_models_common.php] - Relationship between distance from t2' to t5 and t5 to P6
+ll2'5to56aux [calc: build_models_common.php] - Same relationship for auxiliary model
+EAM5" [calc: build_models_common.php] - Extended EM parameter with t5"
+abs5 [calc: build_models_common.php] - Parameter indicating if t5 is an absolute extremum
+draw_flag [calc: build_models_common.php] - Flag for drawing purposes
+_cross_p23 [calc: build_models_common.php] - Coordinates of intersection between lines from points 2 and 3
+ll2'3#5 [calc: build_models_common.php] - Time distance ratio between t3# to t5 and t2' to t3#
+ll2'3#56 [calc: build_models_common.php] - Time distance ratio between t5 to P6 and t2' to t3#
+lvl3#2'6 [calc: build_models_common.php] - Level distance ratio between t3# and t2' compared to t2' and P6
+lvl3#46 [calc: build_models_common.php] - Level distance ratio between t3# and t4 compared to t4 and P6
+lvl23#45 [calc: build_models_common.php] - Level distance ratio between t3# and t2 compared to t4 and t5
+lvl23to45 [calc: build_models_common.php] - Ratio between t2-t3 and t4-t5 levels
+lvl45to25 [calc: build_models_common.php] - Ratio between t4-t5 and t2-t5 levels
+ParE [calc: build_models_common.php] - Ratio between t3-t5 levels and t5-P6 levels
+fixed_at [calc: build_models_common.php] - Bar number where model was fixed
+max_bar [calc: build_models_common.php] - Maximum bar number accessed for this model
+G1_sd [calc: build_models_common.php] - Subdescription of G1 classification
+bad [calc: build_models_common.php] - Flag indicating if model is considered bad
+P6Context [calc: build_models_common.php] - Relationship between preceding model (by real t6) and current model size
+P6"Context [calc: build_models_common.php] - Similar relationship for P6"
+auxP6Context [calc: build_models_common.php] - Similar relationship for auxiliary P6
+auxP6'Context [calc: build_models_common.php] - Similar relationship for auxiliary P6'
+P6ContextOfP6 [calc: build_models_common.php] - Relationship between preceding model (by calculated t6) and current model
+P6ContextOfAuxP6 [calc: build_models_common.php] - Relationship between preceding model and auxiliary model
+auxP6ContextOfP6 [calc: build_models_common.php] - Relationship between auxiliary preceding model and main model
+auxP6ContextOfAuxP6 [calc: build_models_common.php] - Relationship between auxiliary preceding model and auxiliary model
+CountPrevs [calc: build_models_common.php] - Number of preceding models found
+Clst_I [calc: inc_calc_controls.php] - Cluster I classification
+Clst_II [calc: inc_calc_controls.php] - Cluster II classification
+Clst_A [calc: inc_calc_controls.php] - Cluster A classification
+Clst_I_E [calc: inc_calc_controls.php] - Extended Cluster I classification
+Clst_II_E [calc: inc_calc_controls.php] - Extended Cluster II classification
+Clst_A_E [calc: inc_calc_controls.php] - Extended Cluster A classification
+Clst_I" [calc: inc_calc_controls.php] - Alternative Cluster I classification
+Clst_II" [calc: inc_calc_controls.php] - Alternative Cluster II classification
+Clst_A" [calc: inc_calc_controls.php] - Alternative Cluster A classification
+Clst_I_E" [calc: inc_calc_controls.php] - Extended Alternative Cluster I classification
+Clst_II_E" [calc: inc_calc_controls.php] - Extended Alternative Cluster II classification
+Clst_A_E" [calc: inc_calc_controls.php] - Extended Alternative Cluster A classification
+Clst_I_AuxP6 [calc: inc_calc_controls.php] - Cluster I classification for auxiliary P6
+Clst_II_AuxP6 [calc: inc_calc_controls.php] - Cluster II classification for auxiliary P6
+Clst_A_AuxP6 [calc: inc_calc_controls.php] - Cluster A classification for auxiliary P6
+Clst_I_E_AuxP6 [calc: inc_calc_controls.php] - Extended Cluster I classification for auxiliary P6
+Clst_II_E_AuxP6 [calc: inc_calc_controls.php] - Extended Cluster II classification for auxiliary P6
+Clst_A_E_AuxP6 [calc: inc_calc_controls.php] - Extended Cluster A classification for auxiliary P6
+Clst_I_AuxP6' [calc: inc_calc_controls.php] - Cluster I classification for auxiliary P6'
+Clst_II_AuxP6' [calc: inc_calc_controls.php] - Cluster II classification for auxiliary P6'
+Clst_A_AuxP6' [calc: inc_calc_controls.php] - Cluster A classification for auxiliary P6'
+Clst_I_E_AuxP6' [calc: inc_calc_controls.php] - Extended Cluster I classification for auxiliary P6'
+Clst_II_E_AuxP6' [calc: inc_calc_controls.php] - Extended Cluster II classification for auxiliary P6'
+Clst_A_E_AuxP6' [calc: inc_calc_controls.php] - Extended Cluster A classification for auxiliary P6'
+_ll25apprP6 [calc: inc_calc_controls.php] - Time approximation between t2 and t5 for P6
+_ll25apprP6" [calc: inc_calc_controls.php] - Time approximation between t2 and t5 for P6"
+_ll25apprAuxP6 [calc: inc_calc_controls.php] - Time approximation between t2 and t5 for auxiliary P6
+_ll25apprAuxP6' [calc: inc_calc_controls.php] - Time approximation between t2 and t5 for auxiliary P6'
+TLexs13' [calc: build_models_common.php] - Trend line excess between t1 and t3' (clear/cls/exs)
+TLexs3'4 [calc: build_models_common.php] - Trend line excess between t3' and t4 (clear/cls/exs)
+ALexs12' [calc: build_models_common.php] - Aim line excess between t1 and t2' (clear/cls/exs)
+ALexs2'4 [calc: build_models_common.php] - Aim line excess between t2' and t4 (clear/cls/exs)
+auxTLexs [calc: build_models_common.php] - Auxiliary trend line excess
+auxALexs [calc: build_models_common.php] - Auxiliary aim line excess
+ContextClstI [calc: inc_calc_controls.php] - Context for Cluster I classification
+ContextClstII [calc: inc_calc_controls.php] - Context for Cluster II classification
+ContextClstI_E [calc: inc_calc_controls.php] - Context for Extended Cluster I classification
+ContextClstII_E [calc: inc_calc_controls.php] - Context for Extended Cluster II classification
+ContextClstI" [calc: inc_calc_controls.php] - Context for Alternative Cluster I classification
+ContextClstII" [calc: inc_calc_controls.php] - Context for Alternative Cluster II classification
+ContextClstI_E" [calc: inc_calc_controls.php] - Context for Extended Alternative Cluster I classification
+ContextClstII_E" [calc: inc_calc_controls.php] - Context for Extended Alternative Cluster II classification
+ContextClstI_AuxP6 [calc: inc_calc_controls.php] - Context for Cluster I classification for auxiliary P6
+ContextClstII_AuxP6 [calc: inc_calc_controls.php] - Context for Cluster II classification for auxiliary P6
+ContextClstI_E_AuxP6 [calc: inc_calc_controls.php] - Context for Extended Cluster I classification for auxiliary P6
+ContextClstII_E_AuxP6 [calc: inc_calc_controls.php] - Context for Extended Cluster II classification for auxiliary P6
+ContextClstI_AuxP6' [calc: inc_calc_controls.php] - Context for Cluster I classification for auxiliary P6'
+ContextClstII_AuxP6' [calc: inc_calc_controls.php] - Context for Cluster II classification for auxiliary P6'
+ContextClstI_E_AuxP6' [calc: inc_calc_controls.php] - Context for Extended Cluster I classification for auxiliary P6'
+ContextClstII_E_AuxP6' [calc: inc_calc_controls.php] - Context for Extended Cluster II classification for auxiliary P6'
+PrevType [calc: build_models_common.php] - Type of preceding model
+PrevG3 [calc: build_models_common.php] - G3 parameter of preceding model
+PrevSPc [calc: build_models_common.php] - SPc parameter of preceding model
+PrevSP [calc: build_models_common.php] - SP parameter of preceding model
+P6ContextOfP6 [calc: build_models_common.php] - Context relationship between P6 of preceding and current model
+P6ContextOfAuxP6 [calc: build_models_common.php] - Context relationship between P6 of preceding and AuxP6 of current model
+auxP6ContextOfP6 [calc: build_models_common.php] - Context relationship between AuxP6 of preceding and P6 of current model
+auxP6ContextOfAuxP6 [calc: build_models_common.php] - Context relationship between AuxP6 of preceding and current model
+TLSpeedEAM [calc: inc_calc_controls.php] - Speed parameter for trend line in EAM
+SpeedEAM [calc: inc_calc_controls.php] - General speed parameter for EAM
+TLSpeedEAM5" [calc: inc_calc_controls.php] - Speed parameter for trend line in EAM with t5"
+SpeedEAM5" [calc: inc_calc_controls.php] - General speed parameter for EAM with t5"
+TLSpeedAux [calc: inc_calc_controls.php] - Speed parameter for trend line in auxiliary model
+SpeedAux [calc: inc_calc_controls.php] - General speed parameter for auxiliary model
+TLSpeedAux5' [calc: inc_calc_controls.php] - Speed parameter for trend line in auxiliary model with t5'
+SpeedAux5' [calc: inc_calc_controls.php] - General speed parameter for auxiliary model with t5'
+TLSpeedMain [calc: inc_calc_controls.php] - Main speed parameter for trend line
+SpeedMain [calc: inc_calc_controls.php] - Main general speed parameter
+MainSize [calc: inc_calc_controls.php] - Size of main model
+MainSizeT [calc: inc_calc_controls.php] - Time dimension of main model size
+AuxSize [calc: inc_calc_controls.php] - Size of auxiliary model
+AuxSizeT [calc: inc_calc_controls.php] - Time dimension of auxiliary model size
+AuxSize' [calc: inc_calc_controls.php] - Size of alternative auxiliary model
+AuxSizeT' [calc: inc_calc_controls.php] - Time dimension of alternative auxiliary model size
+EAMSize [calc: inc_calc_controls.php] - Size of EAM model
+EAMSizeT [calc: inc_calc_controls.php] - Time dimension of EAM model size
+EAMSize" [calc: inc_calc_controls.php] - Size of alternative EAM model
+EAMSizeT" [calc: inc_calc_controls.php] - Time dimension of alternative EAM model size
+pips [calc: build_models_common.php] - Pip size measurement relevant to the model
+_llapprP6 [calc: inc_calc_controls.php] - Line level approximation for P6
+_llapprP6" [calc: inc_calc_controls.php] - Line level approximation for P6"
+_llapprAuxP6 [calc: inc_calc_controls.php] - Line level approximation for auxiliary P6
+_llapprAuxP6' [calc: inc_calc_controls.php] - Line level approximation for auxiliary P6'
+_ll4apprP6 [calc: inc_calc_controls.php] - t4 line level approximation for P6
+_ll4apprP6" [calc: inc_calc_controls.php] - t4 line level approximation for P6"
+_ll4apprAuxP6 [calc: inc_calc_controls.php] - t4 line level approximation for auxiliary P6
+_ll4apprAuxP6' [calc: inc_calc_controls.php] - t4 line level approximation for auxiliary P6'
+_lvlapprP6 [calc: inc_calc_controls.php] - Level approximation for P6
+_lvlapprP6" [calc: inc_calc_controls.php] - Level approximation for P6"
+_lvlapprAuxP6 [calc: inc_calc_controls.php] - Level approximation for auxiliary P6
+_lvlapprAuxP6' [calc: inc_calc_controls.php] - Level approximation for auxiliary P6'
+
+// Additional distance and correlation parameters
+p5lvlP6 [calc: build_models_common.php] - Distance by level (P6-t5)/(P6-base level)
+p4lvlP6 [calc: build_models_common.php] - Distance by level (P6-t4)/(P6-base level)
+p3_lvlP6 [calc: build_models_common.php] - Distance by level (P6-t3'/t3)/(P6-base level)
+p2_lvlP6 [calc: build_models_common.php] - Distance by level (P6-t2'/t2)/(P6-base level)
+p1lvlP6 [calc: build_models_common.php] - Distance by level (P6-t1)/(P6-base level)
+
+p5llP6 [calc: build_models_common.php] - Distance by time (P6-t5)/(P6-base time)
+p4llP6 [calc: build_models_common.php] - Distance by time (P6-t4)/(P6-base time)
+p3_llP6 [calc: build_models_common.php] - Distance by time (P6-t3'/t3)/(P6-base time)
+p2_llP6 [calc: build_models_common.php] - Distance by time (P6-t2'/t2)/(P6-base time)
+p1llP6 [calc: build_models_common.php] - Distance by time (P6-t1)/(P6-base time)
+
+// Similar parameters for AuxP6, AuxP6' and P6" are also calculated in build_models_common.php
+
+// Post-calculation parameters calculated in inc_calc_controls.php
+pst_apprP6bmp [calc: inc_calc_controls.php] - Approach to P6 bumper
+pst_apprP6"bmp [calc: inc_calc_controls.php] - Approach to P6" bumper
+pst_apprAuxP6bmp [calc: inc_calc_controls.php] - Approach to AuxP6 bumper
+pst_apprAuxP6'bmp [calc: inc_calc_controls.php] - Approach to AuxP6' bumper
+
+// Various PST parameters for pre-approximation, correlation, and movement analysis
+// calculated in inc_calc_controls.php

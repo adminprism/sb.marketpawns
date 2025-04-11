@@ -71,25 +71,44 @@ function calcParams($model, $title, $CP, $pips = 0)
 
     // * Определяем размер модели по уровням и времени
     if ($G1 == 'AM/DBM' || $G1 == 'AM') {
+        // Для моделей AM/DBM и AM:
+        // Размер по уровням = уровень контрольной точки (CP) - уровень точки t1
         $sizeLevel = round($CP_level - low($model['t1'] + $baseBarNum, $v), $precision);
+        // Размер по времени = номер бара контрольной точки - номер бара точки t1
         $sizeTime = $CP_bar - $model['t1']; //t1==0 всегда, написал  просто для порядка
         write_log("G1=$G1 => размер модели по уровню = t6-t1 =" . $CP_level . " - " . low($model['t1'] + $baseBarNum, $v) . " =" . round($sizeLevel, 6) . " по времени t6-t1 =" . $CP_bar . " - " . $model['t1'] . " = " . round($sizeTime, 6) . PHP_EOL, 7);
+        
+        // Начало перебора баров для анализа начинается с бара t4+1
         $first_bar_num = $model["t4"] + 1;
         write_log("Начинаем перебор с бара t4+1=$first_bar_num до CP+sizeTime*TIME_DEPTH% =" . $CP_bar . "+" . $sizeTime . "*" . TIME_DEPTH . "%=" . ($CP_bar + $sizeTime * TIME_DEPTH / 100) . PHP_EOL, 8);
+        
+        // Сохраняем параметры начальной точки (t1) в контрольных параметрах
         $controlParams['bar_0'] = $model['t1'];
+        // Уровень начальной точки - минимальное значение между уровнем CP и уровнем t1
         $controlParams['lvl_0'] = min(abs($CP_level), abs(low($model['t1'] + $baseBarNum, $v)));
     } else {
+        // Для всех остальных типов моделей:
+        // Размер по уровням = уровень контрольной точки (CP) - уровень точки t3
         $sizeLevel = round($CP_level - low($model['t3'] + $baseBarNum, $v), $precision);
+        // Определяем, какое поле использовать для t2 (обычное или альтернативное)
         $t2_fieldName = (!isset($model['t2\'']) || is_null($model['t2\''])) ? 't2' : 't2\'';
+        // Размер по времени = номер бара контрольной точки - номер бара точки t2
         $sizeTime = $CP_bar - $model[$t2_fieldName];
         write_log("G1=$G1 => размер модели по уровню = t6-t3 =" . $CP_level . " - " . low($model['t3'] + $baseBarNum, $v) . " =" . round($sizeLevel, 6) . " по времени t6-$t2_fieldName =" . $CP_bar . " - " . $model[$t2_fieldName] . " = " . round($sizeTime, 6) . PHP_EOL, 7);
+        
+        // Проверка наличия точки t5
         if (!isset($model["t5"]) || is_null($model["t5"])) {
             write_log("Т5 не определена - выходим" . PHP_EOL, 3);
             return (false);
         }
+        
+        // Начало перебора баров для анализа начинается с бара t5
         $first_bar_num = $model["t5"];
         write_log("Начинаем перебор с бара t5=$first_bar_num до CP+sizeTime*TIME_DEPTH% =" . $CP_bar . "+" . $sizeTime . "*" . TIME_DEPTH . "%=" . ($CP_bar + $sizeTime * TIME_DEPTH / 100) . PHP_EOL, 8);
+        
+        // Сохраняем параметры начальной точки (t2) в контрольных параметрах
         $controlParams['bar_0'] = $model[$t2_fieldName];
+        // Уровень начальной точки - минимальное значение между уровнем CP и уровнем t3
         $controlParams['lvl_0'] = min(abs($CP_level), abs(low($model['t3'] + $baseBarNum, $v)));
     }
     $controlParams['size_time'] = round($sizeTime, 3);
@@ -796,7 +815,7 @@ function calcParams($model, $title, $CP, $pips = 0)
         // за основу взят блок (выше) - для ситуации с достижением approach, но данный блок выполняется для предположения, что approach БУДЕТ достигнут на следующем баре (которого пока нет)
         $conf_t4 = 0; // по идее, false остаться не должно, "расширенный" уровень подхода по любому есть :)
         $t4_level = high($model['t4'] + $baseBarNum, $v); // уровень т4, ищем бар повторно достигнувший его после бара т4 (подтвердивщий т4)
-        for ($i = $model['t4'] + 1; $i <= ($CNT - $baseBarNum); $i++) { // перебор всех баров после t5 + один NEXT бар (цена в котором идет который идет от close последнего существующего до approach_level)
+        for ($i = $model['t4'] + 1; $i <= ($CNT - $baseBarNum); $i++) { // перебор всех баров после t5 + один NEXT бар (цена в котором идет  от close последнего существующего до approach_level)
             if ($i == ($CNT - $baseBarNum)) $conf_t4 = $i; // если раньше подтверждения t4 не случилось, значит считаем, что подтвердили на NEXT баре, на котором достигли и approach_level
             else if (high($i + $baseBarNum, $v) >= $t4_level) {
                 $conf_t4 = $i;

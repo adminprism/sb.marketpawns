@@ -158,6 +158,7 @@
             </a>
 
             <ul class="nav-right">
+                <li><a href="/infobase/tables.php">Tables</a></li>
                 <li><a href="https://marketpawns.com">Marketpawns</a></li>
                 <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
                 <!-- <li data-bs-toggle="modal" data-bs-target="#registerModal"><a href="#">Register</a></li>
