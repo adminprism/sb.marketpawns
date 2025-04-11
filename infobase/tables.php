@@ -16,9 +16,16 @@ function readCSV($file) {
     }
 
     $delimiter = detectDelimiter($file);
-    $rows = array_map(function($line) use ($delimiter) {
-        return str_getcsv($line, $delimiter);
-    }, file($file));
+    
+    // Use fgetcsv instead of array_map for better handling of quoted fields and spaces
+    $rows = [];
+    $handle = fopen($file, "r");
+    if ($handle) {
+        while (($data = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
+            $rows[] = $data;
+        }
+        fclose($handle);
+    }
 
     if (empty($rows)) {
         return array(array(), array());
@@ -75,17 +82,37 @@ if (isset($_GET['debug']) && $_GET['debug'] === 'csv') {
         $delimiter = detectDelimiter($file);
         echo "Detected delimiter: '" . $delimiter . "'\n\n";
         
-        $rows = array_map(function($line) use ($delimiter) {
-            return str_getcsv($line, $delimiter);
-        }, file($file));
+        // Use fgetcsv for consistent parsing
+        $rows = [];
+        $handle = fopen($file, "r");
+        if ($handle) {
+            while (($data = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
+                $rows[] = $data;
+            }
+            fclose($handle);
+        }
         
         echo "Total rows found: " . count($rows) . "\n";
-        echo "Header count: " . count($rows[0]) . "\n\n";
-        
-        echo "Row analysis:\n";
-        for ($i = 1; $i < min(count($rows), 20); $i++) {
-            $row = $rows[$i];
-            echo "Row " . $i . ": " . count($row) . " columns. First value: '" . ($row[0] ?? 'empty') . "'\n";
+        if (!empty($rows)) {
+            echo "Header count: " . count($rows[0]) . "\n\n";
+            
+            echo "Row analysis:\n";
+            for ($i = 1; $i < min(count($rows), 20); $i++) {
+                $row = $rows[$i];
+                echo "Row " . $i . ": " . count($row) . " columns. First value: '" . ($row[0] ?? 'empty') . "'\n";
+                
+                // Show a sample of the first cell with special character highlighting
+                if (!empty($row[0])) {
+                    $sample = $row[0];
+                    echo "   Sample (first 50 chars): [" . substr($sample, 0, 50) . "]\n";
+                    echo "   Contains spaces: " . (strpos($sample, ' ') !== false ? 'Yes' : 'No') . "\n";
+                    echo "   Contains tabs: " . (strpos($sample, "\t") !== false ? 'Yes' : 'No') . "\n";
+                    echo "   Contains newlines: " . (strpos($sample, "\n") !== false ? 'Yes' : 'No') . "\n";
+                    echo "\n";
+                }
+            }
+        } else {
+            echo "No rows found in the file.\n";
         }
         
         exit;
@@ -132,7 +159,8 @@ function getTableHtml($headers, $data) {
         $html .= "<tr class='data-row'>";
         foreach ($row as $key => $cell) {
             if ($headers[$key] !== 'Column8') {
-                $html .= "<td>" . htmlspecialchars($cell) . "</td>";
+                // Preserve spaces in content by using CSS
+                $html .= "<td class='cell-content'>" . htmlspecialchars($cell) . "</td>";
             }
         }
         $html .= "</tr>";
@@ -258,13 +286,22 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             margin-bottom: 0;
             font-size: 14px;
         }
-        th, td {
-            padding: 12px 16px;
+        td, th {
+            padding: 8px 12px;
             text-align: left;
-            border: 1px solid #dee2e6;
+            border-bottom: 1px solid #eee;
             min-width: 120px;
-            max-width: 300px;
             vertical-align: top;
+        }
+        .cell-content {
+            white-space: pre-wrap;      /* Preserve spaces and line breaks */
+            word-wrap: break-word;      /* Break long words */
+            word-break: normal;         /* Don't break words arbitrarily */
+            overflow-wrap: break-word;  /* Fallback for word-wrap */
+            max-width: 300px;           /* Prevent very wide cells */
+        }
+        tr {
+            transition: background-color 0.2s;
         }
         th {
             background-color: #f8f9fa;
@@ -575,7 +612,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                         echo "<tr class='data-row'>";
                         foreach ($row as $key => $cell) {
                             if ($headers[$key] !== 'Column8') {
-                                echo "<td>" . htmlspecialchars($cell) . "</td>";
+                                echo "<td class='cell-content'>" . htmlspecialchars($cell) . "</td>";
                             }
                         }
                         echo "</tr>";
