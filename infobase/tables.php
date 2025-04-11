@@ -269,9 +269,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         th {
             background-color: #f8f9fa;
             font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 1;
             white-space: nowrap;
         }
         td {
@@ -387,6 +384,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         }
         
         .table-scroll-container {
+            position: relative;
             max-height: calc(70vh - 100px);
             overflow-y: auto;
             border-radius: 4px;
@@ -467,6 +465,27 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         
         .search-wrapper {
             position: relative;
+        }
+        
+        /* Add styles for the cloned header */
+        .table-floating-header {
+            position: fixed;
+            top: 64px; /* Height of search container plus padding */
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 9;
+            overflow: hidden;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            pointer-events: none;
+        }
+        
+        .table-floating-header.visible {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -595,6 +614,129 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             // Show the selected tab content and add active class to the button
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
+            
+            // After tab change, reinitialize floating headers
+            setTimeout(initFloatingHeaders, 50);
+        }
+
+        // Function to initialize floating headers for all tables
+        function initFloatingHeaders() {
+            const tabContents = document.querySelectorAll('.tab-content.active');
+            
+            tabContents.forEach(tab => {
+                const tableId = tab.id;
+                const table = tab.querySelector('table');
+                const headerRow = table?.querySelector('tr.header-row');
+                
+                if (!headerRow) return;
+                
+                // Remove any existing floating header
+                const existingHeader = tab.querySelector('.table-floating-header');
+                if (existingHeader) {
+                    existingHeader.remove();
+                }
+                
+                // Create a floating header container
+                const floatingHeader = document.createElement('div');
+                floatingHeader.className = 'table-floating-header';
+                floatingHeader.id = `floating-header-${tableId}`;
+                
+                // Clone the header row
+                const clonedHeader = headerRow.cloneNode(true);
+                
+                // Create a table container and add the cloned header
+                const tableClone = document.createElement('table');
+                tableClone.style.width = `${table.offsetWidth}px`;
+                tableClone.appendChild(clonedHeader);
+                floatingHeader.appendChild(tableClone);
+                
+                // Add the floating header to the page
+                tab.querySelector('.table-scroll-container').appendChild(floatingHeader);
+                
+                // Set the initial width of each column in the cloned header
+                const originalCells = headerRow.querySelectorAll('th');
+                const clonedCells = clonedHeader.querySelectorAll('th');
+                
+                originalCells.forEach((cell, index) => {
+                    const width = cell.offsetWidth;
+                    clonedCells[index].style.width = `${width}px`;
+                    clonedCells[index].style.maxWidth = `${width}px`;
+                    clonedCells[index].style.minWidth = `${width}px`;
+                });
+                
+                // Set up IntersectionObserver to show/hide the floating header
+                const observer = new IntersectionObserver((entries) => {
+                    const entry = entries[0];
+                    const searchContainer = tab.querySelector('.search-container');
+                    const scrollContainer = tab.querySelector('.table-scroll-container');
+                    
+                    // If the original header is not visible and we're scrolled
+                    if (!entry.isIntersecting && scrollContainer.scrollTop > 0) {
+                        floatingHeader.classList.add('visible');
+                        
+                        // Adjust the floating header position based on scroll position
+                        const containerRect = scrollContainer.getBoundingClientRect();
+                        const searchRect = searchContainer.getBoundingClientRect();
+                        
+                        floatingHeader.style.top = `${searchRect.bottom}px`;
+                        floatingHeader.style.width = `${containerRect.width}px`;
+                        floatingHeader.style.left = `${containerRect.left}px`;
+                    } else {
+                        floatingHeader.classList.remove('visible');
+                    }
+                }, { 
+                    threshold: 0,
+                    rootMargin: "-1px 0px 0px 0px"
+                });
+                
+                // Start observing the original header
+                observer.observe(headerRow);
+                
+                // Also update on scroll for smoother experience
+                tab.querySelector('.table-scroll-container').addEventListener('scroll', () => {
+                    const isHeaderVisible = isElementInViewport(headerRow);
+                    const scrollContainer = tab.querySelector('.table-scroll-container');
+                    
+                    if (!isHeaderVisible && scrollContainer.scrollTop > 0) {
+                        floatingHeader.classList.add('visible');
+                    } else {
+                        floatingHeader.classList.remove('visible');
+                    }
+                });
+                
+                // Update on window resize
+                window.addEventListener('resize', () => {
+                    // Update table width
+                    tableClone.style.width = `${table.offsetWidth}px`;
+                    
+                    // Update each column width
+                    originalCells.forEach((cell, index) => {
+                        const width = cell.offsetWidth;
+                        clonedCells[index].style.width = `${width}px`;
+                        clonedCells[index].style.maxWidth = `${width}px`;
+                        clonedCells[index].style.minWidth = `${width}px`;
+                    });
+                    
+                    // Update position
+                    const containerRect = scrollContainer.getBoundingClientRect();
+                    floatingHeader.style.width = `${containerRect.width}px`;
+                    floatingHeader.style.left = `${containerRect.left}px`;
+                });
+            });
+        }
+        
+        // Helper function to check if an element is in viewport
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            const searchContainer = el.closest('.tab-content').querySelector('.search-container');
+            const searchRect = searchContainer.getBoundingClientRect();
+            
+            return (
+                rect.top >= searchRect.bottom &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
         }
 
         function searchTable(input, tableId) {
@@ -668,6 +810,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             } else {
                 noResults.style.display = 'none';
             }
+            
+            // After search, reinitialize floating headers as table dimensions might change
+            setTimeout(initFloatingHeaders, 50);
         }
 
         // Show/hide scroll hint based on table width
@@ -679,6 +824,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                     hint.style.display = 'block';
                 }
             });
+            
+            // Initialize floating headers
+            initFloatingHeaders();
         });
 
         function refreshTable(tableId) {
@@ -746,6 +894,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                     if (searchBox.value) {
                         searchTable(searchBox, tableId);
                     }
+                    
+                    // Reinitialize floating headers
+                    setTimeout(initFloatingHeaders, 50);
                 }
             })
             .catch(error => {
