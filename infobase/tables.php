@@ -132,28 +132,53 @@ function getTableDescription($fileId) {
 
 // Add new function to get table HTML
 function getTableHtml($headers, $data, $fileId = '') {
-    $html = '<table tabindex="0" class="data-table" aria-label="Data table for ' . htmlspecialchars($fileId) . '">';
-    
-    // Check if we have an Additional information column
-    $hasAdditionalInfo = in_array('Additional information', $headers);
+    // Extract and remove Additional information column completely
+    $additionalInfoData = [];
+    $hasAdditionalInfo = false;
     $additionalInfoIndex = array_search('Additional information', $headers);
     
-    // Headers
+    if ($additionalInfoIndex !== false) {
+        $hasAdditionalInfo = true;
+        
+        // Store Additional information separately for each row
+        foreach ($data as $rowIndex => $row) {
+            if (isset($row['Additional information']) && !empty($row['Additional information'])) {
+                $additionalInfoData[$rowIndex] = $row['Additional information'];
+            }
+        }
+        
+        // Remove Additional information from headers
+        unset($headers[$additionalInfoIndex]);
+        $headers = array_values($headers); // Reindex array
+        
+        // Remove Additional information from each row
+        foreach ($data as $rowIndex => &$row) {
+            if (isset($row['Additional information'])) {
+                unset($row['Additional information']);
+            }
+        }
+    }
+    
+    $html = '<table tabindex="0" class="data-table" aria-label="Data table for ' . htmlspecialchars($fileId) . '">';
+    
+    // Headers - now without Additional information
     $html .= "<tr class='header-row'>";
     foreach ($headers as $headerIndex => $header) {
-        // Skip Additional information column in the main table if it exists
-        if ($header !== 'Column8' && (!$hasAdditionalInfo || $headerIndex !== $additionalInfoIndex)) {
+        // Skip Column8 if present
+        if ($header !== 'Column8') {
             $html .= "<th tabindex='0' role='button' aria-sort='none' onClick='sortTable(this, \"$fileId\")'>" . htmlspecialchars($header) . "</th>";
         }
     }
     $html .= "</tr>";
     
-    // Data rows
+    // Data rows - Add original index tracking
+    $originalIndex = 0;
     foreach ($data as $rowIndex => $row) {
         $firstCell = reset($row);
         if (strpos($firstCell, '//') === 0) {
-            $html .= "<tr class='section-row'><td colspan='" . (count($headers) - ($hasAdditionalInfo ? 2 : 1)) . "' class='section-header'>" . 
+            $html .= "<tr class='section-row' data-original-index='{$originalIndex}'><td colspan='" . count($headers) . "' class='section-header'>" . 
                      htmlspecialchars(trim($firstCell, '/ ')) . "</td></tr>";
+            $originalIndex++;
             continue;
         }
         
@@ -161,33 +186,34 @@ function getTableHtml($headers, $data, $fileId = '') {
             continue;
         }
         
-        // Add data-row-id attribute and click handler
-        $html .= "<tr class='data-row' data-row-id='$rowIndex' tabindex='0' onclick='selectRow(this, \"$fileId\")' onkeydown='handleRowKeydown(event, this, \"$fileId\")'>";
+        // Add data-row-id attribute, original index, and click handler
+        $html .= "<tr class='data-row' data-row-id='$rowIndex' data-original-index='{$originalIndex}' tabindex='0' onclick='selectRow(this, \"$fileId\")' onkeydown='handleRowKeydown(event, this, \"$fileId\")'>";
         
         foreach ($row as $key => $cell) {
             $header = $headers[$key] ?? '';
-            // Skip Additional information column in the main table
-            if ($header !== 'Column8' && (!$hasAdditionalInfo || $header !== 'Additional information')) {
+            // Skip Column8 if present
+            if ($header !== 'Column8') {
                 $html .= "<td><div class='cell-content'>" . htmlspecialchars($cell) . "</div></td>";
             }
         }
         $html .= "</tr>";
+        $originalIndex++;
     }
     
     $html .= '</table>';
     
-    // If this is an AJAX refresh request and there's Additional information,
-    // add hidden data for the sidebar
-    if (isset($_POST['action']) && $_POST['action'] === 'refresh' && $hasAdditionalInfo && isset($_POST['fileId'])) {
-        $ajaxFileId = htmlspecialchars($_POST['fileId']);
-        $html .= "<div id='additional-data-$ajaxFileId' style='display:none;'>";
-        foreach ($data as $rowIndex => $row) {
-            if (isset($row['Additional information']) && !empty($row['Additional information'])) {
-                $html .= "<div data-row-id='$rowIndex'>" . htmlspecialchars($row['Additional information']) . "</div>";
-            }
+    // If Additional information exists, add the hidden container
+    if ($hasAdditionalInfo) {
+        // For direct table generation
+        $html .= "<div id='additional-data-$fileId' style='display:none;'>";
+        foreach ($additionalInfoData as $rowIndex => $infoText) {
+            $html .= "<div data-row-id='$rowIndex'>" . htmlspecialchars($infoText) . "</div>";
         }
         $html .= "</div>";
     }
+    
+    // If this is an AJAX refresh request and there's Additional information,
+    // the hidden data is already included above
     
     return $html;
 }
@@ -425,6 +451,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             transition: width 0.3s ease;
             width: 100%;
             max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
         
         /* Search container */
@@ -448,19 +477,58 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         
         .search-box {
             width: 100%;
-            padding: 12px 40px 12px 16px;
+            padding: 12px 70px 12px 16px; /* Increased right padding for buttons */
             font-size: 14px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
             transition: border-color 0.2s;
             background: white;
+            z-index: 1;
         }
         
         .search-box:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        
+        /* Clear search button */
+        .clear-search-button {
+            position: absolute;
+            right: 70px; /* Position left of search icon */
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            padding: 0 5px;
+            display: none; /* Hidden by default */
+            z-index: 2;
+        }
+        
+        .clear-search-button:hover {
+            color: #333;
+        }
+        
+        /* Reset filters button */
+        .reset-filters-button {
+            margin-left: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: none; /* Hidden by default */
+        }
+        
+        .reset-filters-button:hover {
+            background-color: #5a6268;
         }
         
         .search-icon {
@@ -476,6 +544,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         .search-stats {
             font-size: 12px;
             color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Container for stats and reset button */
+        .search-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 5px;
         }
         
@@ -516,11 +592,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         /* Table container hierarchy */
         .table-scroll-container {
             position: relative;
-            max-height: min(calc(70vh - 100px), 800px);
+            flex-grow: 1;
             overflow-y: auto;
             overflow-x: hidden;
             border-radius: 4px;
             margin-top: 10px;
+            min-height: 150px;
         }
         
         .table-container {
@@ -1043,7 +1120,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                             $hasContent = true;
                             
                             // Check if there's an Additional information column
-                            $hasAdditionalInfo = in_array('Additional information', $headers);
+                            $hasAdditionalInfo = array_search('Additional information', $headers) !== false;
                             $additionalInfoIndex = array_search('Additional information', $headers);
                             
                             echo "<div class='tab-content-layout'>";
@@ -1055,12 +1132,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                             echo "<div class='search-container'>";
                             echo "<div class='search-wrapper'>";
                             echo "<input type='text' class='search-box' placeholder='Search in this table...' onkeyup='searchTable(this, \"$id\")'>";
-                            // Swapped icon and button
+                            echo "<button class='clear-search-button' onclick='clearSearch(this, \"$id\")' title='Clear search'>×</button>"; // Clear button
                             echo "<button class='refresh-button' onclick='refreshTable(\"$id\")' title='Refresh data'>↻</button>"; 
                             echo "<div class='search-icon'>🔍</div>";
                             echo "<div class='refresh-status' id='refresh-status-$id'>Updated!</div>";
                             echo "</div>";
+                            echo "<div class='search-controls'>"; // Container for stats and reset button
                             echo "<div class='search-stats' id='search-stats-$id'></div>";
+                            echo "<button class='reset-filters-button' onclick='resetFilters(\"$id\")'>Reset Filters</button>"; // Reset button
+                            echo "</div>";
                             echo "</div>";
                             
                             // Moved description below search container
@@ -1088,15 +1168,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                                 echo "<div class='info-sidebar-content'>";
                                 echo "<p class='no-info-message'>Select a row to view additional information.</p>";
                                 echo "</div>";
-                                echo "</div>";
-                                
-                                // Add hidden data for JavaScript
-                                echo "<div id='additional-data-$id' style='display:none;'>";
-                                foreach ($data as $rowIndex => $row) {
-                                    if (isset($row['Additional information']) && !empty($row['Additional information'])) {
-                                        echo "<div data-row-id='$rowIndex'>" . htmlspecialchars($row['Additional information']) . "</div>";
-                                    }
-                                }
                                 echo "</div>";
                             }
                             
@@ -1241,9 +1312,31 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             const searchText = input.value.toLowerCase();
             const tableContent = document.getElementById(tableId);
             const rows = tableContent.getElementsByTagName('tr');
+            const sectionRows = tableContent.querySelectorAll('.section-row');
             const noResults = tableContent.querySelector('.no-results');
+            const clearButton = input.parentElement.querySelector('.clear-search-button');
+            const resetButton = tableContent.closest('.tab-content').querySelector('.reset-filters-button');
+            const headers = tableContent.querySelectorAll('th');
             let visibleCount = 0;
             let totalDataRows = 0;
+            
+            // Check if any sorting is active
+            let isSortingActive = false;
+            headers.forEach(th => {
+                if (th.classList.contains('sort-asc') || th.classList.contains('sort-desc')) {
+                    isSortingActive = true;
+                }
+            });
+
+            // Show/hide clear button
+            if (clearButton) {
+                clearButton.style.display = searchText ? 'block' : 'none';
+            }
+            
+            // Show/hide reset button (if search OR sorting is active)
+            if (resetButton) {
+                resetButton.style.display = (searchText || isSortingActive) ? 'inline-block' : 'none';
+            }
             
             // Remove existing highlights
             const highlighted = tableContent.getElementsByClassName('highlight');
@@ -1264,10 +1357,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                 }
             }
             
+            // Handle section row visibility
+            sectionRows.forEach(row => {
+                row.style.display = searchText ? 'none' : ''; // Hide if searching, show if not
+            });
+            
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 
-                // Skip header row and section headers
+                // Skip header row (already handled section rows)
                 if (row.classList.contains('header-row') || row.classList.contains('section-row')) {
                     continue;
                 }
@@ -1294,7 +1392,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                             found = true;
                             // Highlight matching text
                             cell.innerHTML = cell.textContent.replace(
-                                new RegExp(searchText, 'gi'),
+                                new RegExp(searchText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi'), // Escape regex special chars
                                 match => `<span class="highlight">${match}</span>`
                             );
                         }
@@ -1309,13 +1407,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                 }
             }
             
-            // Update search stats
-            const statsElement = document.getElementById(`search-stats-${tableId}`);
-            if (searchText) {
-                statsElement.textContent = `Showing ${visibleCount} of ${totalDataRows} entries`;
-            } else {
-                statsElement.textContent = '';
-            }
+            // Update search stats using the refactored function
+            updateSearchStats(tableId);
             
             // Show/hide no results message
             if (visibleCount === 0 && searchText !== '') {
@@ -1323,6 +1416,80 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             } else {
                 noResults.style.display = 'none';
             }
+        }
+
+        // Function to clear search input
+        function clearSearch(button, tableId) {
+            const input = button.parentElement.querySelector('.search-box');
+            input.value = '';
+            searchTable(input, tableId);
+            input.focus(); // Keep focus on the search box
+        }
+
+        // Function to reset filters (clears search and column sorting)
+        function resetFilters(tableId) {
+            const tableContent = document.getElementById(tableId);
+            const searchInput = tableContent.querySelector('.search-box');
+            const table = tableContent.querySelector('.data-table');
+            const headers = tableContent.querySelectorAll('th');
+            const resetButton = tableContent.querySelector('.reset-filters-button');
+
+            let filtersWereActive = false;
+
+            // 1. Clear search if active
+            if (searchInput.value) {
+                searchInput.value = '';
+                searchTable(searchInput, tableId); // Calls updateSearchStats, hides button if needed
+                filtersWereActive = true;
+            }
+
+            // 2. Reset column sorting if active
+            let sortWasActive = false;
+            headers.forEach(th => {
+                if (th.classList.contains('sort-asc') || th.classList.contains('sort-desc')) {
+                    sortWasActive = true;
+                    th.classList.remove('sort-asc', 'sort-desc');
+                }
+            });
+
+            if (sortWasActive) {
+                filtersWereActive = true;
+                // Restore original row order using data-original-index
+                const tbody = table.querySelector('tbody') || table;
+                // Select ALL rows within tbody that have the attribute, including section headers
+                const allRows = Array.from(tbody.querySelectorAll('tr[data-original-index]'));
+                
+                const originalRows = allRows.sort((a, b) => {
+                    const indexA = parseInt(a.getAttribute('data-original-index'));
+                    const indexB = parseInt(b.getAttribute('data-original-index'));
+                    return indexA - indexB;
+                });
+                
+                // Reappend ALL rows in original order
+                originalRows.forEach(row => tbody.appendChild(row));
+            }
+
+            // Hide the reset button ONLY if no filters are active anymore
+            if (!filtersWereActive && !searchInput.value) {
+                let isAnySortActive = false;
+                headers.forEach(th => {
+                    if (th.classList.contains('sort-asc') || th.classList.contains('sort-desc')) {
+                         isAnySortActive = true;
+                    }
+                });
+                if (!isAnySortActive && resetButton) {
+                     resetButton.style.display = 'none';
+                }
+            }
+            
+            // Also ensure section rows are visible if they were hidden by search/sort
+            const sectionRows = tableContent.querySelectorAll('.section-row');
+             sectionRows.forEach(row => {
+                row.style.display = ''; 
+            });
+
+            // Final stats update after potential changes
+            updateSearchStats(tableId);
         }
 
         // Show/hide scroll hint based on table width
@@ -1497,27 +1664,40 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         // Column sorting functionality
         function sortTable(th, tableId) {
             const table = th.closest('table');
+            const tableContent = th.closest('.tab-content');
             const tbody = table.querySelector('tbody') || table;
             const rows = Array.from(tbody.querySelectorAll('tr.data-row'));
+            const sectionRows = tableContent.querySelectorAll('.section-row');
             const headerRow = table.querySelector('tr.header-row');
             const headers = Array.from(headerRow.querySelectorAll('th'));
             const columnIndex = headers.indexOf(th);
+            const resetButton = tableContent.querySelector('.reset-filters-button'); // Find reset button
+            const searchInput = tableContent.querySelector('.search-box');
             
             // Toggle sort direction
             let sortDirection = 1;
+            let sortApplied = false;
             if (th.classList.contains('sort-asc')) {
                 th.classList.remove('sort-asc');
                 th.classList.add('sort-desc');
                 sortDirection = -1;
+                sortApplied = true;
             } else if (th.classList.contains('sort-desc')) {
                 th.classList.remove('sort-desc');
                 sortDirection = 0;
+                // Sort is removed, button visibility handled below
             } else {
                 // Remove sort classes from all headers
                 headers.forEach(header => {
                     header.classList.remove('sort-asc', 'sort-desc');
                 });
                 th.classList.add('sort-asc');
+                sortApplied = true;
+            }
+
+            // Hide section rows if sorting is applied
+            if (sortApplied) {
+                 sectionRows.forEach(row => row.style.display = 'none');
             }
             
             // If direction is 0, restore original order
@@ -1528,6 +1708,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                 
                 // Reappend rows in original order
                 originalRows.forEach(row => tbody.appendChild(row));
+
+                // Show section rows ONLY if search is also inactive
+                if (!searchInput.value) {
+                    sectionRows.forEach(row => row.style.display = ''); 
+                }
+
+                // Check if reset button should still be visible (if search is active)
+                 if (resetButton && !searchInput.value) {
+                     resetButton.style.display = 'none';
+                 }
+                 updateSearchStats(tableId); // Update stats text
                 return;
             }
             
@@ -1549,61 +1740,49 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             
             // Reappend in sorted order
             sortedRows.forEach(row => tbody.appendChild(row));
+
+            // Show the reset button if sort was applied
+            if (sortApplied && resetButton) {
+                resetButton.style.display = 'inline-block';
+            }
+            updateSearchStats(tableId); // Update stats text after sorting
         }
-        
-        // Add click handlers to all table headers
-        document.addEventListener('DOMContentLoaded', function() {
-            const headerCells = document.querySelectorAll('th');
-            headerCells.forEach(th => {
-                th.addEventListener('click', function() {
-                    const tableId = th.closest('.tab-content').id;
-                    sortTable(th, tableId);
-                });
-            });
+
+        // Refactored function to update search stats text
+        function updateSearchStats(tableId) {
+            const tableContent = document.getElementById(tableId);
+            if (!tableContent) return; // Exit if table content doesn't exist
+            const searchInput = tableContent.querySelector('.search-box');
+            const statsElement = document.getElementById(`search-stats-${tableId}`);
+            if (!statsElement) return; // Exit if stats element doesn't exist
             
-            // Add keyboard navigation for row selection
-            const tables = document.querySelectorAll('.table-container table');
-            tables.forEach(table => {
-                table.addEventListener('keydown', function(e) {
-                    const tableId = table.closest('.tab-content').id;
-                    const selectedRow = table.querySelector('.selected-row');
-                    let nextRow;
-                    
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        if (selectedRow) {
-                            nextRow = selectedRow.nextElementSibling;
-                            while (nextRow && !nextRow.classList.contains('data-row')) {
-                                nextRow = nextRow.nextElementSibling;
-                            }
-                        } else {
-                            nextRow = table.querySelector('.data-row');
-                        }
-                        
-                        if (nextRow) {
-                            selectRow(nextRow, tableId);
-                            nextRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        if (selectedRow) {
-                            nextRow = selectedRow.previousElementSibling;
-                            while (nextRow && !nextRow.classList.contains('data-row')) {
-                                nextRow = nextRow.previousElementSibling;
-                            }
-                        } else {
-                            const rows = table.querySelectorAll('.data-row');
-                            nextRow = rows[rows.length - 1];
-                        }
-                        
-                        if (nextRow) {
-                            selectRow(nextRow, tableId);
-                            nextRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    }
-                });
+            const headers = tableContent.querySelectorAll('th');
+            const dataRows = tableContent.querySelectorAll('.data-row:not([style*="display: none"])');
+            const totalDataRows = tableContent.querySelectorAll('.data-row').length;
+            const visibleCount = dataRows.length;
+
+            let isSortingActive = false;
+            headers.forEach(th => {
+                if (th.classList.contains('sort-asc') || th.classList.contains('sort-desc')) {
+                    isSortingActive = true;
+                }
             });
-        });
+
+            const searchText = searchInput ? searchInput.value : '';
+            let statsText = '';
+
+            if (searchText || isSortingActive) {
+                statsText = `Showing ${visibleCount} of ${totalDataRows} entries`;
+                // Append (Sections hidden) if either search or sort is active
+                if (searchText || isSortingActive) { 
+                     statsText += ` (Sections hidden)`;
+                }
+            } 
+            
+            if (statsElement) {
+                 statsElement.textContent = statsText;
+            }
+        }
     </script>
 </body>
 </html> 
