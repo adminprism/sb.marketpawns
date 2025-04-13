@@ -161,6 +161,7 @@
                 <li><a href="/infobase/tables.php">Infobase</a></li>
                 <li><a href="https://marketpawns.com">Marketpawns</a></li>
                 <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
+                <li><a href="https://github.com/adminprism/Sandbox" target="_blank">GitHub</a></li>
                 <!-- <li data-bs-toggle="modal" data-bs-target="#registerModal"><a href="#">Register</a></li>
                     <li data-bs-toggle="modal" data-bs-target="#signinModal"><a href="#">Sign in</a></li> -->
             </ul>

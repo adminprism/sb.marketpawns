@@ -15,6 +15,45 @@ function readCSV($file) {
         return array(array(), array());
     }
 
+    $fileName = basename($file);
+    
+    // Special handling for Legend.csv to prevent comma issues in definitions
+    if ($fileName === 'Legend.csv') {
+        // Use a custom approach for Legend.csv
+        $content = file_get_contents($file);
+        $lines = explode("\n", $content);
+        
+        if (empty($lines)) {
+            return array(array(), array());
+        }
+        
+        // Process header (first line)
+        $headers = array_map('trim', explode(',', $lines[0], 2));
+        
+        // Process data rows
+        $csv = [];
+        for ($i = 1; $i < count($lines); $i++) {
+            $line = trim($lines[$i]);
+            if (empty($line)) continue;
+            
+            // Split only at the first comma to separate Term from Definition
+            $parts = explode(',', $line, 2);
+            if (count($parts) < 2) {
+                $parts[] = ''; // Add empty definition if missing
+            }
+            
+            $term = trim($parts[0]);
+            $definition = trim($parts[1]);
+            
+            if (!empty($term)) {
+                $csv[] = array_combine($headers, [$term, $definition]);
+            }
+        }
+        
+        return array($headers, $csv);
+    }
+    
+    // Regular handling for other CSV files
     $delimiter = detectDelimiter($file);
     
     // Use fgetcsv instead of array_map for better handling of quoted fields and spaces
@@ -159,7 +198,13 @@ function getTableHtml($headers, $data, $fileId = '') {
         }
     }
     
-    $html = '<table tabindex="0" class="data-table" aria-label="Data table for ' . htmlspecialchars($fileId) . '">';
+    $tableClass = "data-table";
+    // Add specific ID for Legend table
+    if ($fileId === 'legend') {
+        $tableClass .= " legend-table";
+    }
+    
+    $html = '<table id="' . $fileId . '-table" tabindex="0" class="' . $tableClass . '" aria-label="Data table for ' . htmlspecialchars($fileId) . '">';
     
     // Headers - now without Additional information
     $html .= "<tr class='header-row'>";
@@ -1068,6 +1113,22 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                 transform: translateX(200%);
             }
         }
+
+        /* Legend table specific styling */
+        table.legend-table th:nth-child(1),
+        table.legend-table td:nth-child(1) {
+            width: 25%; /* Term column - narrower */
+        }
+        
+        table.legend-table th:nth-child(2),
+        table.legend-table td:nth-child(2) {
+            width: 75%; /* Definition column - wider */
+        }
+
+        /* If we need to adjust cell content specifically for Legend table */
+        table.legend-table .cell-content {
+            padding-right: 15px; /* Add some padding in the definition column */
+        }
     </style>
 </head>
 <body>
@@ -1081,6 +1142,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                 <li><a href="/index.php">Home</a></li>
                 <li><a href="https://marketpawns.com">Marketpawns</a></li>
                 <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
+                <li><a href="https://github.com/adminprism/Sandbox" target="_blank">GitHub</a></li>
             </ul>
         </div>
     </header>
