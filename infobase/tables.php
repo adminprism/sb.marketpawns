@@ -594,14 +594,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             position: relative;
             flex-grow: 1;
             overflow-y: auto;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             border-radius: 4px;
             margin-top: 10px;
             min-height: 150px;
         }
         
         .table-container {
-            overflow-x: auto;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             border-radius: 4px;
             border: 1px solid #dee2e6;
             position: relative;
@@ -626,7 +626,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             border-collapse: collapse;
             margin-bottom: 0;
             font-size: 14px;
-            table-layout: auto;
+            table-layout: fixed; /* Fixed layout ensures columns maintain widths */
         }
         
         th {
@@ -638,10 +638,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             text-align: left;
             border-bottom: 2px solid #dee2e6;
             font-weight: 600;
-            white-space: nowrap;
+            white-space: normal; /* Allow header text to wrap */
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             transition: background-color 0.2s;
             cursor: pointer;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         th:hover {
@@ -671,10 +673,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             padding: 8px 12px;
             text-align: left;
             border-bottom: 1px solid #eee;
-            min-width: 120px;
             vertical-align: top;
             white-space: normal;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .cell-content {
@@ -682,8 +684,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             word-wrap: break-word;
             word-break: normal;
             overflow-wrap: break-word;
-            max-width: 300px;
-            min-width: 100px;
+            max-width: none; /* Allow content to use full width of cell */
+            min-width: 0; /* Remove minimum width constraint */
         }
         
         tr {
