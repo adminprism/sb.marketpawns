@@ -216,13 +216,25 @@ function getTableHtml($headers, $data, $fileId = '') {
     }
     $html .= "</tr>";
     
+    // Extract sections for navigation
+    $sections = [];
+    $sectionIndex = 0;
+    
     // Data rows - Add original index tracking
     $originalIndex = 0;
     foreach ($data as $rowIndex => $row) {
         $firstCell = reset($row);
         if (strpos($firstCell, '//') === 0) {
-            $html .= "<tr class='section-row' data-original-index='{$originalIndex}'><td colspan='" . count($headers) . "' class='section-header'>" . 
-                     htmlspecialchars(trim($firstCell, '/ ')) . "</td></tr>";
+            $sectionName = trim($firstCell, '/ ');
+            $sectionId = 'section-' . $fileId . '-' . $sectionIndex;
+            $sections[] = [
+                'name' => $sectionName,
+                'id' => $sectionId
+            ];
+            $sectionIndex++;
+            
+            $html .= "<tr class='section-row' id='$sectionId' data-original-index='{$originalIndex}'><td colspan='" . count($headers) . "' class='section-header'>" . 
+                     htmlspecialchars($sectionName) . "</td></tr>";
             $originalIndex++;
             continue;
         }
@@ -247,6 +259,16 @@ function getTableHtml($headers, $data, $fileId = '') {
     
     $html .= '</table>';
     
+    // Store the sections data for JS
+    if (!empty($sections)) {
+        $html .= "<script>
+            if (typeof tableSections === 'undefined') {
+                var tableSections = {};
+            }
+            tableSections['$fileId'] = " . json_encode($sections) . ";
+        </script>";
+    }
+    
     // If Additional information exists, add the hidden container
     if ($hasAdditionalInfo) {
         // For direct table generation
@@ -256,9 +278,6 @@ function getTableHtml($headers, $data, $fileId = '') {
         }
         $html .= "</div>";
     }
-    
-    // If this is an AJAX refresh request and there's Additional information,
-    // the hidden data is already included above
     
     return $html;
 }
@@ -329,12 +348,25 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/mobile.css">
     <style>
+        /* Brand colors */
+        :root {
+            --brand-blue: #282978;
+            --brand-gold: #D4B96C;
+            --brand-blue-light: #3A3B8C;
+            --brand-blue-lighter: #E3E3F0;
+            --brand-gold-light: #E5D6A8;
+            --brand-gold-dark: #B79C49;
+            --text-dark: #222233;
+            --text-light: #FFFFFF;
+            --background-light: #F8F9FA;
+        }
+
         body {
             font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color, #f8fafc);
-            color: var(--text-color, #1f2937);
+            background-color: var(--background-light, #f8fafc);
+            color: var(--text-dark, #1f2937);
             line-height: 1.5;
             display: flex;
             flex-direction: column;
@@ -457,15 +489,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         }
         
         .tab:hover {
-            background: #e9ecef; /* Slightly darker grey on hover */
-            color: #495057;
+            background: var(--brand-blue-lighter);
+            color: var(--brand-blue);
         }
         
         .tab.active {
             background: #ffffff; /* White background for active */
-            color: #212529; /* Black text for active */
+            color: var(--brand-blue);
             font-weight: 600; /* Bolder text for active */
-            border-bottom: 3px solid #495057; /* Dark grey bottom border */
+            border-bottom: 3px solid var(--brand-gold); /* Brand gold bottom border */
             position: relative;
             z-index: 2;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.08);
@@ -534,8 +566,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         
         .search-box:focus {
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 2px rgba(40, 41, 120, 0.25);
         }
         
         /* Clear search button */
@@ -563,7 +595,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             margin-left: 10px;
             padding: 6px 12px;
             font-size: 12px;
-            background-color: #6c757d;
+            background-color: var(--brand-blue);
             color: white;
             border: none;
             border-radius: 4px;
@@ -573,7 +605,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         }
         
         .reset-filters-button:hover {
-            background-color: #5a6268;
+            background-color: var(--brand-blue-light);
         }
         
         .search-icon {
@@ -681,7 +713,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             background: #f8f9fa;
             padding: 12px;
             text-align: left;
-            border-bottom: 2px solid #dee2e6;
+            border-bottom: 2px solid var(--brand-gold);
             font-weight: 600;
             white-space: normal; /* Allow header text to wrap */
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -692,7 +724,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         }
         
         th:hover {
-            background-color: #e9ecef;
+            background-color: var(--brand-blue-lighter);
         }
         
         th::after {
@@ -706,12 +738,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         
         th.sort-asc::after {
             content: '↑';
-            color: #007bff;
+            color: var(--brand-blue);
         }
         
         th.sort-desc::after {
             content: '↓';
-            color: #007bff;
+            color: var(--brand-blue);
         }
         
         td {
@@ -750,9 +782,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         }
         
         tr.selected-row {
-            background-color: #e9f5ff !important;
-            border-left: 3px solid #007bff;
-            box-shadow: 0 1px 3px rgba(0,123,255,0.2);
+            background-color: var(--brand-blue-lighter) !important;
+            border-left: 3px solid var(--brand-blue);
+            box-shadow: 0 1px 3px rgba(40, 41, 120, 0.2);
         }
         
         tr.hidden {
@@ -1039,7 +1071,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             right: 20px;
             width: 40px;
             height: 40px;
-            background-color: #007bff;
+            background-color: var(--brand-blue);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -1059,7 +1091,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         }
         
         .back-to-top:hover {
-            background-color: #0056b3;
+            background-color: var(--brand-blue-light);
         }
         
         /* Subtle pattern background */
@@ -1068,8 +1100,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color, #f8fafc);
-            color: var(--text-color, #1f2937);
+            background-color: var(--background-light, #f8fafc);
+            color: var(--text-dark, #1f2937);
             line-height: 1.5;
             display: flex;
             flex-direction: column;
@@ -1129,6 +1161,230 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
         table.legend-table .cell-content {
             padding-right: 15px; /* Add some padding in the definition column */
         }
+
+        /* Section styling */
+        .section-header {
+            color: #0056b3;
+            font-weight: 600;
+            padding: 8px 0;
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        /* Enhanced section header styling */
+        tr.section-row {
+            background-color: var(--brand-blue-lighter) !important;
+            border-left: 3px solid var(--brand-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        tr.section-row td.section-header {
+            color: var(--brand-blue);
+            font-weight: 700;
+            padding: 12px 15px;
+            font-size: 15px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            background-image: linear-gradient(to right, var(--brand-blue-lighter), #ffffff);
+            position: relative;
+        }
+        
+        tr.section-row td.section-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, var(--brand-blue), transparent);
+        }
+        
+        tr.section-row td.section-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, var(--brand-blue), transparent);
+        }
+
+        /* Sections navigation sidebar */
+        .sections-nav {
+            width: 220px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            margin-right: 22px;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .sections-nav::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sections-nav::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .sections-nav::-webkit-scrollbar-thumb {
+            background: #c5d1e0;
+            border-radius: 4px;
+        }
+
+        .sections-nav::-webkit-scrollbar-thumb:hover {
+            background: #a3b5cb;
+        }
+
+        .sections-nav-title {
+            font-weight: 700;
+            font-size: 15px;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            border-bottom: 2px solid var(--brand-gold);
+            color: var(--brand-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+        }
+
+        .sections-nav-title::before {
+            content: "📑";
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .sections-nav-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sections-nav-item {
+            padding: 9px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border-left: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sections-nav-item:hover {
+            color: var(--brand-blue);
+            background-color: var(--brand-blue-lighter);
+            border-left-color: var(--brand-blue-light);
+            padding-left: 14px;
+            box-shadow: 0 2px 5px rgba(40, 41, 120, 0.1);
+        }
+
+        .sections-nav-item.active {
+            color: var(--brand-blue);
+            font-weight: 600;
+            background-color: var(--brand-blue-lighter);
+            border-left: 2px solid var(--brand-blue);
+            padding-left: 14px;
+            box-shadow: 0 2px 5px rgba(40, 41, 120, 0.1);
+        }
+
+        .sections-nav-item::after {
+            content: "→";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .sections-nav-item:hover::after {
+            opacity: 1;
+            transform: translate(2px, -50%);
+        }
+
+        .sections-nav-item.active::after {
+            opacity: 1;
+            transform: translate(2px, -50%);
+        }
+
+        /* Only show sections navigation if there are sections */
+        .sections-nav.empty {
+            display: none;
+        }
+
+        /* Table container adjustments for when sections nav is visible */
+        .with-sections-nav {
+            display: flex;
+        }
+
+        @media screen and (max-width: 991px) {
+            .sections-nav {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 18px;
+                position: relative;
+                top: 0;
+                max-height: 220px;
+                border-radius: 6px;
+            }
+            
+            .with-sections-nav {
+                flex-direction: column;
+            }
+            
+            .sections-nav-item {
+                padding: 10px 12px;
+                margin-bottom: 4px;
+            }
+        }
+
+        /* Add highlight effect for sections */
+        .highlight-section {
+            animation: highlight-section-animation 2s ease-out;
+            position: relative;
+        }
+
+        @keyframes highlight-section-animation {
+            0% {
+                background-color: rgba(40, 41, 120, 0.2);
+            }
+            100% {
+                background-color: transparent;
+            }
+        }
+
+        .highlight-section::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 41, 120, 0.1);
+            animation: pulse 2s ease-out;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1187,7 +1443,24 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                             $hasAdditionalInfo = array_search('Additional information', $headers) !== false;
                             $additionalInfoIndex = array_search('Additional information', $headers);
                             
-                            echo "<div class='tab-content-layout'>";
+                            // Count sections to determine if we need section navigation
+                            $sectionCount = 0;
+                            foreach ($data as $row) {
+                                $firstCell = reset($row);
+                                if (strpos($firstCell, '//') === 0) {
+                                    $sectionCount++;
+                                }
+                            }
+                            
+                            echo "<div class='tab-content-layout" . ($sectionCount > 0 ? " with-sections-nav" : "") . "'>";
+                            
+                            // Add sections navigation if we have sections
+                            if ($sectionCount > 0) {
+                                echo "<div id='sections-nav-$id' class='sections-nav'>";
+                                echo "<div class='sections-nav-title'>Jump to Section</div>";
+                                echo "<ul class='sections-nav-list' id='sections-list-$id'></ul>";
+                                echo "</div>";
+                            }
                             
                             // Main table container
                             echo "<div class='table-main-container'>";
@@ -1847,6 +2120,102 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                  statsElement.textContent = statsText;
             }
         }
+
+        // Initialize section navigation
+        function initSectionsNav() {
+            if (typeof tableSections === 'undefined') return;
+            
+            for (const tableId in tableSections) {
+                const sections = tableSections[tableId];
+                const navListElement = document.getElementById(`sections-list-${tableId}`);
+                
+                if (!navListElement || sections.length === 0) continue;
+                
+                // Clear existing items
+                navListElement.innerHTML = '';
+                
+                // Create list items for each section
+                sections.forEach((section, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'sections-nav-item';
+                    li.textContent = section.name;
+                    li.dataset.sectionId = section.id;
+                    
+                    li.addEventListener('click', function() {
+                        navigateToSection(tableId, section.id);
+                    });
+                    
+                    navListElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Navigate to specific section
+        function navigateToSection(tableId, sectionId) {
+            const sectionElement = document.getElementById(sectionId);
+            if (!sectionElement) return;
+            
+            // Remove active class from all section items in this table
+            const items = document.querySelectorAll(`#sections-list-${tableId} .sections-nav-item`);
+            items.forEach(item => item.classList.remove('active'));
+            
+            // Add active class to the clicked item
+            const clickedItem = document.querySelector(`#sections-list-${tableId} [data-section-id="${sectionId}"]`);
+            if (clickedItem) clickedItem.classList.add('active');
+            
+            // Calculate position, accounting for sticky headers
+            const headerHeight = document.querySelector('.search-container').offsetHeight || 0;
+            const sectionRect = sectionElement.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetPosition = scrollTop + sectionRect.top - headerHeight - 15;
+            
+            // Add highlight effect to the section
+            sectionElement.classList.add('highlight-section');
+            setTimeout(() => {
+                sectionElement.classList.remove('highlight-section');
+            }, 2000);
+            
+            // Scroll to section with smooth animation
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // Also scroll the table's scroll container if needed
+            const tableContainer = document.querySelector(`#${tableId} .table-scroll-container`);
+            if (tableContainer) {
+                tableContainer.scrollTo({
+                    top: sectionElement.offsetTop - headerHeight - 15,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        // Call this function when tabs are switched or when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initSectionsNav();
+        });
+        
+        // Update sections nav when tab is changed
+        const openTabOriginal = openTab;
+        openTab = function(evt, tabName) {
+            openTabOriginal(evt, tabName);
+            // Initialize section navigation after tab switch
+            setTimeout(initSectionsNav, 100);
+        };
+        
+        // Refresh sections navigation when data is refreshed
+        const refreshTableOriginal = refreshTable;
+        refreshTable = function(tableId) {
+            const result = refreshTableOriginal(tableId);
+            
+            // Re-initialize sections navigation after refresh
+            setTimeout(() => {
+                initSectionsNav();
+            }, 1000);
+            
+            return result;
+        };
     </script>
 </body>
 </html> 
