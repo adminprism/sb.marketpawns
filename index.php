@@ -18,6 +18,35 @@
     </script>
     <title>sandbox</title>
     <style>
+        :root {
+            --brand-dark-blue: #1A237E;
+            --brand-dark-blue-hover: #283593;
+            --brand-gold: #C4A66A;
+            --brand-gold-highlight: #FFF8E1;
+            --brand-blue-light-bg: #E8EAF6;
+            --text-primary: #1A237E;
+            --text-secondary: #4A5568;
+            --text-light: #64748b;
+            --border-color: #E2E8F0;
+            --border-light: #edf2f7;
+            --background-main: #f8fafc;
+            --background-alt: #f0f5fa;
+            --background-content: #ffffff;
+        }
+        
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-main);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e6ecf5' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
         .grid-container {
             display: grid;
             grid-template-columns: 375px 1fr;
@@ -43,8 +72,71 @@
 
             .params-area {
                 border-right: none;
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid var(--border-color);
             }
+        }
+
+        .header {
+            width: 100%;
+            min-height: 60px;
+            background-color: var(--background-content);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header .container_header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-left: 0px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        
+        .nav-right {
+            display: flex;
+            font-size: 12px;
+            line-height: 14px;
+            color: var(--text-primary);
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-right li {
+            padding-top: 5px;
+            padding-right: 15px;
+            list-style-type: none;
+        }
+        
+        .nav-right li:not(:first-child) {
+            padding-left: 15px;
+            padding-bottom: 5px;
+        }
+        
+        .nav-right li:not(:last-child) {
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .nav-right li:hover {
+            font-weight: 500;
+            font-size-adjust: 0.6;
+            color: var(--brand-dark-blue-hover);
+        }
+        
+        .nav-right li a {
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .nav-right li a:hover {
+            color: var(--brand-dark-blue-hover);
         }
 
         .header-area {
@@ -54,19 +146,23 @@
         .params-area {
             grid-area: params;
             padding: 10px;
-            border-right: 1px solid #ccc;
-            background-color: #f5f5f5;
+            border-right: 1px solid var(--border-color);
+            background-color: var(--background-content);
             overflow-y: auto;
-            /* Обеспечивает продление до нижнего края графика */
             height: 100%;
             min-height: 100%;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 8px;
         }
 
         .datasource-area {
             grid-area: datasource;
             padding: 10px;
+            background-color: var(--background-content);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .maincontent-area {
@@ -74,6 +170,9 @@
             padding: 10px;
             display: flex;
             flex-direction: column;
+            background-color: var(--background-content);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .desk {
@@ -85,44 +184,71 @@
         #canvas-wrapper {
             width: 100%;
             flex-grow: 1;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
         }
         
         .sticky-buttons {
             position: sticky;
             top: 10px;
-            background-color: #f5f5f5;
+            background-color: var(--background-content);
             padding: 10px 0;
             z-index: 10;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-light);
         }
         
         .build-btn {
             margin-bottom: 5px;
             width: 100%;
+            padding: 10px;
+            background-color: var(--brand-dark-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(26, 35, 126, 0.25);
+        }
+        
+        .build-btn:hover {
+            background-color: var(--brand-dark-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(26, 35, 126, 0.3);
         }
         
         .log-btn {
             margin-top: 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 5px 10px;
+            background-color: var(--background-alt);
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
             cursor: pointer;
             width: 100%;
+            border-radius: 5px;
+            transition: all 0.25s;
+            font-size: 14px;
+        }
+        
+        .log-btn:hover {
+            background-color: var(--brand-blue-light-bg);
+            border-color: var(--brand-dark-blue);
         }
         
         .params-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            background-color: var(--background-content);
         }
         
         .params-table td {
-            padding: 4px;
-            border-bottom: 1px solid #eee;
+            padding: 8px;
+            border-bottom: 1px solid var(--border-light);
         }
         
         .params-table tr:nth-child(even) {
-            background-color: #f0f0f0;
+            background-color: var(--background-alt);
         }
         
         #right-block {
@@ -143,6 +269,237 @@
         #model-info-table {
             flex-grow: 1;
         }
+        
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        
+        select, input[type="text"] {
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--brand-dark-blue);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.15);
+        }
+        
+        button {
+            background-color: var(--brand-dark-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: var(--brand-dark-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(26, 35, 126, 0.3);
+        }
+        
+        .next-prev-model-btns {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        #source-switch, #showSwitch {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: var(--background-alt);
+            border-radius: 4px;
+        }
+        
+        #active-bar {
+            font-weight: bold;
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 4px;
+            background-color: var(--brand-blue-light-bg);
+            margin-bottom: 10px;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-light);
+            margin: 10px 0;
+        }
+        
+        .scroll-bar-container {
+            width: 100%;
+            padding: 10px 0;
+        }
+        
+        #scroll-bar {
+            width: 100%;
+            height: 10px;
+        }
+        
+        #bar-info, #debug {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--background-alt);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .dop-info {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--background-alt);
+            border-radius: 4px;
+        }
+        
+        .parent_wait {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+        }
+        
+        .block_wait {
+            background-color: var(--background-content);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        #loader-text {
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+        }
+        
+        /* Custom styling for canvas and visualizations */
+        #graph-cover, #line-g, #line-v, #last-price, #point-price, #from-to-text, #candle-info {
+            position: absolute;
+            pointer-events: none;
+        }
+        
+        #source-forex, #source-saves, #source-mysql {
+            padding: 10px;
+            background-color: var(--background-alt);
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        @media screen and (max-width: 991px) {
+            .header .container_header {
+                padding: 0 15px;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-right {
+                margin: 10px 0;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .logo {
+                margin: 10px 0;
+            }
+            
+            .logo img {
+                max-width: 150px;
+                height: auto;
+            }
+            
+            button, .build-btn, .log-btn {
+                font-size: 13px;
+                padding: 7px 10px;
+            }
+            
+            .next-prev-model-btns {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+        
+        /* Additional CSS for new components */
+        .form-group {
+            margin-bottom: 10px;
+        }
+        
+        .form-group label {
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .button-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .content-description {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: var(--brand-blue-light-bg);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-message {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .footer {
+            background-color: var(--background-content);
+            border-top: 1px solid var(--border-color);
+            padding: 15px 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: auto;
+        }
+        
+        .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        h3 {
+            font-size: 16px;
+            color: var(--text-primary);
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -153,20 +510,17 @@
     <header class="header header-area">
         <div class="container_header">
             <a class="logo" href="#">
-                <!-- <img src="/public/images/logo.png" alt="" /> -->
-                <img src="/public/images/SANDBOX.png" alt="" />
+                <img src="/public/images/SANDBOX.png" alt="Sandbox" />
             </a>
 
             <ul class="nav-right">
+                <li><a href="index.php">Home</a></li>
                 <li><a href="/infobase/tables.php">Infobase</a></li>
                 <li><a href="https://marketpawns.com">Marketpawns</a></li>
                 <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
                 <li><a href="https://github.com/adminprism/Sandbox" target="_blank">GitHub</a></li>
-                <!-- <li data-bs-toggle="modal" data-bs-target="#registerModal"><a href="#">Register</a></li>
-                    <li data-bs-toggle="modal" data-bs-target="#signinModal"><a href="#">Sign in</a></li> -->
             </ul>
         </div>
-
     </header>
     <!-- <div id='mB1' class='moving-box'>
         <p class='moving-box-title'>Information</p>
@@ -206,7 +560,6 @@
             <div class="sticky-buttons">
                 <button class="build-btn" onclick="build_models(1)">Calculate Algorythm_1 models</button>
                 <button class="build-btn" onclick="build_models(2)">Calculate Algorythm_2 models</button>
-                <!-- Новая кнопка для открытия лога -->
                 <button class="log-btn" onclick="openDebugLog()">Open Log</button>
             </div>
             
@@ -221,31 +574,35 @@
 
     <!-- DATA SOURCE AREA -->
     <div class="datasource-area">
-        <div id="source-switch">Data source:&nbsp&nbsp&nbsp
+        <div id="source-switch">
+            <h3>Data source:</h3>
             <form id="form-source">
-                <input id="rb-forex" type="radio" name="source" value="1" onclick="changeSource('forex')"> FOREX data (Finam) online&nbsp&nbsp</input>
-                <input id="rb-saves" type="radio" name="source" value="2" checked onclick="changeSource('saves')"> Alpari saved charts&nbsp&nbsp&nbsp</input>
-                <input id="rb-mysql" type="radio" name="source" value="2" onclick="changeSource('mysql')"><span id="rb-mysql-label"> Models and charts from MySql DB&nbsp&nbsp&nbsp&nbsp&nbsp</span></input>
+                <input id="rb-forex" type="radio" name="source" value="1" onclick="changeSource('forex')"> FOREX data (Finam) online</input>
+                <input id="rb-saves" type="radio" name="source" value="2" checked onclick="changeSource('saves')"> Alpari saved charts</input>
+                <input id="rb-mysql" type="radio" name="source" value="2" onclick="changeSource('mysql')"><span id="rb-mysql-label"> Models and charts from MySql DB</span></input>
             </form>
             <input id="chk-active-only" type="checkbox" name="source" value="active_only" checked onclick="changeChkActiveMOdelsOnly()"> For unselected models, show only t.1</input>
         </div>
         <hr />
         <div id="source-forex">
-            Timeframe:
-            <select id="select-interval" name="interval" size="1">
-                <option value="test1" selected>test1</option>
-                <option value="test2">test2</option>
-                <-- filled in by the script in Ready-->
-            </select>
-            Trading tool:
-            <select id="select-pair" name="pair" size="1">
-                <option value="BTCUSDT" selected>BTC_USDT</option>
-                <option value="ETHUSDT">ETH_USDT</option>
-                <-- filled in by the script in Ready-->
-            </select>
+            <div class="form-group">
+                <label>Timeframe:</label>
+                <select id="select-interval" name="interval" size="1">
+                    <option value="test1" selected>test1</option>
+                    <option value="test2">test2</option>
+                    <-- filled in by the script in Ready-->
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Trading tool:</label>
+                <select id="select-pair" name="pair" size="1">
+                    <option value="BTCUSDT" selected>BTC_USDT</option>
+                    <option value="ETHUSDT">ETH_USDT</option>
+                    <-- filled in by the script in Ready-->
+                </select>
+            </div>
 
             <button id="get-data-btn" onclick="get_candles('forex')">Request candlestick chart FOREX</button>
-            <br>
         </div>
         <div id="source-saves">
             <?php
@@ -253,6 +610,7 @@
             sort($filelist);
             if (!$filelist) echo "No saved charts";
             else {
+                echo '<div class="form-group">';
                 echo '<select id="select-chart" name="chart" size="1"  >\n';
                 $i = 0;
                 foreach ($filelist as $filename) {
@@ -260,17 +618,25 @@
                     $pos = strpos($filename, "/");
                     $fn = substr($filename, $pos + 1);
                     echo '<option value="' . $fn . '" ' . (($i == 1) ? 'selected' : '') . '>' . $fn . '</option>\n';
-                    //echo $fn . " и его размер: " . filesize($filename) . " байт <br>";
                 }
                 echo "</select>\n";
-                echo '<label id="lastBar4get_candles_label">&nbsp Data/time of the last bar:&nbsp</label><input id="lastBar4get_candles" type="text">';
-                echo '<label id="nBars4get_candles_label">&nbspBars quantity: &nbsp</label><input id="nBars4get_candles" type="text" value="1000" size="5">';
-                echo "&nbsp";
-                echo '<button id="get-data-btn2" onclick="get_candles(\'saves\')">&nbsp Request Alpari MT saved charts&nbsp</button>';
+                echo '</div>';
+                
+                echo '<div class="form-group">';
+                echo '<label id="lastBar4get_candles_label">Data/time of the last bar:</label>';
+                echo '<input id="lastBar4get_candles" type="text">';
+                echo '</div>';
+                
+                echo '<div class="form-group">';
+                echo '<label id="nBars4get_candles_label">Bars quantity:</label>';
+                echo '<input id="nBars4get_candles" type="text" value="1000" size="5">';
+                echo '</div>';
+                
+                echo '<button id="get-data-btn2" onclick="get_candles(\'saves\')">Request Alpari MT saved charts</button>';
 
-                echo '<div id="showPages">';
-                echo '<button id="next-prev-page-btns" onclick="get_more_candles(\'saves\', firstBarTime, \'prev\')">&nbsp Prev Period &nbsp</button>';
-                echo '<button id="next-prev-page-btns" onclick="get_more_candles(\'saves\', firstBarTime, \'next\')">&nbsp Next Period &nbsp</button>';
+                echo '<div id="showPages" class="button-group">';
+                echo '<button onclick="get_more_candles(\'saves\', firstBarTime, \'prev\')">Prev Period</button>';
+                echo '<button onclick="get_more_candles(\'saves\', firstBarTime, \'next\')">Next Period</button>';
                 echo '</div>';
             }
             ?>
@@ -279,74 +645,67 @@
             <?php
             define("WRITE_LOG", 0);
             require_once 'login_4js.php';
-            //echo $connection->error;
-            // Проверка на ошибки подключения
-
+            
             if (isset($Last_Error) && $Last_Error == "") {
-                // if ($Last_Error == "") {
-
                 if (!$connection) {
-                    echo "❌ Database connection failed: " . mysqli_connect_error() . "<br>";
+                    echo "<div class='error-message'>Database connection failed: " . mysqli_connect_error() . "</div>";
                 } elseif (!function_exists('queryMysql')) {
-                    echo "❌ Функция queryMysql() не найдена!<br>";
+                    echo "<div class='error-message'>Функция queryMysql() не найдена!</div>";
                 } else {
-                    // if (!$connection) {
-                    //     die("Database connection failed: " . mysqli_connect_error());
-                    // }
-
-                    // if (!function_exists('queryMysql')) {
-                    //     die("Функция queryMysql() не найдена!");
-                    // }
-
-                    var_dump($connection);
-
                     try {
-                        // $result = queryMysql("select name from chart_names order by name");
                         $sql = "SELECT name FROM chart_names ORDER BY name";
                         $result = $connection->query($sql);
 
                         if (!$result) {
                             throw new Exception("SQL ERROR: " . $connection->error);
-                            // die("SQL ERROR: " . $connection->error);
                         }
 
                         if (!$result || $result->num_rows == 0) {
-                            echo "⚠️ WARNING: No data in DB<br>";
-                            // echo "ERROR! No data in DB";
+                            echo "<div class='warning-message'>No data in DB</div>";
                         } else {
-                            // else {
+                            echo '<div class="form-group">';
                             echo '<select id="select-name" name="name" size="1">';
                             while ($Rec = $result->fetch_assoc()) {
-                                //echo $Rec['name']."<br>";
                                 echo '<option value="' . htmlspecialchars($Rec['name']) . '" selected>' . htmlspecialchars($Rec['name']) . '</option>';
-                                // echo '<option value="' . $Rec['name'] . '" selected>' . $Rec['name'] . '</option>';
                             }
                             echo '</select>';
-                            //echo '<script>$("#rb-mysql-env").css("display", "none");</script>';
-                            echo '<label id="lastBar4get_fragment_label">&nbspData/time of the last bar:&nbsp</label><input id="lastBar4get_fragment" type="text">';
-                            echo '<label id="modelId4get_fragment_label">&nbspModels Id:&nbsp</label><input id="modelId4get_fragment" type="text">';
-                            echo '<label id="nBars4get_fragment_label">&nbspBars quantity:&nbsp</label><input id="nBars4get_fragment" type="text" value="1000" size="5">';
-                            echo "&nbsp";
-                            echo '<button id="get-data-btn3" onclick="get_fragment()">&nbspRequest fragment from DB&nbsp</button>';
-                            echo '<div id="showLevels">';
-                            echo '   Show levels:';
+                            echo '</div>';
+                            
+                            echo '<div class="form-group">';
+                            echo '<label id="lastBar4get_fragment_label">Data/time of the last bar:</label>';
+                            echo '<input id="lastBar4get_fragment" type="text">';
+                            echo '</div>';
+                            
+                            echo '<div class="form-group">';
+                            echo '<label id="modelId4get_fragment_label">Models Id:</label>';
+                            echo '<input id="modelId4get_fragment" type="text">';
+                            echo '</div>';
+                            
+                            echo '<div class="form-group">';
+                            echo '<label id="nBars4get_fragment_label">Bars quantity:</label>';
+                            echo '<input id="nBars4get_fragment" type="text" value="1000" size="5">';
+                            echo '</div>';
+                            
+                            echo '<button id="get-data-btn3" onclick="get_fragment()">Request fragment from DB</button>';
+                            
+                            echo '<div id="showLevels" class="form-group">';
+                            echo '   <label>Show levels:</label>';
                             echo '<form id="lvl-switch">';
                             echo '<input id="showAim0" type="radio" name="AimshowSwith" value="none" onclick="drawGraph()">No</input>';
-                            echo  '<input id="showAim1" type="radio" name="AimshowSwith" value="P6aims" onclick="drawGraph()">P6aims</input>';
-                            echo  '<input id="showAim2" type="radio" name="AimshowSwith" value=\'P6aims' . '"' . '\' onclick="drawGraph()">P6aims"</input>';
-                            echo  '<input id="showAim3" type="radio" name="AimshowSwith" value="auxP6aims" onclick="drawGraph()">auxP6aims</input>';
-                            echo  '<input id="showAim4" type="radio" name="AimshowSwith" value="auxP6aims\'" onclick="drawGraph()">auxP6aims\'</input>';
+                            echo '<input id="showAim1" type="radio" name="AimshowSwith" value="P6aims" onclick="drawGraph()">P6aims</input>';
+                            echo '<input id="showAim2" type="radio" name="AimshowSwith" value=\'P6aims' . '"' . '\' onclick="drawGraph()">P6aims"</input>';
+                            echo '<input id="showAim3" type="radio" name="AimshowSwith" value="auxP6aims" onclick="drawGraph()">auxP6aims</input>';
+                            echo '<input id="showAim4" type="radio" name="AimshowSwith" value="auxP6aims\'" onclick="drawGraph()">auxP6aims\'</input>';
                             echo '</form>';
                             echo '</div>';
                         }
                     } catch (Exception $e) {
-                        echo "⚠️ Exception: " . $e->getMessage() . "<br>";
+                        echo "<div class='error-message'>Exception: " . $e->getMessage() . "</div>";
                     }
                 }
             } else {
-                echo "❌ Database connection error: " . (isset($Last_Error) ? $Last_Error : "Unknown error") . "<br>";
+                echo "<div class='error-message'>Database connection error: " . (isset($Last_Error) ? $Last_Error : "Unknown error") . "</div>";
             }
-            // } else echo $Last_Error;
             ?>
         </div>
     </div>
@@ -354,17 +713,23 @@
     <!-- MAIN CONTENT AREA -->
     <div class="maincontent-area">
         <div class="desk">
-            <span><strong>To move chart:</strong> drag it with mouse <strong>Scale: </strong> Mouse wheel </span>
+            <div class="content-description">
+                <strong>To move chart:</strong> drag it with mouse <strong>Scale:</strong> Mouse wheel
+            </div>
             <div class="next-prev-model-btns">
-                <button onclick="switchModels('prev')"><strong>&nbsp previous t.1 &nbsp </button> <button id="switch-model-btn" disabled onclick="switchModels('switch')"><strong>&nbsp switch models &nbsp</strong></button>
-                <button onclick="switchModels('next')"><strong>&nbsp next t.1&nbsp</strong></button>
-                <input id="min_max_price_check" type="checkbox" name="min_max" onclick="drawGraph()">
-                <label id="min_v_label">&nbsp min price:&nbsp</label><input id="min_v_text" type="text" size="7px">
-                <label id="max_v_label">&nbsp max price:&nbsp</label><input id="max_v_text" type="text" size="7px">
-
+                <button onclick="switchModels('prev')"><strong>previous t.1</strong></button> 
+                <button id="switch-model-btn" disabled onclick="switchModels('switch')"><strong>switch models</strong></button>
+                <button onclick="switchModels('next')"><strong>next t.1</strong></button>
+                <div class="form-group">
+                    <input id="min_max_price_check" type="checkbox" name="min_max" onclick="drawGraph()">
+                    <label id="min_v_label">min price:</label>
+                    <input id="min_v_text" type="text" size="7px">
+                    <label id="max_v_label">max price:</label>
+                    <input id="max_v_text" type="text" size="7px">
+                </div>
             </div>
             <div id="showSwitch">
-                Show models:
+                <h3>Show models:</h3>
                 <form id="alg-switch">
                     <input id="showAlg1" type="radio" name="AlgshowSwith" value="Alg1" onclick="switchAlg2show(1)">Algorythm_1</input>
                     <input id="showAlg2" type="radio" name="AlgshowSwith" value="Alg2" onclick="switchAlg2show(2)">Algorythm_2</input>
@@ -388,16 +753,11 @@
             <div id="bar-info">bar-info</div>
 
             <div class="dop-info">
-                <!-- Другие элементы внутри dop-info -->
-
                 <input id="chk-log" class="chk-log" type="checkbox" name="show-detailed-log" onclick="toggleDetailedLog()">
                 <label for="chk-log">Show detailed log</label>
-                <!-- <div id="dop-info">
-                <input id="chk-log" type="checkbox" name="log" value="chk-log"">  передавать подробный лог&nbsp&nbsp&nbsp&nbsp&nbsp</input> -->
-                <span id=" info-timing"></span>
+                <span id="info-timing"></span>
                 <span id="info-log"></span>
             </div>
-
 
             <div id="service"></div>
             <div id="debug">
@@ -407,15 +767,19 @@
     </div>
 </div>
 
+<!-- Loading animation overlay -->
 <div class="parent_wait">
     <div class="block_wait">
         <p id="loader-text">0.0</p>
     </div>
 </div>
 
-
-
-
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>© <?php echo date('Y'); ?> Market Pawns. All rights reserved.</p>
+    </div>
+</footer>
 
 <script src="js/functions.js"></script>
 <!-- Подключение обработчика полосы прокрутки перед main.js -->
@@ -465,6 +829,9 @@
                 }
             });
         }
+        
+        // Initialize radio buttons based on URL parameters or defaults
+        initializeInterface();
     });
     
     // Функция для открытия debug-лога
@@ -486,6 +853,48 @@
             const debugDiv = document.getElementById('debug');
             if (debugDiv) {
                 debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+    }
+    
+    // Функция для инициализации интерфейса при загрузке страницы
+    function initializeInterface() {
+        // Show appropriate data source section based on radio selection
+        const sourceRadios = document.querySelectorAll('[name="source"]');
+        for(let radio of sourceRadios) {
+            if(radio.checked) {
+                changeSource(radio.getAttribute('onclick').match(/'([^']+)'/)[1]);
+                break;
+            }
+        }
+        
+        // Set default algorithm radio button
+        const algRadio = document.getElementById('showAlg1');
+        if(algRadio) {
+            algRadio.checked = true;
+            if(typeof switchAlg2show === 'function') {
+                switchAlg2show(1);
+            }
+        }
+        
+        // Adjust canvas size to container
+        resizeCanvas();
+    }
+    
+    // Resize canvas on window resize
+    window.addEventListener('resize', resizeCanvas);
+    
+    function resizeCanvas() {
+        const canvas = document.getElementById('graph');
+        const container = document.getElementById('canvas-wrapper');
+        
+        if(canvas && container) {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight || 400; // Default height if container height is 0
+            
+            // Redraw graph if the function exists
+            if(typeof drawGraph === 'function') {
+                drawGraph();
             }
         }
     }
