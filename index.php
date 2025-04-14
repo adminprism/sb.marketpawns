@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/mobile.css">
     <!-- Подключение стилей для кастомной полосы прокрутки -->
     <link rel="stylesheet" href="css/scrollbar-custom.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- <script src='js/moving_box_css.js'></script> -->
@@ -78,65 +80,96 @@
 
         .header {
             width: 100%;
-            min-height: 60px;
+            min-height: 90px;
             background-color: var(--background-content);
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
         .header .container_header {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 90px;
         }
         
         .logo {
-            margin-left: 0px;
-            padding-top: 5px;
-            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 75px;
+            width: auto;
         }
         
         .nav-right {
             display: flex;
-            font-size: 12px;
-            line-height: 14px;
+            font-size: 14px;
+            line-height: 16px;
             color: var(--text-primary);
             list-style: none;
             padding: 0;
             margin: 0;
+            height: 100%;
         }
         
         .nav-right li {
-            padding-top: 5px;
-            padding-right: 15px;
-            list-style-type: none;
-        }
-        
-        .nav-right li:not(:first-child) {
-            padding-left: 15px;
-            padding-bottom: 5px;
-        }
-        
-        .nav-right li:not(:last-child) {
-            border-right: 1px solid var(--border-color);
-        }
-        
-        .nav-right li:hover {
-            font-weight: 500;
-            font-size-adjust: 0.6;
-            color: var(--brand-dark-blue-hover);
+            display: flex;
+            align-items: center;
+            height: 100%;
+            position: relative;
+            border-right: none;
         }
         
         .nav-right li a {
             text-decoration: none;
             color: var(--text-primary);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            position: relative;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-right li a i {
+            margin-right: 8px;
+            font-size: 16px;
         }
         
         .nav-right li a:hover {
             color: var(--brand-dark-blue-hover);
+            background-color: rgba(232, 234, 246, 0.4);
+        }
+        
+        .nav-right li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--brand-dark-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-right li a:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .nav-right li.active a {
+            color: var(--brand-dark-blue);
+            font-weight: 600;
+        }
+        
+        .nav-right li.active a::after {
+            transform: scaleX(1);
         }
 
         .header-area {
@@ -146,7 +179,7 @@
         .params-area {
             grid-area: params;
             padding: 10px;
-            border-right: 1px solid var(--border-color);
+            border-right: none;
             background-color: var(--background-content);
             overflow-y: auto;
             height: 100%;
@@ -406,22 +439,38 @@
             .header .container_header {
                 padding: 0 15px;
                 flex-direction: column;
-                align-items: center;
-            }
-            
-            .nav-right {
-                margin: 10px 0;
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .logo {
-                margin: 10px 0;
+                height: auto;
+                padding-top: 15px;
+                padding-bottom: 15px;
             }
             
             .logo img {
-                max-width: 150px;
-                height: auto;
+                height: 60px;
+            }
+            
+            .nav-right {
+                margin: 15px 0 5px;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .nav-right li {
+                height: 40px;
+            }
+            
+            .nav-right li a {
+                padding: 0 12px;
+                font-size: 13px;
+            }
+            
+            .nav-right li a i {
+                margin-right: 5px;
+                font-size: 14px;
+            }
+            
+            .logo {
+                margin: 0;
             }
             
             button, .build-btn, .log-btn {
@@ -500,6 +549,16 @@
             margin: 0 0 10px 0;
             font-weight: 600;
         }
+        
+        /* Override any external styles that might create separators */
+        .nav-right li:not(:last-child) {
+            border-right: none !important;
+        }
+        
+        .nav-right li:not(:first-child) {
+            padding-left: 0 !important;
+            border-left: none !important;
+        }
     </style>
 </head>
 
@@ -509,16 +568,16 @@
     <!-- HEADER AREA -->
     <header class="header header-area">
         <div class="container_header">
-            <a class="logo" href="#">
+            <a class="logo" href="index.php">
                 <img src="/public/images/SANDBOX.png" alt="Sandbox" />
             </a>
 
             <ul class="nav-right">
-                <li><a href="index.php">Home</a></li>
-                <li><a href="/infobase/tables.php">Infobase</a></li>
-                <li><a href="https://marketpawns.com">Marketpawns</a></li>
-                <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page">Wiki</a></li>
-                <li><a href="https://github.com/adminprism/Sandbox" target="_blank">GitHub</a></li>
+                <li class="active"><a href="index.php"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="/infobase/tables.php"><i class="fas fa-database"></i>Infobase</a></li>
+                <li><a href="https://marketpawns.com"><i class="fas fa-chess-pawn"></i>Marketpawns</a></li>
+                <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page"><i class="fas fa-book"></i>Wiki</a></li>
+                <li><a href="https://github.com/adminprism/Sandbox" target="_blank"><i class="fab fa-github"></i>GitHub</a></li>
             </ul>
         </div>
     </header>
