@@ -1,0 +1,31 @@
+.nav-right {
+  margin-left: auto;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-right li {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  border-right: none;
+}
+
+.nav-right li:not(:first-child) {
+  border-left: none;
+  padding-left: 0;
+}
+
+.nav-right li:not(:last-child) {
+  border-right: none;
+}
+
+.nav-right li a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px;
+} 

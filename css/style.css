@@ -9,41 +9,63 @@
 }
 
 .header {
-  min-height: 58px;
+  min-height: 90px;
   padding-right: 15px;
   padding-left: 15px;
-  background-color: white;
+  background-color: var(--content-background-color, white);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  width: 100%;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-spacer {
+  height: 90px;
+  width: 100%;
 }
 
 .container_header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 1px;
-  padding-right: 1px;
+  padding-left: 25px;
+  padding-right: 25px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .nav-right {
   display: flex;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 14px;
+  line-height: 16px;
   color: #2c2e61;
 }
 .nav-right li {
   padding-top: 5px;
-  padding-right: 15px;
+  padding-right: 0;
   list-style-type: none;
 }
 .nav-right li:not(:first-child) {
-  padding-left: 15px;
-  padding-bottom: 5px;
+  padding-left: 0;
 }
 .nav-right li:not(:last-child) {
-  border-right: 1px solid #e5e5e5;
+  border-right: none;
+}
+.nav-right li:last-child a {
+  padding-right: 0 !important;
 }
 .nav-right li:hover {
   font-weight: 500;
-  font-size-adjust: 0.6;
 }
 
 /* .logo {
@@ -61,7 +83,6 @@
 } */
 
 .logo {
-  margin-left: 20px; 
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -770,4 +791,32 @@ label[for="chk-log"] {
 #scroll-bar {
    width: 100%;; /* 20% of the viewport width */
    transition: value 0.3s ease; /* плавная анимация */
+}
+
+/* Fixed elements styles */
+.sticky-buttons {
+  position: sticky !important;
+  top: 100px;
+  z-index: 900;
+}
+
+#active-bar {
+  position: sticky !important;
+  top: 160px;
+  z-index: 890;
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+  .header-spacer {
+    height: 140px;
+  }
+  
+  .sticky-buttons {
+    top: 150px;
+  }
+  
+  #active-bar {
+    top: 210px;
+  }
 }

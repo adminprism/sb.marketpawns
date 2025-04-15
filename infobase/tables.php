@@ -1434,24 +1434,73 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
             box-shadow: 0 0 0 2px rgba(26, 35, 126, 0.2);
             vertical-align: middle;
         }
+        
+        /* Fixed header styles */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-spacer {
+            height: 90px;
+            width: 100%;
+        }
+        
+        /* For mobile */
+        @media screen and (max-width: 768px) {
+            .header-spacer {
+                height: 140px;
+            }
+        }
+        
+        /* Fixed elements styles */
+        .tabs-wrapper {
+            position: sticky;
+            top: 90px;
+            z-index: 900;
+            background-color: var(--background-main);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .search-container {
+            position: sticky;
+            top: 140px;
+            z-index: 890;
+        }
+        
+        .sections-nav {
+            position: sticky;
+            top: 190px;
+        }
+        
+        .info-sidebar {
+            position: sticky;
+            top: 190px;
+        }
+        
+        /* Adjust for mobile */
+        @media screen and (max-width: 768px) {
+            .tabs-wrapper {
+                top: 140px;
+            }
+            
+            .search-container {
+                top: 190px;
+            }
+            
+            .sections-nav, .info-sidebar {
+                top: 240px;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Header matching main site -->
-    <header class="header">
-        <div class="container_header">
-            <a class="logo" href="../">
-                <img src="../public/images/SANDBOX.png" alt="Sandbox" />
-            </a>
-            <ul class="nav-right">
-                <li><a href="/index.php"><i class="fas fa-home"></i>Home</a></li>
-                <li class="active"><a href="/infobase/tables.php"><i class="fas fa-database"></i>Infobase</a></li>
-                <li><a href="https://marketpawns.com"><i class="fas fa-chess-pawn"></i>Marketpawns</a></li>
-                <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page"><i class="fas fa-book"></i>Wiki</a></li>
-                <li><a href="https://github.com/adminprism/Sandbox" target="_blank"><i class="fab fa-github"></i>GitHub</a></li>
-            </ul>
-        </div>
-    </header>
+    <?php include '../includes/header.php'; ?>
 
     <div class="container">
         <div class="tab-container">
@@ -1576,11 +1625,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
     <div class="back-to-top" id="backToTop" title="Back to Top">↑</div>
     
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>© <?php echo date('Y'); ?> Market Pawns. All rights reserved.</p>
-        </div>
-    </footer>
+    <?php include '../includes/footer.php'; ?>
 
     <script>
         function closeSidebar(tableId) {

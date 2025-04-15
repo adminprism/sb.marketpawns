@@ -63,10 +63,38 @@
     padding-left: 10px;
   }
 
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .header-spacer {
+    height: 140px; /* Большая высота для мобильных из-за переносов */
+  }
+
+  /* Fixed navigation elements for mobile */
+  .sticky-buttons {
+    position: sticky !important;
+    top: 150px;
+    z-index: 900;
+  }
+  
+  #active-bar {
+    position: sticky !important;
+    top: 210px;
+    z-index: 890;
+  }
+
   .container_header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .nav-right {
@@ -79,11 +107,15 @@
   .nav-right li {
     padding: 8px 0;
     border-right: none;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: none;
   }
 
   .nav-right li:not(:first-child) {
     padding-left: 0;
+  }
+
+  .nav-right li:last-child a {
+    padding-right: 0;
   }
 
   .logo {
