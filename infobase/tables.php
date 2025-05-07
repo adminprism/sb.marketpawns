@@ -107,10 +107,10 @@ function readCSV($file) {
 if (isset($_GET['debug']) && $_GET['debug'] === 'csv') {
     $fileId = $_GET['file'] ?? 'parameters';
     $csvFiles = [
-        'parameters' => __DIR__ . '/parameters.csv',
-        'legend' => __DIR__ . '/Legend.csv',
-        'potential' => __DIR__ . '/potential_next_parameters.csv',
-        'next' => __DIR__ . '/next_parameters.csv'
+        'parameters' => __DIR__ . '/content/parameters.csv',
+        'legend' => __DIR__ . '/content/Legend.csv',
+        'potential' => __DIR__ . '/content/potential_next_parameters.csv',
+        'next' => __DIR__ . '/content/next_parameters.csv'
     ];
     
     if (isset($csvFiles[$fileId])) {
@@ -287,10 +287,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
     header('Content-Type: text/html; charset=utf-8');
     $fileId = $_POST['fileId'] ?? '';
     $csvFiles = [
-        'parameters' => __DIR__ . '/parameters.csv',
-        'legend' => __DIR__ . '/Legend.csv',
-        'potential' => __DIR__ . '/potential_next_parameters.csv',
-        'next' => __DIR__ . '/next_parameters.csv'
+        'parameters' => __DIR__ . '/content/parameters.csv',
+        'legend' => __DIR__ . '/content/Legend.csv',
+        'potential' => __DIR__ . '/content/potential_next_parameters.csv',
+        'next' => __DIR__ . '/content/next_parameters.csv'
     ];
     
     if (isset($csvFiles[$fileId])) {
@@ -1521,10 +1521,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'refresh') {
                     <div class="refresh-animation" id="loading-bar"></div>
                     <?php
                     $csvFiles = [
-                        'parameters' => __DIR__ . '/parameters.csv',
-                        'legend' => __DIR__ . '/Legend.csv',
-                        'potential' => __DIR__ . '/potential_next_parameters.csv',
-                        'next' => __DIR__ . '/next_parameters.csv'
+                        'parameters' => __DIR__ . '/content/parameters.csv',
+                        'legend' => __DIR__ . '/content/Legend.csv',
+                        'potential' => __DIR__ . '/content/potential_next_parameters.csv',
+                        'next' => __DIR__ . '/content/next_parameters.csv'
                     ];
 
                     $hasContent = false;

@@ -6,3 +6,6 @@ alwaysApply: true
 Do not delete comments
 
 Сохрани читаемость и контекст кода
+
+Виде документацию о внесении изменений в developmentlog/CHANGELOG.md 
+Веди документацию о исправлении багов в developmentlog/debug_fixes.md 

@@ -966,16 +966,16 @@
             <div id="source-switch">
                 <h3>Data source:</h3>
                 <form id="form-source">
-                    <input id="rb-forex" type="radio" name="source" value="1" onclick="changeSource('forex')"> FOREX data (Finam) online</input>
-                    <input id="rb-saves" type="radio" name="source" value="2" checked onclick="changeSource('saves')"> Alpari saved charts</input>
-                    <input id="rb-mysql" type="radio" name="source" value="2" onclick="changeSource('mysql')"><span id="rb-mysql-label"> Models and charts from MySql DB</span></input>
+                    <input id="rb-forex" type="radio" name="source" value="1" onclick="changeSource('forex')"> <i class="fas fa-globe"></i> FOREX data (Finam) online</input>
+                    <input id="rb-saves" type="radio" name="source" value="2" checked onclick="changeSource('saves')"> <i class="fas fa-save"></i> Alpari saved charts</input>
+                    <input id="rb-mysql" type="radio" name="source" value="2" onclick="changeSource('mysql')"><span id="rb-mysql-label"> <i class="fas fa-database"></i> Models and charts from MySql DB</span></input>
                 </form>
             </div>
             <div id="showSwitch" style="margin-top: 8px;">
                 <h3>Show models:</h3>
                 <form id="alg-switch">
-                    <input id="showAlg1" type="radio" name="AlgshowSwith" value="Alg1" onclick="switchAlg2show(1)">Algorythm_1</input>
-                    <input id="showAlg2" type="radio" name="AlgshowSwith" value="Alg2" onclick="switchAlg2show(2)">Algorythm_2</input>
+                    <input id="showAlg1" type="radio" name="AlgshowSwith" value="Alg1" onclick="switchAlg2show(1)"><i class="fas fa-chart-line"></i> Algorythm_1</input>
+                    <input id="showAlg2" type="radio" name="AlgshowSwith" value="Alg2" onclick="switchAlg2show(2)"><i class="fas fa-chart-bar"></i> Algorythm_2</input>
                 </form>
             </div>
         </div>
@@ -988,13 +988,13 @@
                  <h3>Calculation Mode:</h3>
                  <form id="form-mode">
                     <div class="mode-option">
-                        <input id="rb-mode1" type="radio" name="calc-mode" value="mode1"><span>show all models</span>
+                        <input id="rb-mode1" type="radio" name="calc-mode" value="mode1"><span><i class="fas fa-th-list"></i> show all models</span>
                     </div>
                     <div class="mode-option">
-                        <input id="rb-mode2" type="radio" name="calc-mode" value="mode2" checked><span>find last (low + high)</span>
+                        <input id="rb-mode2" type="radio" name="calc-mode" value="mode2" checked><span><i class="fas fa-search"></i> find last (low + high)</span>
                     </div>
                     <div class="mode-option">
-                        <input id="rb-mode3" type="radio" name="calc-mode" value="mode3"><span>selected bar as t.1</span>
+                        <input id="rb-mode3" type="radio" name="calc-mode" value="mode3"><span><i class="fas fa-crosshairs"></i> selected bar as t.1</span>
                     </div>
                 </form>
             </div>
@@ -1005,9 +1005,9 @@
             
             <!-- Calculation buttons -->
             <div class="sticky-buttons">
-                <button class="build-btn" onclick="build_models(1)">Calculate Algorythm_1 models</button>
-                <button class="build-btn" onclick="build_models(2)">Calculate Algorythm_2 models</button>
-                <button class="log-btn" onclick="openDebugLog()">Open Log</button>
+                <button class="build-btn" onclick="build_models(1)"><i class="fas fa-chart-line"></i> Calculate Algorythm_1 models</button>
+                <button class="build-btn" onclick="build_models(2)"><i class="fas fa-chart-area"></i> Calculate Algorythm_2 models</button>
+                <button class="log-btn" onclick="openDebugLog()"><i class="fas fa-terminal"></i> Open Log</button>
             </div>
             
             <div id="model-info"> 
@@ -1041,7 +1041,7 @@
                         </select>
                     </div>
 
-                    <button id="get-data-btn" onclick="get_candles('forex')" style="padding: 6px 10px;">Request candlestick chart FOREX</button>
+                    <button id="get-data-btn" onclick="get_candles('forex')" style="padding: 6px 10px;"><i class="fas fa-download"></i> Request candlestick chart FOREX</button>
                 </div>
                 <div id="source-saves" style="padding: 10px;">
                     <?php
@@ -1073,11 +1073,11 @@
                         echo '</div>';
                         echo '</div>';
                         
-                        echo '<button id="get-data-btn2" onclick="get_candles(\'saves\')" style="padding: 6px 10px;">Request Alpari MT saved charts</button>';
+                        echo '<button id="get-data-btn2" onclick="get_candles(\'saves\')" style="padding: 6px 10px;"><i class="fas fa-file-import"></i> Request Alpari MT saved charts</button>';
 
                         echo '<div id="showPages" class="form-inline" style="margin-top: 6px; gap: 6px;">';
-                        echo '<button onclick="get_more_candles(\'saves\', firstBarTime, \'prev\')" style="padding: 6px 10px;">Prev Period</button>';
-                        echo '<button onclick="get_more_candles(\'saves\', firstBarTime, \'next\')" style="padding: 6px 10px;">Next Period</button>';
+                        echo '<button onclick="get_more_candles(\'saves\', firstBarTime, \'prev\')" style="padding: 6px 10px;"><i class="fas fa-arrow-left"></i> Prev Period</button>';
+                        echo '<button onclick="get_more_candles(\'saves\', firstBarTime, \'next\')" style="padding: 6px 10px;"><i class="fas fa-arrow-right"></i> Next Period</button>';
                         echo '</div>';
                     }
                     ?>
@@ -1129,7 +1129,7 @@
                                     echo '<input id="nBars4get_fragment" type="text" value="1000" size="5" style="padding: 6px 8px; margin: 2px 0;">';
                                     echo '</div>';
                                     
-                                    echo '<button id="get-data-btn3" onclick="get_fragment()" style="padding: 6px 10px;">Request fragment from DB</button>';
+                                    echo '<button id="get-data-btn3" onclick="get_fragment()" style="padding: 6px 10px;"><i class="fas fa-database"></i> Request fragment from DB</button>';
                                     
                                     echo '<div id="showLevels" class="form-group" style="margin-top: 6px;">';
                                     echo '   <label>Show levels:</label>';
@@ -1157,12 +1157,12 @@
             <div class="chart-controls" style="margin-bottom: 6px;">
                 <div class="control-panel chart-navigation-panel" style="padding: 10px;">
                     <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
-                        <div id="active-bar" style="margin-bottom: 0; padding: 6px 10px; flex-shrink: 0;">Chosen bar: <span>0</span></div>
+                        <div id="active-bar" style="margin-bottom: 0; padding: 6px 10px; flex-shrink: 0;"><i class="fas fa-location-dot"></i> Chosen bar: <span>0</span></div>
                         
                         <div class="form-inline" style="margin-bottom: 0; margin-right: 0;">
-                            <button onclick="switchModels('prev')"><strong>Previous t.1</strong></button>
-                            <button id="switch-model-btn" disabled onclick="switchModels('switch')"><strong>Switch models</strong></button>
-                            <button onclick="switchModels('next')"><strong>Next t.1</strong></button>
+                            <button onclick="switchModels('prev')"><i class="fas fa-chevron-left"></i> <strong>Previous t.1</strong></button>
+                            <button id="switch-model-btn" disabled onclick="switchModels('switch')"><i class="fas fa-exchange-alt"></i> <strong>Switch models</strong></button>
+                            <button onclick="switchModels('next')"><strong>Next t.1</strong> <i class="fas fa-chevron-right"></i></button>
                         </div>
                         
                         <div class="form-inline" style="margin-bottom: 0; display: flex; align-items: center; gap: 4px;">
@@ -1182,7 +1182,7 @@
             </div>
             
             <div class="content-description" style="margin-bottom: 8px; padding: 8px 12px;">
-                <strong>To move chart:</strong> drag it with mouse <strong>Scale:</strong> Mouse wheel
+                <i class="fas fa-hand-pointer"></i> <strong>To move chart:</strong> drag it with mouse &nbsp;&nbsp; <i class="fas fa-search-plus"></i> <strong>Scale:</strong> Mouse wheel
             </div>
 
             <div id="canvas-wrapper">
@@ -1233,6 +1233,161 @@
 <script src="js/landscape-optimizer.js"></script>
 <script src="js/main.js"></script>
 <script src="js/drawModels.js"></script>
+
+<!-- Enhanced chart snap scrolling functionality with sticky behavior -->
+<script>
+    // Enhanced chart snap scrolling functionality with sticky behavior
+    document.addEventListener('DOMContentLoaded', function() {
+        let canvasWrapper = document.getElementById('canvas-wrapper');
+        let paramsArea = document.querySelector('.params-area');
+        let scrollTimeout;
+        let isScrolling = false;
+        let isInChartView = false;
+        let lastScrollPos = 0;
+        let stickyDelay = false;
+        let releaseTimeout;
+        
+        // Add event listeners to calculation buttons
+        const calcButtons = document.querySelectorAll('.build-btn');
+        calcButtons.forEach(button => {
+            // Store the original onclick function
+            const originalOnClick = button.onclick;
+            
+            // Replace with new function that scrolls to chart after calculation
+            button.onclick = function(event) {
+                // Call the original build_models function
+                if (originalOnClick) {
+                    originalOnClick.call(this, event);
+                }
+                
+                // After a delay, scroll to the chart
+                setTimeout(() => {
+                    animateToChart(true); // Force scroll to chart
+                }, 800); // 800ms delay to allow calculation to start
+            };
+        });
+        
+        function getIdealChartPosition() {
+            if (!canvasWrapper) return 0;
+            
+            const rect = canvasWrapper.getBoundingClientRect();
+            const chartTop = rect.top + window.scrollY;
+            const headerHeight = document.querySelector('.header') ? document.querySelector('.header').offsetHeight : 0;
+            const controlsHeight = document.querySelector('.controls-area') ? document.querySelector('.controls-area').offsetHeight : 0;
+            
+            // Calculate ideal position (where chart is visible below fixed elements)
+            return chartTop - headerHeight - controlsHeight - 20; // 20px extra margin
+        }
+        
+        function animateToChart(force = false) {
+            if (!canvasWrapper) return;
+            
+            const idealScrollPosition = getIdealChartPosition();
+            const currentScroll = window.scrollY;
+            
+            // Check if we're close to the chart (within 200px) or force the animation
+            if (force || Math.abs(currentScroll - idealScrollPosition) < 200) {
+                // Add a class to highlight the chart during the animation
+                canvasWrapper.classList.add('chart-snap-highlight');
+                
+                // Smooth scroll to ideal position with more pronounced animation
+                window.scrollTo({
+                    top: idealScrollPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Remove highlight after animation completes
+                setTimeout(() => {
+                    canvasWrapper.classList.remove('chart-snap-highlight');
+                }, 1000);
+                
+                isInChartView = true;
+                return true;
+            }
+            return false;
+        }
+        
+        // Add a CSS class for the highlight animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes chartHighlight {
+                0% { box-shadow: 0 0 0 rgba(26, 35, 126, 0); }
+                50% { box-shadow: 0 0 20px rgba(26, 35, 126, 0.5); }
+                100% { box-shadow: 0 0 0 rgba(26, 35, 126, 0); }
+            }
+            .chart-snap-highlight {
+                animation: chartHighlight 0.8s ease-in-out;
+                z-index: 5;
+            }
+            .sticky-scroll-active {
+                transition: all 0.5s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Check if we're in the chart view when scrolling begins
+        window.addEventListener('wheel', function(e) {
+            // Skip the sticky behavior if scrolling within the parameters panel
+            if (e.target.closest('.params-area') || paramsArea.contains(e.target)) {
+                return;
+            }
+            
+            const idealPosition = getIdealChartPosition();
+            const currentScroll = window.scrollY;
+            
+            // If we're viewing the chart and starting to scroll away
+            if (Math.abs(currentScroll - idealPosition) < 50 && !stickyDelay) {
+                isInChartView = true;
+                
+                // Determine if scrolling away from the ideal position
+                const scrollingAway = 
+                    (e.deltaY > 0 && currentScroll <= idealPosition) || 
+                    (e.deltaY < 0 && currentScroll >= idealPosition);
+                
+                // Apply sticky delay when scrolling away from the chart
+                if (scrollingAway) {
+                    stickyDelay = true;
+                    document.body.classList.add('sticky-scroll-active');
+                    
+                    // Add resistance by temporarily preventing the scroll
+                    e.preventDefault();
+                    
+                    // After a short delay, allow scrolling to continue
+                    clearTimeout(releaseTimeout);
+                    releaseTimeout = setTimeout(() => {
+                        stickyDelay = false;
+                        document.body.classList.remove('sticky-scroll-active');
+                    }, 400); // Sticky delay time in ms
+                }
+            }
+        }, { passive: false });
+        
+        // Debounce scroll event for snap behavior
+        window.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            
+            if (!isScrolling) {
+                isScrolling = true;
+                lastScrollPos = window.scrollY;
+            }
+            
+            scrollTimeout = setTimeout(function() {
+                isScrolling = false;
+                
+                // Only snap if not scrolling within parameters panel
+                if (document.activeElement && !paramsArea.contains(document.activeElement)) {
+                    animateToChart();
+                }
+            }, 150); // Wait for scrolling to stop
+        });
+        
+        // Initial check if we're near the chart position
+        setTimeout(() => {
+            animateToChart();
+        }, 500);
+    });
+</script>
+
 <script>
     // Дополнительный JavaScript для отображения параметров модели в таблице
     document.addEventListener("DOMContentLoaded", function() {
