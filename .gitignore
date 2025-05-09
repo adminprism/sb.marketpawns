@@ -15,7 +15,7 @@ Colab_CSV/
 
 *.log
 *.json
-*.csv
+# *.csv
 *.zip
 big_saves.zip
 big_saves_.zip

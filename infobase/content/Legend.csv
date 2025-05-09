@@ -1,0 +1,109 @@
+Term,Definition
+// General Terms
+Model,A structured price formation on a chart identified by specific touch points (t1-t5) and technical analysis lines that depicts price movement and predicts future price movement with a certain extent of accuracy. Models consist of key price extremes, confirmation points, Trend Lines, and Target Lines which together form a predictive framework for analyzing market behavior and calculating price targets.
+Algorithm I,Primary algorithm that identifies models by first locating price extremums, then building Trend Lines from t1-t3 and Target Lines from t2-t4. It focuses on model validation through Trend Line confirmation and often uses intersection calculations to determine price targets.
+Algorithm II,Secondary algorithm that builds models starting from t3 as the main reference point. It constructs Trend Lines using t3-t5 points, identifies Base Objects (BO), searches for presuppositions, and analyzes inscribed and preceding models to provide comprehensive market analysis.
+Extremum,Price point that is either a local maximum (high) or minimum (low) within a given range
+Touch,Significant model elements along which lines are drawn. There are three types of touches - that may be price extremes (like t1, t2, t3, t4, t5, t5') or price chart points that are used to draw tangent lines to the price section on which the model is built (like t2', t3', t3", t5", etc.). Price extreme touches sometrimes used to draw lines and sometimes - just to find other touches 
+Point,Includes all touches (t-touch) and other significant model elements such as key model extreme (like RP6), calculated reversal/correction level (like calculated P6). All touches are points, but not all points are touches.  
+Main Reference Point,A critical price level and bar that serves as the primary reference for model calculations and measurements. In Algorithm I t1 serves as the main reference point for constructing Trend Lines and determining model validity,  and in Algorithm II it's t3. 
+t1,Touch point 1 - initial extremum point that marks the beginning of the model
+t2,Touch point 2 - secondary significant extremum used for Target Line construction
+t3,Touch point 3 - confirmation point that establishes the Trend Line in Algorithm I and is the main reference point in Algorithm II
+t3',Alternative third touch point in Algorithm I and Algorithm II - used for alternative Trend Line construction
+t3",Second alternative third touch point in Algorithm II
+t4,Touch point 4 - used for Target Line construction in both Algorithms and for Trend Line confirmation in Algorithm I
+t5,Touch point 5 - used for Auxiliary models Trend Line construction  
+t5",Alternative 5-th touch point in Algorithm II - used for alternative Trend Line construction
+calcP6,Calculated point 6 - the calculated price level and bar number where the Target Line and Trend Line intersect
+RP6,Real point 6 - actual price bar/level where reversal or correction occurred
+auxP6,Auxiliary calculated point 6 - target point for Algorithm I auxiliary models
+auxP6',Alternative auxiliary calculated point 6 - secondary target point for auxiliary models with alternative Target Lines
+LT,Trend Line (Liniya Trenda) - line connecting key points (typically t1-t3 in Algorithm I and t3-t5 in Algorithm II)
+LT_ss, Alternative Trend Line used in Algorithm II - constructed using alternative points (through t5")
+LC,Target Line (Liniya Celey) - line used for price target calculation (typically t2-t4)
+LCs,Alternative Target Line - provides secondary target analysis
+Basic Model,The fundamental model structure identified in Algorithm I that includes the essential touch points (t1-t4) and demonstrates a valid trend formation with confirmed Trend Line and Target Line. It serves as the baseline for possible further model development. Unlike Main Models, Basic Models focus on core structure rather than classification and typically don't include secondary points like t5 or alternative lines. Basic Models represent the initial identification stage of a valid price pattern before additional analysis and classification.
+Main Model,Primary model that serves as a framework for market analysis. It's characterized by its central structural position and has clearly defined Trend Lines and Target Lines that meet specific criteria for intersection and validation. Main Models can contain inscribed models and have relationships with preceding models. Main Types of Main Models are EM (Extension  Model), Attraction Models (AM), DBM (Dinamic Balance Model), External Attraction Models (EAM) and Wedge Models (WEDGE). There are also EM/DBM and AM/DBM. Unlike Basic Models, Main Models are fully classified and characterized according to their specific type and have undergone complete validation and analysis.
+Attraction Model,A class of models (often abbreviated as AM in the code) that demonstrate specific price attraction characteristics. These models have distinct time and price proportions between key points. There are Main Models that are Attraction Models (like AM, EAM and etc.) and Auxiliary Attraction Models (like AuxAM, AuxEM and etc.).
+Auxiliary Attraction Model,A secondary model (often abbreviated as Aux in the code) that complements the Basic Model by incorporating additional touch points (typically including t5) and providing alternative Target Lines or Trend Lines for more comprehensive analysis. 
+Preceding Model,A model that occurs earlier in time (with earlier touch points) than the current model under analysis and may influence its formation or validation. Preceding models are identified in Algorithm II during steps 10-11 and help establish market context.
+Significant Preceding Model,A preceding model that meets specific criteria regarding its influence on the current model, such as proximity of its t4 to the current model's t1 or similarity in price levels. These models have greater analytical importance for interpreting the current price formation.
+Inscribed Models,Models inscribed within the main model in Algorithm II
+Approach Level of the P6, Level at which the price is considered to be approaching P6, defined as LVL_APPROACH in configuration (by default = 6% of the AM's (or Aux's) preicesize)
+Extended Approach Level of the P6, Earlier warning level for P6 approach, defined as LVL_PREAPPROACH in configuration (by default = 15% of the AM's (or Aux's) preicesize)
+Break Out Level of the P6, Level at which the price is considered to be breaking out of P6, defined as LVL_BREAKOUT in configuration (by default = 6% of the AM's (or Aux's) preicesize)
+State,Main algorithm state container that stores current calculation status and parameters
+BAR_50,Depth of search for the last intersection of potential t1 level (50 bars)
+BAR_T3_50,Number of bars for continuous point 3 (t3) search (50 bars)
+BAR_T3_150,Extended depth of search for point t3 (150 bars)
+A2_BAR_T3_300,Depth of search for the bar of last price crossing (300 bars) in Algorithm II
+PAR246aux,Minimum ratio of t2-t4 to t4-t6 (0.5 in Algorithm I, 2 in Algorithm II)
+P12,Minimum distance between t1 and t2 in presupposition (Algorithm II)
+B24to46,Minimum ratio of t2-t4 to t4-t6 for auxiliary main model (Algorithm II)
+CALC_G3_DEPTH,Search depth when determining G3 model trend type (150 bars)
+pips,Minimum price movement unit used for calculations and measurement
+high,Model type searching for high points (price maximums)
+low,Model type searching for low points (price minimums)
+mode1,Calculation mode - search all models throughout the chart
+mode2,Calculation mode - search last model before selected bar
+mode3,Calculation mode - search model using selected bar as reference point
+selectedBar,User-selected bar for model calculation and analysis
+split,Algorithm branch counter for parallel calculations path tracking
+flat_log,Detailed sequential log of algorithm execution steps
+G3,Model trend type indicator ("HTModel" - by trend, "BTModel" - from trend start, "NoData" - insufficient data)
+BO,Base Object - foundation structure of the model formed by key points t2, t1, and confirmation point in Algorithm II
+VMP,Main Model Pattern - comprehensive price structure in Algorithm II, also referred to as EAM (External Attraction Model) in the code
+EAM,External Attraction Model - comprehensive price structure in Algorithm II. It is one of the Main Models.
+IDinners,Models inscribed within the main model in Algorithm II
+IDprevs,Previous models that interact with the current model in Algorithm II
+Presupp,Presupposition - potential model setup that precedes the main model in Algorithm II
+lcb5,Last Crossing Bar 5 - Bar index of crossing the level of t5 in Algorithm II, used to determine potential t5 points
+HTModel,Model "by trend" - model classification where the trend has already been established before the model formation
+BTModel,Model "from trend start" - model classification where the model begins at the start of the trend formation
+parallel,Algorithm execution method where calculations for high and low model types are performed simultaneously
+A2Prev,Previous model reference point in Algorithm II - used to establish connections between related models
+t4_confirmation,Process of validating Trend Line through the t4 point in Algorithm I
+ABmodel,Alternative model found during alternative pattern search in step 8 of Algorithm I
+fix_model,Process of recording and finalizing a validated model to the collection of identified models
+model_validation,Process of checking if a potential model meets all required conditions before being added to the final models list
+price_target,Projected price level calculated from the intersection of Trend Line and Target Line
+reversal_point,Price bar where the trend changes direction, often identified as RP6
+// Terms used to define parameters
+Name,Parameter's name used in the algorithm code and output
+Type,Type of the parameter that defines its primary purpose and usage category (e.g., technical, control, calculation)
+Sbtype,Subtype of the parameter providing further classification 
+Data Type,Data type of the parameter and its possible values (integer, string, float, percentage, etc.)
+atin (abbreviation),According to inner numbering - parameter that uses internal numbering of the model
+Time,Number of bars between points (touches) within the model structure, measured using atin
+Timesize,The time component of model size calculation - specifically the horizontal distance in bars between reference points and targets. For Main Models in Algorithm I (MainSizeT), it's calculated as the bar distance from t1 to calcP6. For Auxiliary Models (AuxSizeT), it's the distance from t2 to auxP6. In Algorithm II (EAMSizeT), it's calculated from t2 to calcP6. These time measurements are used to determine time-based proportions within models.
+Pricesize,The price component of model size calculation - specifically the vertical distance in price units or pips between reference levels and targets. The calculation varies by model type: for Main Models in Algorithm I (MainSize), it measures the price distance from t1 to calcP6; for Auxiliary Models (AuxSize), it measures from t3 to auxP6; and for External Attraction Models in Algorithm II (EAMSize), it measures from t3 to calcP6. These measurements are used as foundations for calculating important price ratios and approach levels, which use different percentages depending on model type.
+// Types and subtypes of parameters	
+tec,Technical parameters that are used for the operation of the algorithm and in the calculation process
+calc,Calculation parameters that are derived from mathematical operations on model data
+flag,Boolean parameters that indicate specific conditions or states in the model (true/false, yes/no)
+control,Parameters which are used to depict how price reacted on this model (how it worked out)
+Count,A list of coordinates or specific points used in model calculations
+Classification,Parameters subtype that denote the type or subtype of model
+Precontrol,The peculiarity of these parameters is that they are calculated for models that have already reached the Approach Level of P6. Therefore, they can be calculated simultaneously with the control parameters.
+Early precontrol,Parameters calculated before the model reaches the Approach Level, providing early warning signals
+Additional precontrol,These are precontrol parameters which use [LVL_PREAPPROACH] for early detection of potential price movements
+Postcontrol,These parameters are calculated only for models that have several features; - the Approach Level of the P6 was reached; - to calculate some parameters, the P6 level must also be reached. This is additionally discussed in the parameter description. - after reaching  P6 level and/or the Approach Level of the calculated P6, the Bumper Level of the corresponding P6 has been reached. I.e. for these parameters (and not only for them) it is assumed that the tracking of the Bumper Level begins after reaching the Approach Level of the corresponding P6 (as always) and stops in case of reaching the Breakout Level of the corresponding P6.
+// Complex parameters definitions terms
+Base Level,Reference price level used as a foundation for calculating other levels and measuring price movements
+Main Reference Bar identifier,Bar index that serves as the primary reference point where the model is located
+Prelead-extremum,If the _lvlapprP6 parameter is calculated and the value is different from 0 (i.e. after reaching the Extended Approach Level of the calculated P6 [LVL_PREAPPROACH] before reaching the [LVL_APPROACH] there is a price correction), the following calculations are performed: A search is performed for a bar containing the maximum correction in the section after (i.e. not including) the bar that reached LVL_PREAPPROACH before the bar that reached [LVL_APPROACH] (not including).This extremum is Prelead-extremum
+Proto-6,If a Prelead-extremum is found, a search is made for the maximum (closest to P6 by level) extremum in the section from the bar (inclusive) that reached LVL_PREAPPPROACH to the bar containing the prelead extremum (not including). This extremum is Proto-6.
+Pullback,Correction on the way to considered models Aims - a price movement against the primary trend direction that occurs during model development
+SL,Stop Loss - a dynamic price level calculated as a percentage of the model's Pricesize, used to place protective stops and monitor potential price reversals. Initially set at 
+BSL,Bumper Stop Level - a dynamic price level calculated as a percentage of the model's Pricesize, used to place protective stops and monitor potential price reversals. Initially set at LVL_BUMPER1 (20% of Pricesize by default), and then adjusts to LVL_BUMPER2 (15% of Pricesize) when price reaches the Approach Level of P6. The BSL serves as a key reference for triggering protective measures and is crucial for parameters in the Postcontrol category.
+3# (virtual point),A calculated virtual point (not an actual chart extremum) used as a reference for measuring price ratios and distances within a model for some parameters
+Hasten RP6 check,Section [LVL_PREAPPROACH] - [LVL_APPROACH] check for LVL_BUMPER and U-turn aims achievement, detecting early signals of potential reversal
+Approximation,Section between LVL_PREAPPROACH and LVL_APPROACH - the zone where price is considered to be approaching the target level
+
+
+
+
+
+
+

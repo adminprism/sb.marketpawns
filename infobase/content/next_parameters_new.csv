@@ -1,0 +1,201 @@
+Parameter;Type;Subtype;Calculated In;Description;Dependencies;Data Type;Additional information
+;;;;;;;
+// Basic Next Bar Parameters;;;;;;;
+NEXT_llapprP6;calc;Next Bar;inc_calc_controls.php;Next bar line level approximation for P6;;;
+NEXT_lvlapprP6;calc;Next Bar;inc_calc_controls.php;Next bar level approximation for P6;;;
+"NEXT_llapprP6""";calc;Next Bar;inc_calc_controls.php;"Next bar line level approximation for P6""";;;
+"NEXT_lvlapprP6""";calc;Next Bar;inc_calc_controls.php;"Next bar level approximation for P6""";;;
+;;;;;;;
+// Auxiliary Model Next Bar Parameters;;;;;;;
+NEXT_llapprAuxP6;calc;Next Bar;inc_calc_controls.php;Next bar line level approximation for AuxP6;;;
+NEXT_lvlapprAuxP6;calc;Next Bar;inc_calc_controls.php;Next bar level approximation for AuxP6;;;
+NEXT_llapprAuxP6';calc;Next Bar;inc_calc_controls.php;Next bar line level approximation for AuxP6';;;
+NEXT_lvlapprAuxP6';calc;Next Bar;inc_calc_controls.php;Next bar level approximation for AuxP6';;;
+;;;;;;;
+// Time-based Approximation Parameters;;;;;;;
+NEXT_ll4apprP6;calc;Next Bar;inc_calc_controls.php;Next bar line level approximation from preapproach to time between t2 and t4 for P6;;;
+"NEXT_ll4apprP6""";calc;Next Bar;inc_calc_controls.php;"Next bar line level approximation from preapproach to time between t2 and t4 for P6""";;;
+NEXT_ll4apprAuxP6;calc;Next Bar;inc_calc_controls.php;Next bar line level approximation from preapproach to time between t2 and t4 for AuxP6;;;
+NEXT_ll4apprAuxP6';calc;Next Bar;inc_calc_controls.php;Next bar line level approximation from preapproach to time between t2 and t4 for AuxP6';;;
+;;;;;;;
+// Node Time Relative Parameters;;;;;;;
+NEXT_llapprP6ba;calc;Next Bar;inc_calc_controls.php;Next bar level approximation relative to P6 node time;;;
+"NEXT_llapprP6""ba";calc;Next Bar;inc_calc_controls.php;"Next bar level approximation relative to P6"" node time";;;
+NEXT_llapprAuxP6ba;calc;Next Bar;inc_calc_controls.php;Next bar level approximation relative to AuxP6 node time;;;
+NEXT_llapprAuxP6'ba;calc;Next Bar;inc_calc_controls.php;Next bar level approximation relative to AuxP6' node time;;;
+;;;;;;;
+// Half-time Parameters;;;;;;;
+NEXT_lvlapprP6half;calc;Next Bar;inc_calc_controls.php;Next bar half-time approximation for P6 to its Pricesize;;;
+"NEXT_lvlapprP6""half";calc;Next Bar;inc_calc_controls.php;"Next bar half-time approximation for P6"" to its Pricesize";;;
+NEXT_lvlapprAuxP6half;calc;Next Bar;inc_calc_controls.php;Next bar half-time approximation for AuxP6 to its Pricesize;;;
+NEXT_lvlapprAuxP6'half;calc;Next Bar;inc_calc_controls.php;Next bar half-time approximation for AuxP6' to its Pricesize;;;
+;;;;;;;
+// Bar-adjusted Parameters;;;;;;;
+NEXT_llapprP6halfba;calc;Next Bar;inc_calc_controls.php;Next bar half bar-adjusted line level approximation for P6;;;
+"NEXT_llapprP6""halfba";calc;Next Bar;inc_calc_controls.php;"Next bar half bar-adjusted line level approximation for P6""";;;
+NEXT_llapprAuxP6halfba;calc;Next Bar;inc_calc_controls.php;Next bar half bar-adjusted line level approximation for AuxP6;;;
+NEXT_llapprAuxP6'halfba;calc;Next Bar;inc_calc_controls.php;Next bar half bar-adjusted line level approximation for AuxP6';;;
+;;;;;;;
+// Bar-adjusted Level Parameters;;;;;;;
+NEXT_lvlapprP6halfba;calc;Next Bar;inc_calc_controls.php;Next bar bar-adjusted half-time approximation for P6 to its Pricesize;;;
+"NEXT_lvlapprP6""halfba";calc;Next Bar;inc_calc_controls.php;"Next bar bar-adjusted half-time approximation for P6"" to its Pricesize";;;
+NEXT_lvlapprAuxP6halfba;calc;Next Bar;inc_calc_controls.php;Next bar bar-adjusted half-time approximation for AuxP6 to its Pricesize;;;
+NEXT_lvlapprAuxP6'halfba;calc;Next Bar;inc_calc_controls.php;Next bar bar-adjusted half-time approximation for AuxP6' to its Pricesize;; ;
+;;;;;;;
+// Aim Line Breakout Parameters;;;;;;;inc_calc_controls 957 NEXT
+_c4preapALP6;flag;Pre-control;inc_calc_controls.php;P6 pre-approximation Aim line breakout;;;When [APPROACH] is reached, the presence of a breakout of the AL of the AM is checked in the section from the confirmation bar to the approach bar
+"_c4preapALP6""";flag;Pre-control;inc_calc_controls.php;"P6"" pre-approximation Aim line breakout";;;
+_c4preapALAuxP6;flag;Pre-control;inc_calc_controls.php;AuxP6 pre-approximation Aim line breakout;;;
+_c4preapALAuxP6';flag;Pre-control;inc_calc_controls.php;AuxP6' pre-approximation Aim line breakout;;;
+;;;;;;;
+// Aim Line Breakout Bar Parameters;;;;;;;inc_calc_controls 961 NEXT
+_llc4preapALP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted Aim line break out bar relative to P6;;;Parameter is calculated if _c4preapALP6 = 1
+"_llc4preapALP6""";calc;Pre-control;inc_calc_controls.php;"Bar-adjusted Aim line break out bar relative to P6""";"depends on _c4preapALP6""""";;
+_llc4preapALAuxP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted Aim line break out bar relative to AuxP6;depends on _c4preapALAuxP6;;
+_llc4preapALAuxP6';calc;Pre-control;inc_calc_controls.php;Bar-adjusted Aim line break out bar relative to AuxP6';depends on _c4preapALAuxP6';;
+;;;;;;;
+// Level-adjusted Aim Line Parameters;;;;;;;inc_calc_controls 964 NEXT
+_lvlconf4ALP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [Aim line break out level - t4 level] / [P6 level -Aim line break out level];;;Parameter is calculated if _c4preapALP6 = 1
+"_lvlconf4ALP6""";calc;Pre-control;inc_calc_controls.php;"Level-adjusted [Aim line break out level - t4 level] / [P6"" level - Aim line break out level]";"depends on _c4preapALP6""""";;
+_lvlconf4ALAuxP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [Aim line break out level - t4 level] / [AuxP6 level- Aim line break out level];depends on _c4preapALAuxP6;;
+_lvlconf4ALAuxP6';calc;Pre-control;inc_calc_controls.php;Level-adjusted [Aim line break out level - t4 level] / [AuxP6' level - Aim line break out level];depends on _c4preapALAuxP6';;
+;;;;;;;
+// Bar-adjusted Aim Line Parameters;;;;;;;967
+_llALapP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted [Approach bar -Aim line break out bar]/ [P6 node bar - conf_t4 bar];;;Parameter is calculated if _c4preapALP6 = 1
+"_llALapP6""";calc;Pre-control;inc_calc_controls.php;"Bar-adjusted [Approach bar -Aim line break out bar]/ [P6"" node bar - conf_t4 bar]";"depends on _c4preapALP6""""";;
+_llALapAuxP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted [Approach bar -Aim line break out bar]/ [AuxP6 node bar - conf_t4 bar];depends on _c4preapALAuxP6;;
+_llALapAuxP6';calc;Pre-control;inc_calc_controls.php;Bar-adjusted [Approach bar -Aim line break out bar]/ [AuxP6' node bar - conf_t4 bar];depends on _c4preapALAuxP6';;
+;;;;;;;
+// Level-adjusted Aim Line Parameters;;;;;;;970
+_lvlALapP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [Approach level -Aim line break out level]/[P6 node level - conf_t4 level];;;Parameter is calculated if _c4preapALP6 = 1
+"_lvlALapP6""";calc;Pre-control;inc_calc_controls.php;"Level-adjusted [Approach level -Aim line break out level]/[P6"" node level - conf_t4 level]";"depends on _c4preapALP6""""";;
+_lvlALapAuxP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [Approach level -Aim line break out level]/[AuxP6 node level - conf_t4 level];depends on _c4preapALAuxP6;;
+_lvlALapAuxP6';calc;Pre-control;inc_calc_controls.php;Level-adjusted [Approach level -Aim line break out level]/[AuxP6' node level - conf_t4 level];depends on _c4preapALAuxP6';;
+;;;;;;;
+// Node Bar Aim Line Parameters;;;;;;;973
+_llALP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted [P6 node bar - Aim line break out bar]/[P6 node bar - conf_t4 bar];;;Parameter is calculated if _c4preapALP6 = 1
+"_llALP6""";calc;Pre-control;inc_calc_controls.php;"Bar-adjusted [P6"" node bar -Aim line break out bar]/[P6"" node bar - conf_t4 bar]";"depends on _c4preapALP6""""";;
+_llALAuxP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted [AuxP6 node bar -Aim line break out bar]/[AuxP6 node bar - conf_t4 bar];depends on _c4preapALAuxP6;;
+_llALAuxP6';calc;Pre-control;inc_calc_controls.php;Bar-adjusted [AuxP6' node bar -Aim line break out bar]/[AuxP6' node bar - conf_t4 bar];depends on _c4preapALAuxP6';;
+;;;;;;;
+// Level-adjusted Node Bar Parameters;;;;;;;976
+_lvlALP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [P6 node bar - Aim line break out level]/[P6 node level - conf_t4 level];;;Parameter is calculated if _c4preapALP6 = 1
+"_lvlALP6""";calc;Pre-control;inc_calc_controls.php;"Level-adjusted [P6"" node bar - Aim line break out level]/[P6"" node level - conf_t4 level]";"depends on _c4preapALP6""""";;
+_lvlALAuxP6;calc;Pre-control;inc_calc_controls.php;"Level-adjusted [AuxP6"" - Aim line break out level]/[AuxP6 node level - conf_t4 level]";depends on _c4preapALAuxP6;;
+_lvlALAuxP6';calc;Pre-control;inc_calc_controls.php;Level-adjusted [AuxP6' - Aim line break out level]/[AuxP6' node level - conf_t4 level];depends on _c4preapALAuxP6';;
+;;;;;;;
+// Aim Line Correlation Parameters;;;;;;;978
+_ALcorP6;flag;Pre-control;inc_calc_controls.php;Aim line breakout correlation for correction/hasten Potential Real P6;;;Parameter is calculated if _c4preapALP6 = 1
+"_ALcorP6""";flag;Pre-control;inc_calc_controls.php;"Aim line breakout correlation for correction/hasten Potential Real P6""";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_ALcorAuxP6;flag;Pre-control;inc_calc_controls.php;Aim line breakout correlation for correction/hasten Potential Real AuxP6;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_ALcorAuxP6';flag;Pre-control;inc_calc_controls.php;Aim line breakout correlation for correction/hasten Potential Real AuxP6';depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Timesize Parameters;;;;;;;1011
+_llALcorsizeP6;calc;Pre-control;inc_calc_controls.php;Timesize of correction/hasten Potential Real P6;;;Parameter is calculated if _c4preapALP6 = 1 and _ALcorP6 = 1
+"_llALcorsizeP6""";calc;Pre-control;inc_calc_controls.php;"Timesize of correction/hasten Potential Real P6""";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_llALcorsizeAuxP6;calc;Pre-control;inc_calc_controls.php;Timesize of correction/hasten Potential Real AuxP6;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_llALcorsizeAuxP6';calc;Pre-control;inc_calc_controls.php;Timesize of correction/hasten Potential Real AuxP6';depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Pricesize Parameters;;;;;;;1014
+_lvlALcorsizeP6;calc;Pre-control;inc_calc_controls.php;Pricesize of correction/hasten Potential Real P6;;;Parameter is calculated if _c4preapALP6 = 1 and _ALcorP6 = 1
+"_lvlALcorsizeP6""";calc;Pre-control;inc_calc_controls.php;"Pricesize of correction/hasten Potential Real P6""";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_lvlALcorsizeAuxP6;calc;Pre-control;inc_calc_controls.php;Pricesize of correction/hasten Potential Real AuxP6;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_lvlALcorsizeAuxP6';calc;Pre-control;inc_calc_controls.php;Pricesize of correction/hasten Potential Real AuxP6';depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Time Distance Parameters;;;;;;;1017
+_llALcordistP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted Time distance from start of correction/hasten Potential Real P6;;;Parameter is calculated if _c4preapALP6 = 1 and _ALcorP6 = 1
+"_llALcordistP6""";calc;Pre-control;inc_calc_controls.php;"Bar-adjusted Time distance from start of correction/hasten Potential Real P6""";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_llALcordistAuxP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted Time distance from start of correction/hasten Potential Real AuxP6;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_llALcordistAuxP6';calc;Pre-control;inc_calc_controls.php;Bar-adjusted Time distance from start of correction/hasten Potential Real AuxP6';depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Price Distance Parameters;;;;;;;1020
+_lvlALcordistP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted Price distance from start of correction/hasten Potential Real P6;;;Parameter is calculated if _c4preapALP6 = 1 and _ALcorP6 = 1
+"_lvlALcordistP6""";calc;Pre-control;inc_calc_controls.php;"Level-adjusted Price distance from start of correction/hasten Potential Real P6""";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_lvlALcordistAuxP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted Price distance from start of correction/hasten Potential Real AuxP6;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_lvlALcordistAuxP6';calc;Pre-control;inc_calc_controls.php;Level-adjusted Price distance from start of correction/hasten Potential Real AuxP6';depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Position Parameters;;;;;;;1022
+_llALcorposP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted [P6 node - Start time of correction/hasten Potential Real P6]/Timesize;;;Parameter is calculated if _c4preapALP6 = 1 and _ALcorP6 = 1
+"_llALcorposP6""";calc;Pre-control;inc_calc_controls.php;"Bar-adjusted [P6"" node - Start time of correction/hasten Potential Real P6""]/Timesize";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_llALcorposAuxP6;calc;Pre-control;inc_calc_controls.php;Bar-adjusted [AuxP6 node -Start time of correction/hasten Potential Real AuxP6]/Timesize;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_llALcorposAuxP6';calc;Pre-control;inc_calc_controls.php;Bar-adjusted [AuxP6' node - Start time of correction/hasten Potential Real AuxP6']/Timesize;depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Level Position Parameters;;;;;;;1024
+_lvlALcorposP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [P6 node - Start level of correction/hasten Potential Real P6]/Pricesize;;;Parameter is calculated if _c4preapALP6 = 1 and _ALcorP6 = 1
+"_lvlALcorposP6""";calc;Pre-control;inc_calc_controls.php;"Level-adjusted [P6"" node - Start level of correction/hasten Potential Real P6""]/Pricesize";"depends on _c4preapALP6"""", _ALcorP6""""";;
+_lvlALcorposAuxP6;calc;Pre-control;inc_calc_controls.php;Level-adjusted [AuxP6 node -Start level of correction/hasten Potential Real AuxP6]/Pricesize;depends on _c4preapALAuxP6, _ALcorAuxP6;;
+_lvlALcorposAuxP6';calc;Pre-control;inc_calc_controls.php;Level-adjusted [AuxP6' node - Start level of correction/hasten Potential Real AuxP6']/Pricesize;depends on _c4preapALAuxP6', _ALcorAuxP6';;
+;;;;;;;
+// Proto Parameters;;;;;;;1039
+_P6proto;flag;Pre-control;inc_calc_controls.php;Proto P6 indicator;;;If the _lvlapprP6 parameter is calculated and the value is different from 0
+"_P6""proto";calc;Pre-control;inc_calc_controls.php;"Proto P6"" indicator";"depends on _lvlapprP6""""";;
+_AuxP6proto;calc;Pre-control;inc_calc_controls.php;Proto AuxP6 indicator;depends on _lvlapprAuxP6;;
+_AuxP6'proto;calc;Pre-control;inc_calc_controls.php;Proto AuxP6' indicator;depends on _lvlapprAuxP6';;
+;;;;;;;
+// Proto Size Parameters;;;;;;;1060
+_llprotosizeP6;calc;Pre-control;inc_calc_controls.php;Relative duration of Proto-P6 to Timesize;;;The distance in bars between the Proto-P6 and Prelead-extremum bars is calculated
+"_llprotosizeP6""";calc;Pre-control;inc_calc_controls.php;Relative duration of Proto-P6' to Timesize;"depends on _lvlapprP6"""", _P6""""proto";; 
+_llprotosizeAuxP6;calc;Pre-control;inc_calc_controls.php;Relative duration of Proto-AuxP6 to Timesize;depends on _lvlapprAuxP6, _AuxP6proto;;
+_llprotosizeAuxP6;calc;Pre-control;inc_calc_controls.php;Relative duration of Proto-AuxP6 to Timesize;depends on _lvlapprAuxP6', _AuxP6'proto;;
+_lvlprotosizeP6;calc;Pre-control;inc_calc_controls.php;Relative depth of proto-P6  development to Pricesize;"depends on _lvlapprP6, _P6proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;The difference between the proto-P6 and Prelead-extremum levels is divided by Pricesize
+"_lvlprotosizeP6""";calc;Pre-control;inc_calc_controls.php;"Level prototype size for P6""";"depends on _lvlapprP6"", _P6""proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;"the difference between the proto-P6"" and Prelead-extremum levels is divided by Pricesize"
+_lvlprotosizeAuxP6;calc;Pre-control;inc_calc_controls.php;Level prototype size for AuxP6;"depends on _lvlapprAuxP6, _AuxP6proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;the difference between the Aux proto-AuxP6 and Prelead-extremum levels is divided by Pricesize
+_lvlprotosizeAuxP6';calc;Pre-control;inc_calc_controls.php;Level prototype size for AuxP6';"depends on _lvlapprAuxP6', _AuxP6'proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;the difference between the Aux proto-6' and Prelead-extremum levels is divided by Pricesize
+_llprotoposP6;calc;Pre-control;inc_calc_controls.php;Relative position of proto-P6 to Timesize;"depends on _lvlapprP6, _P6proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;"The distance in bars between proto-P6 and the node of the calculated P6 is calculated. Let's designate this value as A1. Calculate A1/Timesize. This is value of parmeter _llprotoposP6.
+
+The remaining parameters are calculated by analogy.
+
+These parameters can have both negative and positive values. They will be positive if the proto-P6 bar lies before the bar of the node of the calculated P6.
+If the proto-P6 bar lies after the bar of the node of the calculated P6, these parameters will have a negative value."
+"_llprotoposP6""";calc;Pre-control;inc_calc_controls.php;"Relative position of proto-P6"" to Timesize";"depends on _lvlapprP6"", _P6""proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;
+_llprotoposAuxP6;calc;Pre-control;inc_calc_controls.php;Relative position of proto-AuxP6 to Timesize;"depends on _lvlapprAuxP6, _AuxP6proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;
+_llprotoposAuxP6';calc;Pre-control;inc_calc_controls.php;Relative position of proto-AuxP6' to Timesize;"depends on _lvlapprAuxP6', _AuxP6'proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;
+_lvlprotoposP6;calc;Pre-control;inc_calc_controls.php;"Relative position of proto-P6"" to Pricesize";"depends on _lvlapprP6, _P6proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;"We calculate the difference between the level of proto-P6 and the level of the calculated P6 . We designate this value as X1. We calculate X1/Y. 
+
+The remaining parameters are calculated by analogy."
+"_lvlprotoposP6""";calc;Pre-control;inc_calc_controls.php;Relative position of proto-P6 to Pricesize;"depends on _lvlapprP6"", _P6""proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;
+_lvlprotoposAuxP6;calc;Pre-control;inc_calc_controls.php;Relative position of proto-AuxP6 to Pricesize;"depends on _lvlapprAuxP6, _AuxP6proto and
+according to rules: 
+conf_preap_lvlrule
+app_lvlcond
+preap_app_llcond";;
