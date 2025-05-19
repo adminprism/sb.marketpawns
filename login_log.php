@@ -2,8 +2,10 @@
 $dbhost = 'localhost';    // Unlikely to require changing
 $dbname = 'webfinance_';   // Modify these...
 // $dbname = 'webfinance_2';   // Modify these...
+// $dbname = 'market_pawns';   // Modify these...
 $dbuser = 'root';   // ...variables according
 $dbpass = 'Timer11!';   // ...to your installation
+// $dbpass = 'prsms111!';
 $startTime = $php_start = microtime(true);
 $sql_time = $fgc_time = 0;
 
