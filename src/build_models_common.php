@@ -1718,7 +1718,8 @@ class G1Classifier
      */
     private function analyzeT6RightOfT4WithoutT2Prime()
     {
-        $P6 = round(" " . abs($this->t6['level']), 5);
+        //! $P6 = round(" " . abs($this->t6['level']), 5);
+        $P6 = round(abs($this->t6['level']), 5);
         $dist_1_4 = $this->state['t4'] - $this->state['t1'];
         $dist_4_6 = $this->t6['bar'] - $this->state['t4'];
 
@@ -1726,13 +1727,15 @@ class G1Classifier
             // 7.2.1.1.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является некорректной ЧМП
             $this->state['param']['G1'] = "NA_7_2_1_1"; // некорректная ЧМП
             $this->state['param']['calcP6'] = $P6;
-            $this->state['param']['calcP6t'] = round(" " . $this->t6['bar'], 3);
+            //! $this->state['param']['calcP6t'] = round(" " . $this->t6['bar'], 3);
+            $this->state['param']['calcP6t'] = round($this->t6['bar'], 3);
         } else if ($dist_1_4 * 12 > $dist_4_6) {
             // 7.2.1.2.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является ЧМП/МДР
             $this->state = myLog($this->state, "7.2.1.2. данная модель является ЧМП/МДР.");
             $this->state['param']['G1'] = 'AM/DBM';
             $this->state['param']['calcP6'] = $P6;
-            $this->state['param']['calcP6t'] = round(" " . $this->t6['bar'], 3);
+            //! $this->state['param']['calcP6t'] = round(" " . $this->t6['bar'], 3);
+            $this->state['param']['calcP6t'] = round($this->t6['bar'], 3);
         } else {
             // 7.2.1.3. участок от т.1 до т.4 умноженный на 12 меньше или равен участку от СТ до т.1 то данная модель является МДР.
             $this->state = myLog($this->state, "7.2.1.3. данная модель является МДР.");

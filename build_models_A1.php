@@ -1173,8 +1173,10 @@ function step_6($State)
                     // $State['t6мп']=substr($t6,0,7).' ('.substr(($v=='low')?($t6_level*1):(-1)*$t6_level,0,7).')'; //ЗАГЛУШКА
                     // $State['param']['auxP6'] = substr(" " . abs($t6_level), 1, 7);
                     // $State['param']['auxP6t'] = substr(" " . $t6, 1, 7);
-                    $State['param']['auxP6'] = round(" " . abs($t6_level), 5);
-                    $State['param']['auxP6t'] = round(" " . $t6, 7);
+                    //! $State['param']['auxP6'] = round(" " . abs($t6_level), 5);
+                    //! $State['param']['auxP6t'] = round(" " . $t6, 7);
+                    $State['param']['auxP6'] = round(abs($t6_level), 5);
+                    $State['param']['auxP6t'] = round($t6, 7);
                     $State['param']['auxP6t_from'] = __LINE__;
                     $State = myLog($State, "рассчитали auxP6 в 6.2.1.1. : (" . $State['param']['auxP6t'] . ") " . $State['param']['auxP6']);
                     $State = myLog($State, "  draw_flag= " . ($State['draw_flag'] ?? 0)); // 2222222222222222222222222
@@ -1255,7 +1257,8 @@ function step_6($State)
             //  $State['t6мп']=substr($t6,0,7).' ('.substr(($v=='low')?($t6_level*1):(-1)*$t6_level,0,7).')'; // ЗАГЛУШКА
             // $State['param']['auxP6'] = substr(" " . abs($t6_level), 0, 7);
             // $State['param']['auxP6t'] = substr($t6, 0, 7);
-            $State['param']['auxP6'] = round(" " . abs($t6_level), 5);
+            //! $State['param']['auxP6'] = round(" " . abs($t6_level), 5);
+            $State['param']['auxP6'] = round(abs($t6_level), 5);
             $State['param']['auxP6t'] = round($t6, 7);
             $State['param']['auxP6t_from'] = __LINE__;
             $State = myLog($State, "рассчитали auxP6 в 6.2.2.: (" . $State['param']['auxP6t'] . ") " . $State['param']['auxP6']);
@@ -1387,7 +1390,8 @@ function step_6($State)
                             //  $State['t6мп']=substr($t6,0,7).' ('.substr(($v=='low')?($t6_level*1):(-1)*$t6_level,0,7).')'; // ЗАГЛУШКА
                             // $State['param']['aux5'P6'] = substr(" " . abs($t6_level), 0, 7);
                             // $State['param']['aux5'P6t'] = substr($t6, 0, 7);
-                            $State['param']['auxP6\''] = round(" " . abs($t6s_level), 5);
+                            //! $State['param']['auxP6\''] = round(" " . abs($t6s_level), 5);
+                            $State['param']['auxP6\''] = round(abs($t6s_level), 5);
                             $State['param']['auxP6\'t'] = round($t6s, 7);
                             $State = myLog($State, "рассчитали auxP6' : (" . $State['param']['auxP6\'t'] . ") " . $State['param']['auxP6\'']);
 
@@ -1460,7 +1464,8 @@ function step_6($State)
         if ($dy > 0) { // если линии сходятся
             $t6s = $t3_5s + ($y_top - $y_bottom) / $dy; // находим время т.5'
             $t6s_level = lineLevel($LC_s, $t6s); // находим уровень т.5'
-            $State['param']['auxP6\''] = round(" " . abs($t6s_level), 5);
+            //! $State['param']['auxP6\''] = round(" " . abs($t6s_level), 5);
+            $State['param']['auxP6\''] = round(abs($t6s_level), 5);
             $State['param']['auxP6\'t'] = round($t6s, 7);
             $State = myLog($State, "рассчитали auxP6' : (" . $State['param']['auxP6\'t'] . ") " . $State['param']['auxP6\'']);
 
@@ -1659,8 +1664,10 @@ function step_7($State)
     else { //7.2 t2' найти не смогли - цена пересекает ЛЦ' на т1-т2
         if ($t6_) { // есть пересечение - t6 найдена
             if ($t6_['bar'] > $State['t4']) { // 7.2.1 t6 справа от т2 и т4
-                $P6 = $State['param']['calcP6'] = round(" " . abs($t6_['level']), 5);
-                $State['param']['calcP6t'] = round(" " . $t6_['bar'], 3);
+                //! $P6 = $State['param']['calcP6'] = round(" " . abs($t6_['level']), 5);
+                //! $State['param']['calcP6t'] = round(" " . $t6_['bar'], 3);
+                $P6 = $State['param']['calcP6'] = round(abs($t6_['level']), 5);
+                $State['param']['calcP6t'] = round($t6_['bar'], 3);
                 $dist_1_4 = $State['t4'] - $State['t1'];
                 $dist_4_6 = $t6_['bar'] - $State['t4'];
                 if ($dist_1_4 * 3 > $dist_4_6) { //7.2.1.1.Если участок от т.1 до т.4, умноженный на 3 больше участка от т.4 до расчетной т.6, то данная модель является некорректной ЧМП
@@ -1849,7 +1856,8 @@ function fix_model($State, $name, $wo_t5 = false)
     $_CP = linesIntersection($LT, $LCs);
     if ($_CP && $_CP['bar'] > $State['t4'])
         // $State['param']['_cross_point'] = substr(" " . $_CP['bar'], 1, 7) . " (" . substr(" " . abs($_CP['level']), 1, 7) . ")";
-        $State['param']['_cross_point'] = round(" " . $_CP['bar'], 3) . " (" . round(" " . abs($_CP['level']), 5) . ")";
+        //! $State['param']['_cross_point'] = round(" " . $_CP['bar'], 3) . " (" . round(" " . abs($_CP['level']), 5) . ")";
+        $State['param']['_cross_point'] = round($_CP['bar'], 3) . " (" . round(abs($_CP['level']), 5) . ")";
     // конец доп.блока _CROSS_POINT
 
     if ($name) $State['status'][$name] = 0;
@@ -2075,8 +2083,10 @@ function calcStatistics()
                 if (abs($t6_['level']) > 0 && isset($pv1['param']["AUX5'"]) && $pv1['param']["AUX5'"] == "AUX5'") {
                     // $res['Models'][$pk][$pk1]['param']['auxP6\''] = substr(" " . abs($t6_['level']), 1, 7);
                     // $res['Models'][$pk][$pk1]['param']['auxP6\'t'] = substr(" " . $t6_['bar'], 1, 7);
-                    $res['Models'][$pk][$pk1]['param']['auxP6\''] = round(" " . abs($t6_['level']), 5);
-                    $res['Models'][$pk][$pk1]['param']['auxP6\'t'] = round(" " . $t6_['bar'], 7);
+                    //! $res['Models'][$pk][$pk1]['param']['auxP6\''] = round(" " . abs($t6_['level']), 5);
+                    //! $res['Models'][$pk][$pk1]['param']['auxP6\'t'] = round(" " . $t6_['bar'], 7);
+                    $res['Models'][$pk][$pk1]['param']['auxP6\''] = round(abs($t6_['level']), 5);
+                    $res['Models'][$pk][$pk1]['param']['auxP6\'t'] = round($t6_['bar'], 7);
                     // ! added 15/02/22
                     // $State['param']['TLSpeedAux5\''] = round($LT__['angle']/$pips*1000,2);
                     // $res['Models'][$pk][$pk1]['param']['TLSpeedAux5\''] = round($LT__['angle']/($pv1['t4'] - $pv1['t1']),4);
