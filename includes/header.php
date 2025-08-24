@@ -21,6 +21,9 @@ $is_infobase = is_in_directory('/infobase');
             <li class="<?php echo $is_infobase ? 'active' : ''; ?>">
                 <a href="<?php echo $base_url; ?>infobase/tables.php"><i class="fas fa-database"></i>Infobase</a>
             </li>
+            <li>
+                <a href="<?php echo $base_url; ?>trade_emulator.html"><i class="fas fa-play-circle"></i>Trade Emulator</a>
+            </li>
             <li><a href="https://marketpawns.com"><i class="fas fa-chess-pawn"></i>Marketpawns</a></li>
             <li><a href="https://wiki.marketpawns.com/index.php?title=Main_Page"><i class="fas fa-book"></i>Wiki</a></li>
             <li><a href="https://github.com/adminprism/Sandbox" target="_blank" style="padding-right: 0 !important;"><i class="fab fa-github"></i>GitHub</a></li>

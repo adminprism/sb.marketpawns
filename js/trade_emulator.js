@@ -59,7 +59,7 @@ function calculatePlease(){ // запрашиваем PHP модуль calc_setu
     for(i in cbs){
         if($('#condition1_'+i).is(":checked"))l.push(i)
     }
-    if(l.length==0)alert('Нужно выбрать хотя бы один сетап!')
+    if(l.length==0)alert('You need to select at least one setup!')
     else{ // вызываем AJAX для расчета выбранных сетапов
         function showResults(answer){
             $("#debug").html("<pre>" + JSON2html(ResAJAX) + "</pre>")
@@ -72,7 +72,7 @@ function calculatePlease(){ // запрашиваем PHP модуль calc_setu
                 $info_=i.split('|')[1]
                 html_+='<a class="file_link" href="'+reportFiles[i]+'"  target="_blank">'+$tag_+'</a>'
                 //html_+='<a class="trade_graph" href="'+reportFiles[i].replace('json','jpg')+'"  target="_blank">'+"(график)"+'</a><br>'
-                html_+="<p class=\"click_for_graph\" onclick=showGraph_open("+cnt_+",0)>"+$info_+"</p><p class=\"click_for_graph1\" onclick=showGraph_open("+cnt_+",1)>"+"&nbsp;&nbsp;&nbsp;&nbsp;(график в %%)"+"</p><br>"
+                html_+="<p class=\"click_for_graph\" onclick=showGraph_open("+cnt_+",0)>"+$info_+"</p><p class=\"click_for_graph1\" onclick=showGraph_open("+cnt_+",1)>"+"&nbsp;&nbsp;&nbsp;&nbsp;(chart in %%)"+"</p><br>"
                 cnt_+=1
             }
             $("#report_files").html(html_)
@@ -110,11 +110,11 @@ function calculatePlease(){ // запрашиваем PHP модуль calc_setu
                     $("#debug").css("display", "block");
                     $("#trade_emulator_errors").html("<pre>" + JSON2html(ResAJAX.Errors) + "</pre>")
                     $("#trade_emulator_errors").css("display","block");
-                    alert("Ошибка в calc_setups.php!")
+                    alert("Error in calc_setups.php!")
                 }
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
-                alert("error(2) - AJAX запрос");
+                alert("Error(2) - AJAX request");
                 console.log("fail -  jqXHR: ");
                 console.log(jqXHR);
                 loaderOff();
@@ -162,7 +162,7 @@ $(document).ready(function () {
 
     loaderOff()
     if(answer['Errors'].length>0){
-      alert("Ошибка получения списка сетапов!")
+      alert("Error getting setups list!")
       $("#debug").css("display","block");
     }
     else{
@@ -185,7 +185,7 @@ $(document).ready(function () {
       $('.conditions_span').each(function(index,item){
         $(item).attr("title",item.innerText)
       });
-      $("#progress_info").html("Получен список сетапов. Количество: "+i)
+      $("#progress_info").html("Setups list received. Count: "+i)
 
       html_=$("#select-name").html()
       for(a of answer['tools']){ // перебор всех имеющихся в БД инструментов - заподняем комбо-бокс выбора инструмента
@@ -214,8 +214,8 @@ $(document).ready(function () {
         showProgress(true) // после получения списка сетапов обновляем текущий статус
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
-        $("#progress_info").html("Ошибка AJAX при получении списка сетапов")
-        alert("error(1) - AJAX запрос");
+        $("#progress_info").html("AJAX error while getting setups list")
+        alert("Error(1) - AJAX request");
         console.log("fail -  jqXHR: ");
         console.log(jqXHR);
         loaderOff();

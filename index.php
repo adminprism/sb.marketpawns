@@ -1008,6 +1008,7 @@
                 <button class="build-btn" onclick="build_models(1)"><i class="fas fa-chart-line"></i> Calculate Algorythm_1 models</button>
                 <button class="build-btn" onclick="build_models(2)"><i class="fas fa-chart-area"></i> Calculate Algorythm_2 models</button>
                 <button class="log-btn" onclick="openDebugLog()"><i class="fas fa-terminal"></i> Open Log</button>
+                <a class="build-btn" href="trade_emulator.html" style="text-decoration:none; display:inline-block;"><i class="fas fa-play-circle"></i> Open Trade Emulator</a>
             </div>
             
             <div id="model-info"> 

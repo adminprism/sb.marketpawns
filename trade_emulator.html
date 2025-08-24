@@ -17,25 +17,34 @@
 <body>
     <div class="window">
         <div id="trade_title" >
-            <p id="title_label" oncontextmenu=debug_on_off(event) >Эмулятор торгов по заданным сетапам:&nbsp&nbsp&nbsp</p>
-            <p id="status_label" >Статус:</p>
+            <p id="title_label" oncontextmenu=debug_on_off(event) >Trade Emulator for Configured Setups:&nbsp&nbsp&nbsp</p>
+            <p id="status_label" >Status:</p>
             <p id="progress_info">START</p>
+        </div>
+        <div style="margin: 8px 0;">
+            <a href="index.php" class="file_link" style="margin-right:8px;">⟵ Back to Main</a>
+            <button onclick="location.reload()" style="margin-right:8px;">Refresh List (LIST)</button>
+            <button onclick="showProgress(true)" style="margin-right:8px;">Show Status (PROGRESS)</button>
+            <button onclick="calculatePlease()" style="margin-right:8px;">Start Calculation (CALC)</button>
+            <button onclick="toggleReportsViewer()" style="margin-right:8px;">📊 View Reports</button>
+            <button onclick="debug_on_off(event)" style="margin-right:8px;">Debug</button>
+            <a href="developmentlog/TRADE_EMULATOR_USER_GUIDE.md" target="_blank" class="file_link">Help</a>
         </div>
         <hr />
         <div id="setup_selection">
             <div id="setup_selection_window">
-            <p> Выбор нужных сетапов из заданных в PHP</p>
-                <button onclick="selectSetups(1)">Отметить все</button>
-                <button onclick="selectSetups(0)">Снять отметки</button>
-                <a>Выбрать инструмент: </a>
+            <p> Select required setups from those defined in PHP</p>
+                <button onclick="selectSetups(1)">Select All</button>
+                <button onclick="selectSetups(0)">Unselect All</button>
+                <a>Choose instrument: </a>
                 <select id="select-name" name="name" size="1">
-                    <option value="--- ВСЕ ---" selected>--- ВСЕ ---</option>
+                    <option value="--- ALL ---" selected>--- ALL ---</option>
                 </select>
             <hr>
             <div id="setup_selection_list"> <!-- заполняется скриптом - список всех сетапов -->
             </div>
             <hr>
-            <button onclick="calculatePlease()">Выполнить эмуляцию торгов по выбранным сетапам</button>
+            <button onclick="calculatePlease()">Execute Trade Emulation for Selected Setups</button>
             </div>
 
             <div id="setup_selection_info"> <!-- заполняется скриптом - параметры выбранного сетапа -->
@@ -50,6 +59,35 @@
     </div>
     <div id="report_files">
 
+    </div>
+    
+    <!-- Reports Viewer Section -->
+    <div id="reports_viewer" style="margin-top: 20px; display: none;">
+        <h3>📊 Reports Viewer</h3>
+        <div style="margin-bottom: 10px;">
+            <button onclick="loadReportSessions()">🔄 Refresh Sessions</button>
+            <button onclick="toggleReportsViewer()">❌ Close Viewer</button>
+        </div>
+        
+        <div id="sessions_list" style="margin-bottom: 15px;">
+            <h4>Available Sessions:</h4>
+            <div id="sessions_container"></div>
+        </div>
+        
+        <div id="session_details" style="display: none;">
+            <h4 id="session_title">Session Details</h4>
+            <div id="session_summary" style="margin-bottom: 15px;"></div>
+            <div id="reports_list"></div>
+        </div>
+        
+        <div id="report_details" style="display: none;">
+            <h4 id="report_title">Report Details</h4>
+            <div style="margin-bottom: 10px;">
+                <button onclick="showSessionDetails()">⬅ Back to Session</button>
+                <button onclick="exportReportData()" id="export_btn">💾 Export Data</button>
+            </div>
+            <div id="report_content"></div>
+        </div>
     </div>
     <div id="debug">
         debug
@@ -67,6 +105,7 @@
 
     <script src="js/functions.js"></script>
     <script src="js/trade_emulator.js"></script>
+    <script src="js/reports_viewer.js"></script>
 
 </body>
 

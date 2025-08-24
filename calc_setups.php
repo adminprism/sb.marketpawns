@@ -252,7 +252,7 @@ if(isset($_POST['setupIDs'])||isset($_POST['mode'])){$res['info']['type']='_POST
 if(isset($PARAM['mode'])&&strtoupper($PARAM['mode'])=='PROGRESS'){
     $out=file_get_contents(PROGRESS_FILENAME);
     if($out)$res['answer']=$out;
-    else $res['answer']="ERROR! Ошибка чтения файла ".PROGRESS_FILENAME;
+    else $res['answer']="ERROR! Error reading file ".PROGRESS_FILENAME;
     $res['answer']=$out;
 
     unset($res['Error']);
@@ -272,7 +272,7 @@ if($result) {
     $result->close();
 }
 else{
-    $res['Errors'][]="Ошибка чтения списка инструментов из БД!";
+    $res['Errors'][]="Error reading instruments list from database!";
     die();
 }
 
@@ -282,7 +282,7 @@ if(isset($PARAM['mode'])&&strtoupper($PARAM['mode'])=='LIST'){
     $res['tools']=$toolsList;
     $res['PIC_WIDTH']=PIC_WIDTH;
     $res['PIC_HEIGHT']=PIC_HEIGHT;
-    writeProgress("Прочитан список сетапов. Количество: ".count($setups));
+    writeProgress("Setups list loaded. Count: ".count($setups));
     unset($res['Error']);
     die();
 }
@@ -299,12 +299,12 @@ if(!is_dir('Reports'))mkdir('Reports');
 $dir_name='Reports/'.date("Y-m-d H_i_s");
 $tmp=mkdir($dir_name);
 if(!$tmp){
-    $res['Errors'][]="ERROR! Не удалось создать папку \"$dir_name\"";
+    $res['Errors'][]="ERROR! Failed to create directory \"$dir_name\"";
     die();
 }
 $tmp=mkdir($dir_name."/TTLs");
 if(!$tmp){
-    $res['Errors'][]="ERROR! Не удалось создать папку \"$dir_name/TTLs\"";
+    $res['Errors'][]="ERROR! Failed to create directory \"$dir_name/TTLs\"";
     die();
 }
 
@@ -383,8 +383,8 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
 
     // if($debug_models_cnt[$name_id]>50000 || $name_id>17)continue; // for debug only
 
-    writeProgress("Обрабатываю инструмент: $curTool, ранее обработано: $ind --- посчитано сделок: ".$tradesCnt);
-    write_log("---------- Обрабатываю инструмент: $curTool, ранее обработано: $ind \n".PHP_EOL,3);
+    writeProgress("Processing instrument: $curTool, previously processed: $ind --- trades calculated: ".$tradesCnt);
+    write_log("---------- Processing instrument: $curTool, previously processed: $ind \n".PHP_EOL,3);
 
     // загружаем чарт по текущему инструменту
     $Chart=[];
@@ -399,11 +399,11 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
 
     // if(count($Chart)<1000){ // если что-то не так - нет баров по данному инструменту, например
     if(count($Chart)<100){ // если что-то не так - нет баров по данному инструменту, например
-        $res['Errors'][]=$res['Error']="Ошибка в чарте (мало баров) name_id=$name_id";
+        $res['Errors'][]=$res['Error']="Chart error (too few bars) name_id=$name_id";
         die();
     }
     $pips=calcPips_clone($Chart); // определили размер пипса для текущего инструмента
-    write_log("Загружено баров: ".count($Chart)." pips=$pips".PHP_EOL,9);
+    write_log("Loaded bars: ".count($Chart)." pips=$pips".PHP_EOL,9);
     //$res['answer']['tmp_pips_'.$name_id."_$curTool"]=$pips;
 
 
@@ -415,7 +415,7 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
         $models[]=$rec;
     }
     $result->close();
-    write_log("Загружено моделей: ".count($models).PHP_EOL,7);
+    write_log("Loaded models: ".count($models).PHP_EOL,7);
 
     // заносим в массивы всю нужную инфу по "геометрии" моделей (size_and_levels)
     $size_and_levels=[];
@@ -439,7 +439,7 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
     }
     $result->close();
     //$res['_____SIZE&LEVELS']=$size_and_levels;
-    write_log("Загружено size_and_levels: ".count($size_and_levels).PHP_EOL,7);
+    write_log("Loaded size_and_levels: ".count($size_and_levels).PHP_EOL,7);
 
     // заносим в массив $NN_Answers всю инфу по ответам нейронок, какая есть
     $add1=$add2="";
@@ -450,7 +450,7 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
         $NN_Answers[$rec['model_id']][str_replace("P6","P6aims",$rec['aim_name'])][$rec['nn_number']]=floatval($rec['answer']);
     }
     $result->close();
-    write_log("Загружено nn_answers: ".count($NN_Answers).PHP_EOL,7);
+    write_log("Loaded nn_answers: ".count($NN_Answers).PHP_EOL,7);
     //$res['_____NN_answers']=$NN_Answers;
 
     foreach($setups as $curSetupNum=>$curSetup)if(in_array($curSetupNum,$setupList)){ // берем только отмеченные сетапы
@@ -506,9 +506,9 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
                 calcTime("readTTLs",$st);
             }
             $splitCnt++;
-            write_log("##### Перебор моделей для $curTool ($curSetupNum / $splitCnt) '".$curParsedSetup['tag']."'".PHP_EOL,7);
+            write_log("##### Processing models for $curTool ($curSetupNum / $splitCnt) '".$curParsedSetup['tag']."'".PHP_EOL,7);
             if(($modelCnt+count($checkModels))>($last_modelCnt+10) || $lastStatus<(microtime(true)-5)) {
-                writeProgress("Обрабатываю инструмент: $curTool, ранее обработано: $ind --- посчитано сделок: ".$tradesCnt);
+                writeProgress("Processing instrument: $curTool, previously processed: $ind --- trades calculated: ".$tradesCnt);
                 $lastStatus=microtime(true);
                 $last_modelCnt=$modelCnt+count($checkModels);
             }
@@ -647,7 +647,7 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
     //file_put_contents("tmp_log/_______debug_ " . shortFileName(__FILE__) . "_(" . __LINE__ . "_$name_id).json", json_encode(get_defined_vars(), JSON_PARTIAL_OUTPUT_ON_ERROR)); // for debug only
 
     $ind++;
-    writeProgress("Последний обрабатанный инструмент: $curTool, всего обработано: $ind --- посчитано сделок: \".$tradesCnt");
+    writeProgress("Last processed instrument: $curTool, total processed: $ind --- trades calculated: ".$tradesCnt);
 
 } // перебор всез tool
 $st=microtime(true);
@@ -806,7 +806,7 @@ function writeReports($dir_name){ // генерация и запись отче
             $res['answer']['out_files'][$cnt.") ".$tag."_"."$G1|trades:".($pv2['TRADE_CNT']??0).", pnl: ".$pv2['PROFIT']."-".$pv2['LOSS']."=   ".($pv2['PROFIT']-$pv2['LOSS'])." "]=$fileName;
             fclose($header);
             $tmp_CT=(microtime(true)-$ttt);
-            if($cnt % 10 ==0)writeProgress("Генерация и запись отчетов: $cnt");
+            if($cnt % 10 ==0)writeProgress("Generating and writing reports: $cnt");
         }
     }
 }
@@ -1756,9 +1756,9 @@ function calcPips_clone($Chart){
 }
 function writeProgress($status)
 {   global $startTime,$tmp_CT;
-    $ct=round(microtime(true)-$startTime,0)." сек.";
-    $mgu=number_format(memory_get_usage()/1024/1024,0)." Мб";
-    $status = "[" . date("Y-m-d H:i:s") . "] $status (время счета: $ct, занято памяти: $mgu )";// /*".round($tmp_CT,3)."c.*/";
+    $ct=round(microtime(true)-$startTime,0)." sec.";
+    $mgu=number_format(memory_get_usage()/1024/1024,0)." MB";
+    $status = "[" . date("Y-m-d H:i:s") . "] $status (calculation time: $ct, memory usage: $mgu )";// /*".round($tmp_CT,3)."c.*/";
     $p_header = fopen(PROGRESS_FILENAME, 'w');
     fwrite($p_header, $status);
     fclose($p_header);
