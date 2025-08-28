@@ -50,7 +50,10 @@ function displaySessions(sessions) {
         return;
     }
     
-    let html = '<div class="sessions-grid">';
+    let html = '<div style="display:flex; justify-content:flex-end; margin-bottom:8px;">\
+        <button class="btn btn-outline" onclick="confirmDeleteAllSessions()">Delete All Sessions<\/button>\
+    <\/div>';
+    html += '<div class="sessions-grid">';
     sessions.forEach(session => {
         html += `
             <div class="session-card">
@@ -71,6 +74,26 @@ function displaySessions(sessions) {
     
     container.innerHTML = html;
     hideAllSections();
+}
+
+// Delete all sessions
+function confirmDeleteAllSessions(){
+    if(!confirm('Delete ALL report sessions? This will remove all reports and charts.')) return;
+    showLoader('Deleting all sessions...');
+    const formData = new FormData();
+    formData.append('action','delete_all_sessions');
+    fetch('reports_api.php',{ method:'POST', body: formData })
+        .then(r=>r.json())
+        .then(data=>{
+            hideLoader();
+            if(data && data.success){
+                alert('All sessions deleted');
+                loadReportSessions();
+            } else {
+                showError('Failed to delete all sessions: '+(data && data.error ? data.error : 'Unknown error'));
+            }
+        })
+        .catch(err=>{ hideLoader(); showError('Network error: '+err.message); });
 }
 
 // Load session details and summary
@@ -212,13 +235,13 @@ function displayReportDetails(reportData) {
         if (reportData._file_info.chart_url) {
             html += `<div class="chart-container">
                 <h6>PnL Chart (Pips)</h6>
-                <img src="${reportData._file_info.chart_url}" alt="PnL Chart" style="max-width: 100%; height: auto;" onclick="openImageModal('${reportData._file_info.chart_url}')">
+                <img src="${reportData._file_info.chart_url}" alt="PnL Chart" class="chart-thumbnail" onclick="openImageModal('${reportData._file_info.chart_url}')">
             </div>`;
         }
         if (reportData._file_info.chart_proc_url) {
             html += `<div class="chart-container">
                 <h6>PnL Chart (Percentage)</h6>
-                <img src="${reportData._file_info.chart_proc_url}" alt="PnL Chart %" style="max-width: 100%; height: auto;" onclick="openImageModal('${reportData._file_info.chart_proc_url}')">
+                <img src="${reportData._file_info.chart_proc_url}" alt="PnL Chart %" class="chart-thumbnail" onclick="openImageModal('${reportData._file_info.chart_proc_url}')">
             </div>`;
         }
         html += '</div>';
@@ -274,7 +297,7 @@ function displayReportDetails(reportData) {
         // Show first 10 trades
         reportData.PNLs.slice(0, 10).forEach(trade => {
             html += `<tr>
-                <td>${formatNumber(trade.model_id)}</td>
+                <td>${trade.model_id}</td>
                 <td>${trade.close_time}</td>
                 <td class="${trade.pnl >= 0 ? 'profit' : 'loss'}">${formatNumber(trade.pnl)}</td>
                 <td>${formatNumber(trade.close_lvl)}</td>

@@ -1,0 +1,152 @@
+/* Marketpawns scoped theme
+   Scope: Apply only within .mp-theme to avoid changing the site header.
+   Note: Do not change header styles or highlight logic. */
+
+.mp-theme {
+  /* Brand tokens (scoped) */
+  --primary-color: #1A237E; /* Dark blue */
+  --hover-color: #283593; /* Dark blue hover */
+  --secondary-color: #4b5563; /* Muted gray */
+  --brand-gold: #C4A66A; /* Accent gold */
+  --brand-blue-light-bg: #F6F6F6; /* Neutral light surface */
+
+  /* Surfaces and content */
+  --background-color: #f7f7f7;
+  --content-background-color: #ffffff;
+  --background-alt: #f5f5f5;
+  --border-color: #E2E8F0;
+  --border-light: #edf2f7;
+
+  /* Typography */
+  --text-color: #1f2937; /* Neutral text */
+  --text-primary: #1A237E; /* Brand primary */
+  --text-secondary: #4A5568; /* Secondary text */
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+}
+
+/* Panels and sections */
+.mp-theme .control-panel,
+.mp-theme #source-switch,
+.mp-theme #showSwitch,
+.mp-theme #source-forex,
+.mp-theme #source-saves,
+.mp-theme #source-mysql {
+  background-color: var(--background-alt);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mp-theme .params-area,
+.mp-theme .maincontent-area,
+.mp-theme #right-block,
+.mp-theme .desk {
+  background-color: var(--content-background-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+}
+
+/* Sticky blocks */
+.mp-theme .sticky-buttons {
+  background-color: var(--content-background-color);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Buttons */
+.mp-theme button,
+.mp-theme .build-btn,
+.mp-theme .log-btn {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mp-theme button,
+.mp-theme .build-btn {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.mp-theme button:hover,
+.mp-theme .build-btn:hover {
+  background-color: var(--hover-color);
+}
+
+.mp-theme .log-btn {
+  background-color: var(--background-alt);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Inputs */
+.mp-theme select,
+.mp-theme input[type="text"],
+.mp-theme input[type="number"],
+.mp-theme input[type="checkbox"],
+.mp-theme input[type="radio"] {
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.mp-theme select:focus,
+.mp-theme input[type="text"]:focus,
+.mp-theme input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.15);
+}
+
+/* Tables */
+.mp-theme .params-table,
+.mp-theme .report-table,
+.mp-theme .metrics-table,
+.mp-theme .pnl-table {
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.mp-theme .params-table td,
+.mp-theme .report-table td,
+.mp-theme .metrics-table td,
+.mp-theme .pnl-table td {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.mp-theme .params-table tr:first-child td {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Info blocks */
+.mp-theme #active-bar {
+  background-color: var(--brand-blue-light-bg);
+  border: 1px solid rgba(26, 35, 126, 0.1);
+  border-left: 4px solid var(--brand-gold);
+  color: var(--text-primary);
+}
+
+.mp-theme #bar-info,
+.mp-theme #debug,
+.mp-theme .dop-info {
+  background-color: var(--background-alt);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+}
+
+/* Links inside themed blocks */
+.mp-theme a {
+  color: var(--text-primary);
+}
+
+.mp-theme a:hover {
+  color: var(--hover-color);
+}
+
+

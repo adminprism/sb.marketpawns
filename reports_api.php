@@ -61,6 +61,10 @@ try {
             $response['data'] = deleteSession($session);
             $response['success'] = true;
             break;
+        case 'delete_all_sessions':
+            $response['data'] = deleteAllSessions();
+            $response['success'] = true;
+            break;
             
         default:
             throw new Exception('Invalid action');
@@ -295,5 +299,23 @@ function deleteSession($session) {
     } else {
         throw new Exception('Failed to delete session directory');
     }
+}
+
+function deleteAllSessions(){
+    $reportsDir = 'Reports';
+    if (!is_dir($reportsDir)) {
+        return ['deleted_sessions'=>0];
+    }
+    $dirs = glob($reportsDir . '/*', GLOB_ONLYDIR);
+    $deleted=0; $allDeletedFiles=[];
+    foreach($dirs as $dir){
+        $session=basename($dir);
+        try{
+            $res=deleteSession($session);
+            $deleted++;
+            $allDeletedFiles=array_merge($allDeletedFiles,$res['deleted_files']??[]);
+        }catch(Exception $e){ /* continue */ }
+    }
+    return ['deleted_sessions'=>$deleted,'deleted_files'=>$allDeletedFiles];
 }
 ?>

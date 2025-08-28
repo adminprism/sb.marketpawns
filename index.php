@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/marketpawns-theme.css">
     <!-- Подключение стилей для кастомной полосы прокрутки -->
     <link rel="stylesheet" href="css/scrollbar-custom.css">
     <!-- Font Awesome for icons -->
@@ -25,14 +26,14 @@
             --brand-dark-blue-hover: #283593;
             --brand-gold: #C4A66A;
             --brand-gold-highlight: #FFF8E1;
-            --brand-blue-light-bg: #E8EAF6;
+            --brand-blue-light-bg: #F6F6F6;
             --text-primary: #1A237E;
             --text-secondary: #4A5568;
             --text-light: #64748b;
             --border-color: #E2E8F0;
             --border-light: #edf2f7;
-            --background-main: #f8fafc;
-            --background-alt: #f0f5fa;
+            --background-main: #f7f7f7;
+            --background-alt: #f5f5f5;
             --background-content: #ffffff;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
@@ -52,7 +53,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e6ecf5' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: none;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -331,7 +332,7 @@
         }
         
         .log-btn:hover {
-            background-color: var(--brand-blue-light-bg);
+            background-color: var(--background-alt);
             border-color: var(--brand-dark-blue);
             transform: translateY(-1px);
         }
@@ -550,13 +551,14 @@
             position: sticky;
             top: 100px;
             z-index: 890;
-            background-color: var(--brand-blue-light-bg);
+            background-color: var(--background-alt);
             padding: 12px 16px;
             margin-bottom: 20px;
             border-radius: 8px;
             font-weight: 600;
             color: var(--text-primary);
             border: 1px solid rgba(26, 35, 126, 0.1);
+            border-left: 4px solid var(--brand-gold);
             box-shadow: var(--shadow-sm);
             letter-spacing: 0.01em;
             font-size: 15px;
@@ -710,7 +712,7 @@
         .content-description {
             margin-bottom: 16px;
             padding: 14px 18px;
-            background-color: var(--brand-blue-light-bg);
+            background-color: var(--brand-gold-highlight);
             border-radius: 8px;
             font-size: 14px;
             border-left: 4px solid var(--brand-dark-blue);
@@ -960,7 +962,7 @@
     <?php include 'includes/header.php'; ?>
     
     <!-- CONTROLS AREA - Unified control elements for better horizontal organization -->
-    <div class="controls-area">
+    <div class="controls-area mp-theme">
         <!-- Data Source Controls -->
         <div class="control-panel datasource-panel">
             <div id="source-switch">
@@ -982,7 +984,7 @@
     </div>
     
     <!-- PARAMS AREA -->
-    <div class="params-area">
+    <div class="params-area mp-theme">
         <div id="right-block" oncontextmenu="debug_on_off(event)">
             <div id="calc-mode-container">
                  <h3>Calculation Mode:</h3>
@@ -1008,7 +1010,7 @@
                 <button class="build-btn" onclick="build_models(1)"><i class="fas fa-chart-line"></i> Calculate Algorythm_1 models</button>
                 <button class="build-btn" onclick="build_models(2)"><i class="fas fa-chart-area"></i> Calculate Algorythm_2 models</button>
                 <button class="log-btn" onclick="openDebugLog()"><i class="fas fa-terminal"></i> Open Log</button>
-                <a class="build-btn" href="trade_emulator.html" style="text-decoration:none; display:inline-block;"><i class="fas fa-play-circle"></i> Open Trade Emulator</a>
+                
             </div>
             
             <div id="model-info"> 
@@ -1021,7 +1023,7 @@
     </div>
 
     <!-- MAIN CONTENT AREA -->
-    <div class="maincontent-area">
+    <div class="maincontent-area mp-theme">
         <div class="desk">
             <div id="data-source-container" style="margin-bottom: 6px;">
                 <div id="source-forex" style="padding: 10px;">
@@ -1092,7 +1094,7 @@
                         if (!$connection) {
                             echo "<div class='error-message'>Database connection failed: " . mysqli_connect_error() . "</div>";
                         } elseif (!function_exists('queryMysql')) {
-                            echo "<div class='error-message'>Функция queryMysql() не найдена!</div>";
+                            echo "<div class='error-message'>Function queryMysql() not found!</div>";
                         } else {
                             try {
                                 $sql = "SELECT name FROM chart_names ORDER BY name";

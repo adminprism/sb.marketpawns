@@ -1,5 +1,27 @@
 # Trade Types Legend (Легенда типов трейда)
 
+## Quick Reference
+- P6rev / P6"rev / auxP6rev / auxP6'rev:
+  - Entry: on approach to P6 (after t5 exclusion rules). AlternateTrigger1 available if real P6 is reached.
+  - SL: InitStopLoss from AM level (percent), trailing by Trigger1/2 (or AMrealP6).
+  - TP: Aim1, enforced not on the approach bar.
+  - Cancel: price hits CancelLevel, time exceeds Actual, chart end, or t5 exclusion.
+- P6reach / P6"reach / auxP6reach / auxP6'reach:
+  - Entry: after t4 confirmed; for P6"reach respects t5" exclusion.
+  - SL: t5 or percent from t4. Trailing by Trigger1/2 when closer than current SL.
+  - TP: Aim1 (>= target level), not on the same bar as confirmation.
+  - Cancel: CancelLevel/time/chart end.
+- P6over / P6"over / auxP6over / auxP6'over:
+  - Entry: classic — on P6 breakdown; aggressive — on t4 if condition2 is true (open_bar=t4). t5/t5" exclusion applies.
+  - SL: t5 or percent; reference is t4 for aggressive, P6 breakdown for classic.
+  - TP: Aim1 beyond open_level; for aggressive if condition2 fails — exit on close of the open bar.
+  - Cancel: CancelLevel/time/chart end.
+- P6disrupt / P6"disrupt / auxP6disrupt / auxP6'disrupt:
+  - Entry: on approach to P6 (same trigger as rev), but trade direction is breakout/continuation (long), open_level = approach level.
+  - SL: t5 or percent from AM; triggers/trailling like over-long; no AlternateTrigger1; no triggers/TP on the same bar as approach.
+  - TP: Aim1 above open_level.
+  - Cancel: CancelLevel/time/chart end; t5/t5" exclusion like rev.
+
 ## Overview
 This document explains the different trade types implemented in the trade emulator based on the actual code analysis from `calc_setups.php`.
 
@@ -17,53 +39,13 @@ Trade types follow the pattern: `[Target][Variant]`
 - **rev** - Reversal trade (торговля на разворот)
 - **reach** - Reaching trade (торговля на достижение)
 - **over** - Breakout trade (торговля на пробой)
+- **disrupt** - Approach-entry + breakout-direction (подход + направление пробоя)
 
-## Complete Trade Types
-
-### Reversal Trades (Торговля на разворот)
-**Strategy**: Trade expecting price to reverse from the 6th point level
-
-- **P6rev** - Reversal from primary 6th point
-- **P6"rev** - Reversal from alternative primary 6th point  
-- **auxP6rev** - Reversal from auxiliary 6th point
-- **auxP6'rev** - Reversal from alternative auxiliary 6th point
-
-**Key characteristics:**
-- Entry: When price approaches the calculated 6th point level
-- Direction: Opposite to the approach direction (reversal)
-- Stop Loss: Typically set beyond the 6th point level
-- Take Profit: Set at predetermined percentage from model size
-- Special rules: Trade is cancelled if t5 bar already reached the approach level
-
-### Reaching Trades (Торговля на достижение)
-**Strategy**: Trade expecting price to reach the 6th point level
-
-- **P6reach** - Trade to reach primary 6th point
-- **P6"reach** - Trade to reach alternative primary 6th point
-- **auxP6reach** - Trade to reach auxiliary 6th point  
-- **auxP6'reach** - Trade to reach alternative auxiliary 6th point
-
-**Key characteristics:**
-- Entry: After model formation, trading towards the 6th point
-- Direction: Towards the calculated 6th point
-- Stop Loss: Can be set as t5 level or percentage from model
-- Take Profit: Near the 6th point level (within approach/breakdown range)
-- Special rules: Stop loss set within approach and breakdown levels
-
-### Breakout Trades (Торговля на пробой)
-**Strategy**: Trade expecting price to break through the 6th point level
-
-- **P6over** - Breakout through primary 6th point
-- **P6"over** - Breakout through alternative primary 6th point
-- **auxP6over** - Breakout through auxiliary 6th point
-- **auxP6'over** - Breakout through alternative auxiliary 6th point
-
-**Key characteristics:**
-- Entry: When price breaks through the 6th point level
-- Direction: Continuation beyond the 6th point
-- Stop Loss: Set above the 6th point level
-- Take Profit: Set at significant distance beyond breakout level
-- Special rules: No AlternateTrigger1 used for breakout trades
+## Disrupt Details
+- Purpose: combine early entry benefit of approach (rev) with continuation expectation (over).
+- Entry mechanics: waits for approach level to be reached (after t5 exclusions), opens long at `appr_level`.
+- Restrictions: triggers and Aim1 must not fire on the same bar as the approach; `AMrealP6` trailing is not used.
+- SL logic: `t5` or percent from AM; Trigger1/2 move SL only if the new SL is closer than current SL.
 
 ## Trade Execution Logic
 
@@ -91,7 +73,7 @@ Trade types follow the pattern: `[Target][Variant]`
 - Price reaches cancel level
 - Time limit exceeded (Actual parameter)
 - Chart data ends
-- t5 exclusion rules (for reversal trades)
+- t5 exclusion rules (where applicable)
 
 ## Model Types Compatibility
 - **EAM models**: Compatible with P6 and P6" targets
@@ -110,7 +92,7 @@ Trade types follow the pattern: `[Target][Variant]`
 'Aim1' => '30%',
 'Trigger1' => '15%',
 'AlternateTrigger1' => '10%',
-'Trailing1' => 'AMrealP6'
+'eling1' => 'AMrealP6'
 ```
 
 ### Example 2: P6reach Setup  
@@ -131,9 +113,21 @@ Trade types follow the pattern: `[Target][Variant]`
 'Trigger1' => '-20%, -15%, 5%'
 ```
 
+### Example 4: P6disrupt Setup
+```php
+'trade type' => 'P6disrupt',
+'CancelLevel' => '85%',
+'InitStopLoss' => 't5',
+'Aim1' => '30%',
+'Trigger1' => '15%',
+'AlternateTrigger1' => '',
+'Trailing1' => '10%'
+```
+
 ## Notes
 - Percentage values are relative to model size
 - Negative percentages indicate direction opposite to model orientation
 - Multiple values (e.g., "10%, 20%, 5%") create parameter ranges for testing
 - Special values like 't5' and 'AMrealP6' reference specific model points
 - All trades use the same basic state machine but with different entry/exit logic
+

@@ -1,94 +1,440 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset='UTF-8'>
-    <!-- <script src='js/moving_box_css.js'></script> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/scrollbar-custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script>
         //скрипт для передачи параметров для запуска страницы
         url_="calc_setups.php" // имя PHP файла, в который летят AJAX запросы - он вначале присылает список сетапов, а потом результаты эмуляции по нужным
         ver = "1.0";
     </script>
-    <title>Trade emulator (ver. 2022-08-02) </title>
+    <title>Trade Emulator - Market Pawns</title>
+    <style>
+        body {
+            font-family: var(--font-sans, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-main, #f7f7f7);
+            color: var(--text-secondary, #4A5568);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 15px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="window">
-        <div id="trade_title" >
-            <p id="title_label" oncontextmenu=debug_on_off(event) >Trade Emulator for Configured Setups:&nbsp&nbsp&nbsp</p>
-            <p id="status_label" >Status:</p>
-            <p id="progress_info">START</p>
-        </div>
-        <div style="margin: 8px 0;">
-            <a href="index.php" class="file_link" style="margin-right:8px;">⟵ Back to Main</a>
-            <button onclick="location.reload()" style="margin-right:8px;">Refresh List (LIST)</button>
-            <button onclick="showProgress(true)" style="margin-right:8px;">Show Status (PROGRESS)</button>
-            <button onclick="calculatePlease()" style="margin-right:8px;">Start Calculation (CALC)</button>
-            <button onclick="toggleReportsViewer()" style="margin-right:8px;">📊 View Reports</button>
-            <button onclick="debug_on_off(event)" style="margin-right:8px;">Debug</button>
-            <a href="developmentlog/TRADE_EMULATOR_USER_GUIDE.md" target="_blank" class="file_link">Help</a>
-        </div>
-        <hr />
-        <div id="setup_selection">
-            <div id="setup_selection_window">
-            <p> Select required setups from those defined in PHP</p>
-                <button onclick="selectSetups(1)">Select All</button>
-                <button onclick="selectSetups(0)">Unselect All</button>
-                <a>Choose instrument: </a>
-                <select id="select-name" name="name" size="1">
-                    <option value="--- ALL ---" selected>--- ALL ---</option>
-                </select>
-            <hr>
-            <div id="setup_selection_list"> <!-- заполняется скриптом - список всех сетапов -->
-            </div>
-            <hr>
-            <button onclick="calculatePlease()">Execute Trade Emulation for Selected Setups</button>
-            </div>
-
-            <div id="setup_selection_info"> <!-- заполняется скриптом - параметры выбранного сетапа -->
-
+    <!-- Header Section -->
+    <header class="emulator-header">
+        <div class="header-content">
+            <div class="title-section">
+                <h1 id="title_label" oncontextmenu="debug_on_off(event)">
+                    <i class="fas fa-chart-line"></i> Trade Emulator
+                </h1>
+                <p class="subtitle">Configure and execute trading strategy simulations</p>
             </div>
         </div>
-        <hr />
+    </header>
 
+    <!-- Navigation Toolbar -->
+    <nav class="toolbar">
+        <div class="toolbar-left">
+            <a href="index.php" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Main
+            </a>
+        </div>
+        <div class="toolbar-center">
+            <button onclick="location.reload()" class="btn btn-outline">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button onclick="showProgress(true)" class="btn btn-outline">
+                <i class="fas fa-info-circle"></i> Status
+            </button>
+            <button onclick="calculatePlease()" class="btn btn-primary">
+                <i class="fas fa-play"></i> Start Calculation
+            </button>
+            <!-- View Reports moved below Setup Details -->
+        </div>
+        <div class="toolbar-right">
+            <button onclick="debug_on_off(event)" class="btn btn-outline">
+                <i class="fas fa-bug"></i> Debug
+            </button>
+            <a href="developmentlog/TRADE_EMULATOR_USER_GUIDE.md" target="_blank" class="btn btn-outline">
+                <i class="fas fa-question-circle"></i> Help
+            </a>
+        </div>
+    </nav>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-container">
+            <div class="status-indicator">
+                <i class="fas fa-info-circle"></i>
+                <span class="status-label">Status:</span>
+                <span id="progress_info" class="status-value">START</span>
+            </div>
+        </div>
     </div>
-    <div id="trade_emulator_errors">
-        errors
-    </div>
-    <div id="report_files">
 
+    <!-- Progress Overlay (replaces loader) -->
+    <div id="calc_progress" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:9999;">
+        <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#ffffff; border:1px solid var(--border-light); border-radius:10px; padding:16px 18px; width:560px; box-shadow:0 10px 30px rgba(0,0,0,0.25);">
+            <div style="font-weight:600; margin-bottom:10px; color:#1f2937;">Calculation progress</div>
+            <div style="margin-bottom:8px; display:flex; gap:8px;">
+                <button id="btn-cancel-calc" class="btn btn-outline" style="padding:6px 10px;" onclick="cancelCalculation()">
+                    Cancel calculation
+                </button>
+            </div>
+            <div style="margin:8px 0;">
+                <div style="font-size:13px; color:#4b5563; margin-bottom:4px;">Instruments: <span id="p_inst_text">0/0 (0%)</span></div>
+                <div style="height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden;"><div id="p_inst_bar" style="height:10px; width:0%; background:#2563eb;"></div></div>
+            </div>
+            <div style="margin:8px 0;">
+                <div style="font-size:13px; color:#4b5563; margin-bottom:4px;">Setups: <span id="p_setup_text">0/0 (0%)</span></div>
+                <div style="height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden;"><div id="p_setup_bar" style="height:10px; width:0%; background:#10b981;"></div></div>
+                <div id="p_setup_tag" style="font-size:12px; color:#6b7280; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+            </div>
+            <div style="margin:8px 0;">
+                <div style="font-size:13px; color:#4b5563; margin-bottom:4px;">Models: <span id="p_model_text">0/0 (0%)</span></div>
+                <div style="height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden;"><div id="p_model_bar" style="height:10px; width:0%; background:#f59e0b;"></div></div>
+            </div>
+            <div id="p_extra" style="font-size:12px; color:#6b7280; margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="emulator-main">
+        <!-- Setup Configuration Panel -->
+        <section class="config-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-cogs"></i> Setup Configuration</h2>
+                <p>Select and configure trading setups for emulation</p>
+            </div>
+            
+            <div class="config-content">
+                <!-- Controls Row -->
+                <div class="controls-row">
+                    <div class="control-group">
+                        <label>Bulk Actions:</label>
+                        <div class="btn-group">
+                            <button onclick="selectSetups(1)" class="btn btn-sm btn-success">
+                                <i class="fas fa-check-double"></i> Select All
+                            </button>
+                            <button onclick="selectSetups(0)" class="btn btn-sm btn-warning">
+                                <i class="fas fa-times"></i> Unselect All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="select-name">Instrument Filter:</label>
+                        <select id="select-name" name="name" class="form-select">
+                            <option value="--- ALL ---" selected>--- ALL INSTRUMENTS ---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Trade Variant Builder -->
+                <div class="builder-section" style="margin-top: 10px; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; background: var(--background-content);">
+                    <div class="setup-header" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                        <h3 style="margin:0;"><i class="fas fa-wand-magic-sparkles"></i> Trade Variant Builder</h3>
+                        <div>
+                            <a href="developmentlog/TRADE_TYPES_LEGEND.md" target="_blank" class="btn btn-sm btn-outline" style="margin-right:8px;"><i class="fas fa-book"></i> Legend</a>
+                            <a href="developmentlog/TRADE_EMULATOR_USER_GUIDE.md" target="_blank" class="btn btn-sm btn-outline" style="margin-right:8px;"><i class="fas fa-circle-info"></i> Guide</a>
+                            <button id="btn-add-setup" class="btn btn-sm btn-primary" onclick="addCustomSetup()"><i class="fas fa-plus"></i> Add to list</button>
+                            <button id="btn-save-presets" class="btn btn-sm btn-outline" onclick="saveCustomSetups()"><i class="fas fa-save"></i> Save presets</button>
+                        </div>
+                    </div>
+
+                    <div class="builder-grid" style="margin-top:10px; display:grid; grid-template-columns: 2fr 1fr; gap:24px; align-items:start;">
+                        <div>
+                    <div style="margin-top: 10px; display:grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap:20px; align-items:start;">
+                        <div>
+                            <label>Target</label>
+                            <select id="b_target" class="form-select">
+                                <option value="P6">P6</option>
+                                <option value='P6"'>P6"</option>
+                                <option value="auxP6">auxP6</option>
+                                <option value="auxP6'">auxP6'</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Variant <span title="rev: reversal on approach; reach: trade to reach P6 after t4; over: breakout (aggressive uses t4 if condition2 true)"><i class="fas fa-question-circle"></i></span></label>
+                            <select id="b_variant" class="form-select" onchange="onVariantChange()">
+                                <option value="rev">rev (reversal)</option>
+                                <option value="reach">reach</option>
+                                <option value="over">over (breakout)</option>
+                                <option value="disrupt">disrupt (approach entry, breakout direction)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>CancelLevel (%) <span title="Cancel threshold from AM level: lvl_am - size_level * CancelLevel/100"><i class="fas fa-question-circle"></i></span></label>
+                            <input id="b_cancel" type="text" value="85%" class="form-input" />
+                        </div>
+                        <div>
+                            <label>Actual (time %) <span title="Time window: bar_0 + size_time*(1 + Actual/100)"><i class="fas fa-question-circle"></i></span></label>
+                            <input id="b_actual" type="text" value="200%" class="form-input" />
+                        </div>
+                    </div>
+
+                    <div style="margin-top:10px; display:grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap:20px; align-items:start;">
+                        <div>
+                            <label>InitStopLoss <span title="Initial stop-loss. Value can be % or 't5'. Reference: rev—AM; reach—t4 (or 't5'); over classic—P6 breakdown; over aggressive—t4."><i class="fas fa-question-circle"></i></span></label>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <select id="b_sl_type" class="form-select" style="width:90px;" onchange="syncSL()">
+                                    <option value="percent">%</option>
+                                    <option value="t5">t5</option>
+                                </select>
+                                <select id="b_sl_mode" class="form-select" style="width:120px;" onchange="syncSL()">
+                                    <option value="single">single</option>
+                                    <option value="range">range</option>
+                                </select>
+                                <input id="b_sl_val" type="text" value="-6%" class="form-input" />
+                            </div>
+                            <div id="b_sl_range_wrap" style="display:none; margin-top:6px; gap:12px; grid-template-columns: repeat(3, minmax(160px, 1fr)); display:grid;">
+                                <input id="b_sl_from" type="text" value="10%" class="form-input" placeholder="from" />
+                                <input id="b_sl_to" type="text" value="20%" class="form-input" placeholder="to" />
+                                <input id="b_sl_step" type="text" value="5%" class="form-input" placeholder="step" />
+                            </div>
+                        </div>
+                        <div>
+                            <label>Aim1 <span title="Single % or range: from, to, step. Negative % means opposite direction to AM."><i class="fas fa-question-circle"></i></span></label>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <select id="b_aim_mode" class="form-select" style="width:120px;" onchange="syncAim()">
+                                    <option value="single">single %</option>
+                                    <option value="range">range</option>
+                                </select>
+                                <input id="b_aim_single" type="text" value="30%" class="form-input" />
+                            </div>
+                            <div id="b_aim_range_wrap" style="display:none; margin-top:6px; gap:12px; grid-template-columns: repeat(3, minmax(160px, 1fr)); display:grid;">
+                                <input id="b_aim_from" type="text" value="28%" class="form-input" placeholder="from" />
+                                <input id="b_aim_to" type="text" value="30%" class="form-input" placeholder="to" />
+                                <input id="b_aim_step" type="text" value="1%" class="form-input" placeholder="step" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Trigger1 <span title="Set a single % or a range (from,to,step) relative to AM"><i class="fas fa-question-circle"></i></span></label>
+                            <div style="display:grid; gap:12px; grid-template-columns: minmax(220px, 280px) 1fr; align-items:center;">
+                                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                    <select id="b_tr1_mode" class="form-select" style="width:120px;" onchange="syncTrigger(1)">
+                                        <option value="single">single %</option>
+                                        <option value="range">range</option>
+                                    </select>
+                                    <input id="b_tr1_single" type="text" value="15%" class="form-input" />
+                                </div>
+                                <div id="b_tr1_range_wrap" style="display:none; gap:12px; grid-template-columns: repeat(3, minmax(140px, 1fr)); display:grid;">
+                                    <input id="b_tr1_from" type="text" value="15%" class="form-input" placeholder="from" />
+                                    <input id="b_tr1_to" type="text" value="20%" class="form-input" placeholder="to" />
+                                    <input id="b_tr1_step" type="text" value="2%" class="form-input" placeholder="step" />
+                                </div>
+                            </div>
+                            <div style="margin-top:6px; display:grid; grid-template-columns: minmax(240px, 320px) 1fr; gap:12px; align-items:center;">
+                                <select id="b_trl1_type" class="form-select" onchange="syncTrailing(1)">
+                                    <option value="percent">%</option>
+                                    <option value="t5">t5</option>
+                                    <option value="AMrealP6">AMrealP6</option>
+                                </select>
+                                <input id="b_trl1_val" type="text" value="AMrealP6" class="form-input" />
+                            </div>
+                        </div>
+
+                        <div id="b_alttr1_wrap">
+                            <label>AlternateTrigger1 (rev only) <span title="Only for 'rev'. Requires real P6. Moves SL according to Trailing1."><i class="fas fa-question-circle"></i></span></label>
+                            <input id="b_alttr1" type="text" value="" class="form-input" placeholder="optional e.g. 10%" />
+                        </div>
+
+                        <div>
+                            <label>Trigger2 <span title="Optional second trigger. Supports single % or range (from,to,step)"><i class="fas fa-question-circle"></i></span></label>
+                            <div style="display:grid; gap:12px; grid-template-columns: minmax(220px, 280px) 1fr; align-items:center;">
+                                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                    <select id="b_tr2_mode" class="form-select" style="width:120px;" onchange="syncTrigger(2)">
+                                        <option value="single">single %</option>
+                                        <option value="range">range</option>
+                                    </select>
+                                    <input id="b_tr2_single" type="text" value="" class="form-input" placeholder="optional" />
+                                </div>
+                                <div id="b_tr2_range_wrap" style="display:none; gap:12px; grid-template-columns: repeat(3, minmax(140px, 1fr)); display:grid;">
+                                    <input id="b_tr2_from" type="text" value="" class="form-input" placeholder="from" />
+                                    <input id="b_tr2_to" type="text" value="" class="form-input" placeholder="to" />
+                                    <input id="b_tr2_step" type="text" value="" class="form-input" placeholder="step" />
+                                </div>
+                            </div>
+                            <div style="margin-top:6px; display:grid; grid-template-columns: minmax(240px, 320px) 1fr; gap:12px; align-items:center;">
+                                <select id="b_trl2_type" class="form-select" onchange="syncTrailing(2)">
+                                    <option value="percent">%</option>
+                                    <option value="t5">t5</option>
+                                </select>
+                                <input id="b_trl2_val" type="text" value="" class="form-input" placeholder="optional" />
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <div>
+                            <label style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+                                <span>Builder Preview</span>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="copyBuilderPreview()"><i class="fas fa-copy"></i> Copy</button>
+                            </label>
+                            <pre id="builder_preview" style="min-height:400px; background:#0b1220; color:#cbd5e1; padding:10px; border-radius:6px; overflow:auto;">{}</pre>
+                            <div id="custom_setups_list" style="margin-top:10px;"></div>
+                        </div>
+                    </div>
+                    <!-- Conditions Builder -->
+                    <div style="margin-top:10px;">
+                        <label>Conditions</label>
+                        <div style="display:flex; gap:12px; align-items:center; margin:6px 0;">
+                            <label><input type="radio" name="condmode" value="advanced" checked onchange="toggleCondMode()"> Advanced</label>
+                            <label><input type="radio" name="condmode" value="simple" onchange="toggleCondMode()"> Simple</label>
+                        </div>
+                        <div id="cond_adv_wrap" style="display:block;">
+                            <label for="c_adv1" style="display:block; margin:6px 0 4px;">Condition1 (PHP)</label>
+                            <textarea id="c_adv1" class="form-input" rows="6" style="min-height:140px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;" placeholder="$G1==\"P\" && $bad==0"></textarea>
+                            <label id="cond2_label" for="c_adv2" style="display:block; margin:10px 0 4px;">Condition2 (PHP, for 'over')</label>
+                            <textarea id="c_adv2" class="form-input" rows="4" style="min-height:100px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;" placeholder="$G1==\"P\" && $bad==0"></textarea>
+                        </div>
+                        <div id="cond_simple_wrap" style="display:none; margin-top:6px;">
+                            <div style="display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                                <div>
+                                    <label>G1</label>
+                                    <input id="c_g1" type="text" class="form-input" placeholder="P or N" />
+                                </div>
+                                <div>
+                                    <label>Bad</label>
+                                    <select id="c_bad" class="form-select">
+                                        <option value="">Any</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Section min</label>
+                                    <input id="c_section_min" type="text" class="form-input" placeholder=">5" />
+                                </div>
+                                <div>
+                                    <label>NN1 probability</label>
+                                    <input id="c_nn1" type="text" class="form-input" placeholder=">=0.6" />
+                                </div>
+                                <div>
+                                    <label>NN2 probability</label>
+                                    <input id="c_nn2" type="text" class="form-input" placeholder=">=0.6" />
+                                </div>
+                                <div>
+                                    <label>NN3 probability</label>
+                                    <input id="c_nn3" type="text" class="form-input" placeholder=">=0.6" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Setup Selection List -->
+                <div class="setup-list-container">
+                    <div class="setup-header" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <h3 style="margin:0;"><i class="fas fa-list"></i> Available Setups</h3>
+                            <span id="setup_count" class="setup-count">Loading...</span>
+                        </div>
+                        <label style="display:flex; align-items:center; gap:6px; font-size:14px;">
+                            <input type="checkbox" id="setup_select_all" /> All
+                        </label>
+                    </div>
+                    <div id="setup_selection_list" class="setup-grid">
+                        <!-- заполняется скриптом - список всех сетапов -->
+                    </div>
+                </div>
+
+                <!-- Execute Button -->
+                <div class="execute-section">
+                    <button onclick="calculatePlease()" class="btn btn-large btn-primary">
+                        <i class="fas fa-rocket"></i> Execute Trade Emulation for Selected Setups
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup Info Panel -->
+        <aside class="info-panel">
+            <div class="panel-header">
+                <h3><i class="fas fa-info-circle"></i> Setup Details</h3>
+            </div>
+            <div id="setup_selection_info" class="info-content">
+                <p><i>Hover over a setup to view its details...</i></p>
+            </div>
+            <div style="margin-top:10px;">
+                <button onclick="toggleReportsViewer()" class="btn btn-outline">
+                    <i class="fas fa-chart-bar"></i> View Reports
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Error Display -->
+    <div id="trade_emulator_errors" class="error-panel">
+        <!-- errors -->
+    </div>
+
+    <!-- Report Files -->
+    <div id="report_files" class="report-files-panel">
+        <!-- report files -->
     </div>
     
     <!-- Reports Viewer Section -->
-    <div id="reports_viewer" style="margin-top: 20px; display: none;">
-        <h3>📊 Reports Viewer</h3>
-        <div style="margin-bottom: 10px;">
-            <button onclick="loadReportSessions()">🔄 Refresh Sessions</button>
-            <button onclick="toggleReportsViewer()">❌ Close Viewer</button>
-        </div>
-        
-        <div id="sessions_list" style="margin-bottom: 15px;">
-            <h4>Available Sessions:</h4>
-            <div id="sessions_container"></div>
-        </div>
-        
-        <div id="session_details" style="display: none;">
-            <h4 id="session_title">Session Details</h4>
-            <div id="session_summary" style="margin-bottom: 15px;"></div>
-            <div id="reports_list"></div>
-        </div>
-        
-        <div id="report_details" style="display: none;">
-            <h4 id="report_title">Report Details</h4>
-            <div style="margin-bottom: 10px;">
-                <button onclick="showSessionDetails()">⬅ Back to Session</button>
-                <button onclick="exportReportData()" id="export_btn">💾 Export Data</button>
+    <section id="reports_viewer" class="reports-viewer" style="display: none;">
+        <div class="viewer-header">
+            <h2><i class="fas fa-chart-bar"></i> Reports Viewer</h2>
+            <div class="viewer-controls">
+                <button onclick="loadReportSessions()" class="btn btn-outline">
+                    <i class="fas fa-sync-alt"></i> Refresh Sessions
+                </button>
+                <button onclick="toggleReportsViewer()" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Close Viewer
+                </button>
             </div>
-            <div id="report_content"></div>
         </div>
-    </div>
+        
+        <div class="viewer-content">
+            <!-- Sessions List -->
+            <div id="sessions_list" class="viewer-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-folder"></i> Available Sessions</h3>
+                </div>
+                <div id="sessions_container" class="sessions-container"></div>
+            </div>
+            
+            <!-- Session Details -->
+            <div id="session_details" class="viewer-section" style="display: none;">
+                <div class="section-header">
+                    <h3 id="session_title"><i class="fas fa-folder-open"></i> Session Details</h3>
+                </div>
+                <div id="session_summary" class="session-summary"></div>
+                <div id="reports_list" class="reports-container"></div>
+            </div>
+            
+            <!-- Report Details -->
+            <div id="report_details" class="viewer-section" style="display: none;">
+                <div class="section-header">
+                    <h3 id="report_title"><i class="fas fa-file-alt"></i> Report Details</h3>
+                    <div class="section-controls">
+                        <button onclick="showSessionDetails()" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Back to Session
+                        </button>
+                        <button onclick="exportReportData()" id="export_btn" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+                <div id="report_content" class="report-content"></div>
+            </div>
+        </div>
+    </section>
     <div id="debug">
         debug
     </div>

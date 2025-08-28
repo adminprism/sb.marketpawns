@@ -14,6 +14,8 @@ define("TTLS_LIMIT", 300000); // лимит числа трейдов при к�
 define("DEBUG_TOOL_LIMIT", 1000000); // для отладки - максимальное количество инструментов (всего сейчас 140, это много для полного пересчета при отладке)
 define("DEBUG_REPORT_LIMIT", 50000); // для отладки - максимальное количество отчетов (они довольно долго генерятся)
 define("PROGRESS_FILENAME","___calc_setup_progress.txt"); // в этом файле периодически сохраняем текущий статус, чтобы потом получить его запросом их AJAX (должен совпадать с указанным в JS)
+define("CANCEL_FILENAME","___calc_setup_cancel.flag"); // флаг отмены расчёта
+$USER_PRESETS_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'user_setups.json';
 
 define("PIC_WIDTH",1600); // размер графика по горизонтали
 define("PIC_HEIGHT",800); // размер графика по вертикали
@@ -161,6 +163,21 @@ $setups=[
         'Trailing2' => '',
         'Actual' => '200%'
     ],
+    [
+        // 'condition1' => '$G1=="EAM" && $bad==0 && $section==3',
+        'condition1' => '$G1=="EAM" && $bad==0',
+        'condition2' => '',
+        'trade type' => 'P6disrupt',
+        'CancelLevel' => '85%',
+        'InitStopLoss' => '10%',
+        'Aim1' => '-10%, -30%,10%',
+        'Trigger1' => '',
+        'AlternateTrigger1' => '',
+        'Trailing1' => '',
+        'Trigger2' => '',
+        'Trailing2' => '',
+        'Actual' => '200%',
+    ],
 //    // ниже остался от текста в ТЗ
 //    [
 //        'condition1' => '$G1=="EAM" && $bad==0 && best_lists_proc(4,5)>= 45 && worst_lists_proc(4,5)>=30 && $bad==0 && $Clst_II_E', // - условие вызова сетапа для рассматриваемой модели, полностью аналогично фильтрам
@@ -250,11 +267,27 @@ if(isset($_POST['setupIDs'])||isset($_POST['mode'])){$res['info']['type']='_POST
 
 // если запрос на чтение текущего "прогресса" - файла  ___calc_setup_progress.txt
 if(isset($PARAM['mode'])&&strtoupper($PARAM['mode'])=='PROGRESS'){
-    $out=file_get_contents(PROGRESS_FILENAME);
-    if($out)$res['answer']=$out;
-    else $res['answer']="ERROR! Error reading file ".PROGRESS_FILENAME;
-    $res['answer']=$out;
+    // Текстовый статус
+    $out=@file_get_contents(PROGRESS_FILENAME);
+    if($out) $res['answer']=$out; else $res['answer']="ERROR! Error reading file ".PROGRESS_FILENAME;
+    // Структурированный прогресс для прогресс-бара
+    $jsonFile = __DIR__ . DIRECTORY_SEPARATOR . 'tmp_log' . DIRECTORY_SEPARATOR . '___load_progress.json';
+    if(is_file($jsonFile)){
+        $j=@file_get_contents($jsonFile);
+        $o=@json_decode($j,true);
+        if(is_array($o) && isset($o['progress'])) $res['progress']=$o['progress'];
+    }
+    // если есть флаг завершения — добавим его в ответ
+    $doneFlag = __DIR__ . DIRECTORY_SEPARATOR . 'tmp_log' . DIRECTORY_SEPARATOR . '___calc_done.flag';
+    if(is_file($doneFlag)) $res['done']=true; else $res['done']=false;
+    unset($res['Error']);
+    die();
+}
 
+// установка флага отмены расчёта
+if(isset($PARAM['mode'])&&strtoupper($PARAM['mode'])=='CANCEL'){
+    @file_put_contents(CANCEL_FILENAME, '1');
+    $res=['answer'=>'CANCELLED'];
     unset($res['Error']);
     die();
 }
@@ -278,10 +311,19 @@ else{
 
 // если запрос на получение всех сетапов (первоначальный запрос при старте)
 if(isset($PARAM['mode'])&&strtoupper($PARAM['mode'])=='LIST'){
+    // Подмешиваем сохранённые пресеты из файла, если есть
+    if(file_exists($USER_PRESETS_FILE)){
+        $json=file_get_contents($USER_PRESETS_FILE);
+        $usr=json_decode($json,true);
+        if(is_array($usr)){
+            foreach($usr as $idx=>$cs){ if(is_array($cs)) { $cs['___preset_src']='user'; $cs['___preset_id']=$idx; $setups[]=$cs; } }
+        }
+    }
     $res['answer']=$setups;
     $res['tools']=$toolsList;
     $res['PIC_WIDTH']=PIC_WIDTH;
     $res['PIC_HEIGHT']=PIC_HEIGHT;
+    $res['preset_meta']=['user_count'=>isset($usr)&&is_array($usr)?count($usr):0];
     writeProgress("Setups list loaded. Count: ".count($setups));
     unset($res['Error']);
     die();
@@ -308,15 +350,83 @@ if(!$tmp){
     die();
 }
 
+// перед стартом расчёта снимаем флаг отмены, если остался от прошлых запусков
+if(file_exists(CANCEL_FILENAME)) @unlink(CANCEL_FILENAME);
+
 
 $setupList=[]; // список id сетапов
-if (isset($PARAM['setupIDs'])){ // задан в параметрах список id сетапов
+if (isset($PARAM['setupIDs']) && strlen(trim($PARAM['setupIDs']))>0){ // задан в параметрах список id сетапов
     $tmpArr=explode(',',$PARAM['setupIDs']);
     foreach($tmpArr as $id_)if(isset($setups[intval($id_)]))$setupList[]=intval($id_); // проверяем, что такой индекс есть в списке сетапов
-}
-else{
+} else if (!isset($PARAM['setupIDs'])) {
+    // если параметр setupIDs не передан вовсе — по умолчанию считаем все (будут добавлены кастомные ниже)
     foreach($setups as $id_=>$txt_)$setupList[]=$id_;
 }
+
+// Если из клиента пришли кастомные сетапы — добавляем их в общий список и включаем в расчёт
+$custom_added_cnt = 0;
+if(isset($PARAM['custom_setups'])){
+    $posted=json_decode($PARAM['custom_setups'], true);
+    if(is_array($posted)){
+        foreach($posted as $cs){
+            if(!is_array($cs)) continue;
+            // Нормализуем структуру
+            $norm=[
+                'condition1' => $cs['condition1'] ?? '',
+                'condition2' => $cs['condition2'] ?? '',
+                'trade type' => $cs['trade type'] ?? 'P6rev',
+                'CancelLevel' => $cs['CancelLevel'] ?? '85%',
+                'InitStopLoss' => $cs['InitStopLoss'] ?? '-6%',
+                'Aim1' => $cs['Aim1'] ?? '30%',
+                'Trigger1' => $cs['Trigger1'] ?? '',
+                'AlternateTrigger1' => $cs['AlternateTrigger1'] ?? '',
+                'Trailing1' => $cs['Trailing1'] ?? '',
+                'Trigger2' => $cs['Trigger2'] ?? '',
+                'Trailing2' => $cs['Trailing2'] ?? '',
+                'Actual' => $cs['Actual'] ?? '200%'
+            ];
+            $setups[]=$norm;
+            $idx=count($setups)-1;
+            $setupList[]=$idx; // включаем в расчёт независимо от выбора чекбокса
+            $custom_added_cnt++;
+        }
+    }
+}
+
+// Обработка сохранения пресетов
+if(isset($PARAM['mode']) && strtoupper($PARAM['mode'])==='SAVE_SETUPS'){
+    $out=[];
+    if(isset($PARAM['custom_setups'])){
+        $arr=json_decode($PARAM['custom_setups'], true);
+        if(is_array($arr)) $out=$arr;
+    }
+    $ok=@file_put_contents($USER_PRESETS_FILE, json_encode($out, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+    if($ok===false){
+        $res=['Errors'=>['Failed to write presets file: '.$USER_PRESETS_FILE],'answer'=>null];
+    } else {
+        $res=['answer'=>'OK'];
+    }
+    unset($res['Error']);
+    die();
+}
+
+// Удаление одного сохранённого пресета по индексу в файле
+if(isset($PARAM['mode']) && strtoupper($PARAM['mode'])==='DELETE_PRESET'){
+    $idx = isset($PARAM['preset_id']) ? intval($PARAM['preset_id']) : -1;
+    $arr=[]; $ok=false;
+    if(file_exists($USER_PRESETS_FILE)){
+        $json=file_get_contents($USER_PRESETS_FILE);
+        $arr=json_decode($json,true);
+        if(is_array($arr) && $idx>=0 && $idx<count($arr)){
+            array_splice($arr,$idx,1);
+            $ok = (@file_put_contents($USER_PRESETS_FILE, json_encode(array_values($arr), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE))!==false);
+        }
+    }
+    $res=['answer'=>$ok?'OK':'ERROR','left_count'=>is_array($arr)?count($arr):0];
+    unset($res['Error']);
+    die();
+}
+
 if(count($setupList)==0){
     $res['Errors'][]="Ошибочный список номеров сетапов!";
     die();
@@ -381,7 +491,23 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
     if($ind>=DEBUG_TOOL_LIMIT)break; // для отладки - прерываем по достижению лимита
     $curTool=$toolsList[$pk];
 
+    // проверка отмены расчёта
+    if(file_exists(CANCEL_FILENAME)){
+        $res['Errors'][]='Calculation cancelled by user';
+        writeProgress('Cancelled');
+        die();
+    }
+
     // if($debug_models_cnt[$name_id]>50000 || $name_id>17)continue; // for debug only
+
+    // Прогресс: старт по инструменту
+    $progress = [
+        'instruments'=>['total'=>count($nameIdList),'done'=>$ind,'current'=>$curTool],
+        'setups'=>['total'=>0,'done'=>0,'tag'=>''],
+        'models'=>['total'=>0,'done'=>0],
+        'trades_calculated'=>$tradesCnt
+    ];
+    writeProgressJSON($progress);
 
     writeProgress("Processing instrument: $curTool, previously processed: $ind --- trades calculated: ".$tradesCnt);
     write_log("---------- Processing instrument: $curTool, previously processed: $ind \n".PHP_EOL,3);
@@ -399,7 +525,9 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
 
     // if(count($Chart)<1000){ // если что-то не так - нет баров по данному инструменту, например
     if(count($Chart)<100){ // если что-то не так - нет баров по данному инструменту, например
-        $res['Errors'][]=$res['Error']="Chart error (too few bars) name_id=$name_id";
+        // Добавляем больше контекста в сообщение об ошибке, чтобы на фронтенде было понятно, какой инструмент и что делать
+        $toolName = isset($curTool) ? $curTool : (string)$name_id;
+        $res['Errors'][] = $res['Error'] = "Chart error: too few bars for '$toolName' (name_id=$name_id). Please load/refresh history via load_and_calc_dir_5m.php or fill_db4chart.php.";
         die();
     }
     $pips=calcPips_clone($Chart); // определили размер пипса для текущего инструмента
@@ -416,6 +544,15 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
     }
     $result->close();
     write_log("Loaded models: ".count($models).PHP_EOL,7);
+
+    // Обновим прогресс по моделям (известно общее количество)
+    $progress = [
+        'instruments'=>['total'=>count($nameIdList),'done'=>$ind,'current'=>$curTool],
+        'setups'=>['total'=>0,'done'=>0,'tag'=>''],
+        'models'=>['total'=>count($models),'done'=>0],
+        'trades_calculated'=>$tradesCnt
+    ];
+    writeProgressJSON($progress);
 
     // заносим в массивы всю нужную инфу по "геометрии" моделей (size_and_levels)
     $size_and_levels=[];
@@ -483,7 +620,7 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
         $parsedSetupList=[]; // получившийся список сетапов
         foreach($indArr as $pk=>$pv){ // перебор всех получившихся комбинаций
             // фомируем тег для каждой комбинации параметров (в тег входят только поля, по которым задан диапазон
-            $tag="[".$curSetupNum." ".str_replace("'","``",str_replace('"',"`",$curSetup['trade type'])).'] ';
+            $tag="[".$curSetupNum." ".str_replace("'","``",str_replace('"','`',$curSetup['trade type'])).'] ';
             $tmpRes=[];
             foreach($pv as $pk1=>$pv1){
                 $tmpRes[$ind2name[$pk1]]=$pv1;
@@ -506,13 +643,30 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
                 calcTime("readTTLs",$st);
             }
             $splitCnt++;
+            // Отобразим прогресс по сетапам (вариантам) и текущий тег
+            $progress = [
+                'instruments'=>['total'=>count($nameIdList),'done'=>$ind,'current'=>$curTool],
+                'setups'=>['total'=>count($parsedSetupList),'done'=>$splitCnt,'tag'=>$curParsedSetup['tag']],
+                'models'=>['total'=>count($models),'done'=>$modelCnt],
+                'trades_calculated'=>$tradesCnt
+            ];
+            writeProgressJSON($progress);
             write_log("##### Processing models for $curTool ($curSetupNum / $splitCnt) '".$curParsedSetup['tag']."'".PHP_EOL,7);
             if(($modelCnt+count($checkModels))>($last_modelCnt+10) || $lastStatus<(microtime(true)-5)) {
                 writeProgress("Processing instrument: $curTool, previously processed: $ind --- trades calculated: ".$tradesCnt);
+                // периодически обновляем done по моделям и общее число трейдов
+                $progress = [
+                    'instruments'=>['total'=>count($nameIdList),'done'=>$ind,'current'=>$curTool],
+                    'setups'=>['total'=>count($parsedSetupList),'done'=>$splitCnt,'tag'=>$curParsedSetup['tag']],
+                    'models'=>['total'=>count($models),'done'=>($modelCnt+count($checkModels))],
+                    'trades_calculated'=>$tradesCnt
+                ];
+                writeProgressJSON($progress);
                 $lastStatus=microtime(true);
                 $last_modelCnt=$modelCnt+count($checkModels);
             }
 
+            $cancelTick=0;
             foreach($models as $model) { // перебор всех моделей
 
 //                write_log("- tmp1 ($curSetupNum / $splitCnt) id:".$model['id'].PHP_EOL,9);
@@ -540,6 +694,13 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
                         $pv = "" . $model[$pk];
                         $eval_str = '$' . $k . '=\'' . str_replace("'", "\'", $pv) . '\';'; // ВНИМАНИЕ! - null тут превращается в пустую строку - вроде, так норм???
                         eval($eval_str); // создание собственно переменных
+                    }
+                    // периодическая проверка флага отмены
+                    $cancelTick++;
+                    if(($cancelTick%1000)==0 && file_exists(CANCEL_FILENAME)){
+                        $res['Errors'][]='Calculation cancelled by user';
+                        writeProgress('Cancelled');
+                        die();
                     }
                     if (!$bad) $bad = 0;
                     calcTime("setVars",$st);
@@ -574,7 +735,7 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
                         // проверяем, что сетап подходит для данной цели (соответсвует указанной "trade type" ) иначе выходим
                         $isMatched=false;
                         $tradeType=$curSetup['trade type'];
-                        if(!$isMatched)if($curAim=='P6aims'&&in_array($tradeType,['P6rev','P6reach','P6over']))$isMatched=true; // есть соответствие
+                        if(!$isMatched)if($curAim=='P6aims'&&in_array($tradeType,['P6rev','P6reach','P6over','P6disrupt']))$isMatched=true; // есть соответствие (+ P6disrupt)
                         if(!$isMatched)if($curAim=='P6aims"'&&in_array($tradeType,['P6"rev','P6"reach','P6"over']))$isMatched=true; // есть соответствие
                         if(!$isMatched)if($curAim=='auxP6aims'&&in_array($tradeType,['auxP6rev','auxP6reach','auxP6over']))$isMatched=true; // есть соответствие
                         if(!$isMatched)if($curAim=='auxP6aims\''&&in_array($tradeType,['auxP6\'rev','auxP6\'reach','auxP6\'over']))$isMatched=true; // есть соответствие
@@ -639,6 +800,14 @@ foreach($nameIdList as $pk=>$name_id)if(is_null($tool)||$name_id==$selected_name
             }
         } // перебор всех сетапов (распарсенных)
           $modelCnt+=count($checkModels);
+          // Финальный апдейт прогресса по моделям для текущего инструмента
+          $progress = [
+              'instruments'=>['total'=>count($nameIdList),'done'=>$ind,'current'=>$curTool],
+              'setups'=>['total'=>count($parsedSetupList),'done'=>$splitCnt+1,'tag'=>''],
+              'models'=>['total'=>count($models),'done'=>$modelCnt],
+              'trades_calculated'=>$tradesCnt
+          ];
+          writeProgressJSON($progress);
     } // перебор всех сетапов (нераспарсенных)
 
 
@@ -659,6 +828,16 @@ $res['_____MGU_without_TTLs']=memory_get_usage();
 unset($res['Error']);
 $res['info']['MGU_exit']=memory_get_usage();
 file_put_contents("tmp_log/_calc_setups_res_ " . shortFileName(__FILE__) . "_(" . __LINE__ .").json", json_encode($res, JSON_PARTIAL_OUTPUT_ON_ERROR)); // for debug only
+// финальный прогресс — расчёт завершён: закроем оверлей на клиенте
+writeProgress("Completed. Trades calculated: ".$tradesCnt);
+writeProgressJSON([
+    'instruments'=>['total'=>count($nameIdList),'done'=>count($nameIdList),'current'=>''],
+    'setups'=>['total'=>0,'done'=>0,'tag'=>''],
+    'models'=>['total'=>0,'done'=>0],
+    'trades_calculated'=>$tradesCnt
+]);
+// создадим файл-маркер завершения, чтобы клиент мог скрыть оверлей при перезагрузке без ожидания запроса
+@file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'tmp_log'.DIRECTORY_SEPARATOR.'___calc_done.flag','1');
 die();
 
 function fieldCompFunc($k1,$k2){
@@ -1049,10 +1228,10 @@ function tradeEmulation($setup,$model,$size_and_levels,$curSetup,$check2=false,$
                     ){ // выполнилось условие
                         // фиксируем срабатывание TP (Aim1)
                         $TTLs[$setup['tag']][$G1]['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
 
                         $TTLs[$setup['tag']][$G1]['AIM_CNT']=($TTLs[$setup['tag']][$G1]['AIM_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['AIM_CNT']=($TTLs[$setup['tag']]['ALL_G1']['AIM_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['AIM_CNT']=($TTLs[$setup['tag']][$G1]['AIM_CNT'] ?? 0)+1;
 
                         $PNL=round(($appr_level-($lvl_am-$size_level*$setup['Aim1']/100))/$pips,0); // фин.результат сделки без учета спреда - ур.входа-TP
                         if($PNL>0){
@@ -1185,11 +1364,11 @@ function tradeEmulation($setup,$model,$size_and_levels,$curSetup,$check2=false,$
                     if($low<$SL_level){
                         // фиксируем срабатывание SL
                         $TTLs[$setup['tag']][$G1]['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
 
                         $SL_field_name="SL$SL_num"."_CNT"; // имя поля счетчика - в зависимости от номера SL (сколько было перестановок)
                         $TTLs[$setup['tag']][$G1][$SL_field_name]=($TTLs[$setup['tag']][$G1][$SL_field_name] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1'][$SL_field_name]=($TTLs[$setup['tag']]['ALL_G1'][$SL_field_name] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1'][$SL_field_name]=($TTLs[$setup['tag']][$G1][$SL_field_name] ?? 0)+1;
 
                         $PNL=round(($SL_level-$t4_level)/$pips,0); // фин.результат сделки без учета спреда в пипсах
                         if($PNL>0){
@@ -1314,7 +1493,7 @@ function tradeEmulation($setup,$model,$size_and_levels,$curSetup,$check2=false,$
 
     } //[2] вариaнт торговли на достижение P6
 
-    if(substr($setup['trade type'],-4)=='over'){ // [3] вариaнт торговли на пробой 6-ой (P6over, P6"over, auxP6over, auxP6'over)
+    if(substr($setup['trade type'],-4)=='over' || substr($setup['trade type'],-7)=='disrupt'){ // [3] вариaнт торговли на пробой 6-ой (P6over, P6"over, auxP6over, auxP6'over) и вариант P6disrupt
         $tradesCnt++;
         $TTLs[$setup['tag']][$G1]['ALL_CNT']=($TTLs[$setup['tag']][$G1]['ALL_CNT'] ?? 0)+1;
         $TTLs[$setup['tag']]['ALL_G1']['ALL_CNT']=($TTLs[$setup['tag']]['ALL_G1']['ALL_CNT'] ?? 0)+1;
@@ -1408,11 +1587,11 @@ function tradeEmulation($setup,$model,$size_and_levels,$curSetup,$check2=false,$
                     if($low<$SL_level){
                         // фиксируем срабатывание SL
                         $TTLs[$setup['tag']][$G1]['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
 
                         $SL_field_name="SL$SL_num"."_CNT"; // имя поля счетчика - в зависимости от номера SL (сколько было перестановок)
                         $TTLs[$setup['tag']][$G1][$SL_field_name]=($TTLs[$setup['tag']][$G1][$SL_field_name] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1'][$SL_field_name]=($TTLs[$setup['tag']]['ALL_G1'][$SL_field_name] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1'][$SL_field_name]=($TTLs[$setup['tag']][$G1][$SL_field_name] ?? 0)+1;
 
                         $PNL=round(($SL_level-$open_level)/$pips,0); // фин.результат сделки без учета спреда в пипсах
                         if($PNL>0){
@@ -1456,11 +1635,11 @@ function tradeEmulation($setup,$model,$size_and_levels,$curSetup,$check2=false,$
                     //		--	 иначе позиция закрывается на уровне close бара, подтвердившего т.4.
                     if($isAggressive && $curBar==$open_bar && !$check2){ // выходим на close бара открытия (не выполнилось условие2 при агрессивной тактике
                         $TTLs[$setup['tag']][$G1]['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
 
                         $SL_field_name="SL$SL_num"."_CNT"; // имя поля счетчика - в зависимости от номера SL (сколько было перестановок)
                         $TTLs[$setup['tag']][$G1][$SL_field_name]=($TTLs[$setup['tag']][$G1][$SL_field_name] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1'][$SL_field_name]=($TTLs[$setup['tag']]['ALL_G1'][$SL_field_name] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1'][$SL_field_name]=($TTLs[$setup['tag']][$G1][$SL_field_name] ?? 0)+1;
 
                         $PNL=round(($close-$open_level)/$pips,0); // фин.результат сделки без учета спреда в пипсах
                         if($PNL>0){
@@ -1541,10 +1720,10 @@ function tradeEmulation($setup,$model,$size_and_levels,$curSetup,$check2=false,$
                     if($high>$aim1_level){ // выполнилось условие
                         // фиксируем срабатывание TP (Aim1)
                         $TTLs[$setup['tag']][$G1]['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['TRADE_CNT']=($TTLs[$setup['tag']][$G1]['TRADE_CNT'] ?? 0)+1;
 
                         $TTLs[$setup['tag']][$G1]['AIM_CNT']=($TTLs[$setup['tag']][$G1]['AIM_CNT'] ?? 0)+1;
-                        $TTLs[$setup['tag']]['ALL_G1']['AIM_CNT']=($TTLs[$setup['tag']]['ALL_G1']['AIM_CNT'] ?? 0)+1;
+                        $TTLs[$setup['tag']]['ALL_G1']['AIM_CNT']=($TTLs[$setup['tag']][$G1]['AIM_CNT'] ?? 0)+1;
 
                         $PNL=round(($aim1_level-$open_level)/$pips,0); // фин.результат сделки без учета спреда - ур.входа-TP
                         if($PNL>0){
@@ -1830,4 +2009,11 @@ function calcTime($src,$startTime=0){ // добавляем всемя выпо�
     }
     $res['info']['Timing'][$src]['CNT']=($res['info']['Timing'][$src]['CNT'] ?? 0)+1; // первый элемент - счетчик обращений
     $res['info']['Timing'][$src]['calcTime']=($res['info']['Timing'][$src]['calcTime'] ?? 0.0)+(microtime(true)-$startTime); // второй элемент - время выполнения
+}
+
+function writeProgressJSON($progress){
+    $dir = __DIR__ . DIRECTORY_SEPARATOR . 'tmp_log';
+    if(!is_dir($dir)) @mkdir($dir,0777,true);
+    $file = $dir . DIRECTORY_SEPARATOR . '___load_progress.json';
+    @file_put_contents($file, json_encode(['progress'=>$progress], JSON_UNESCAPED_UNICODE));
 }
